@@ -1,0 +1,89 @@
+#ifndef MINISHELL_H
+#define MINISHELL_H
+
+# define PIPE_SETTER 1
+# define SEMICOLONE_SETTER 2
+# define SINGLE_QUOTE_SETTER 4
+# define DOUBLE_QUOTE_SETTER 8
+# define REDIRECTION1_SETTER 16
+# define REDIRECTION2_SETTER 32
+# define REDIRECTION3_SETTER 64
+# define DOLLAR_SETTER 128
+
+# define PIPE_TOKEN -10
+# define SEMICOLONE_TOKEN -20
+# define SINGLE_QUOTE_TOKEN -30
+# define DOUBLE_QUOTE_TOKEN -40
+# define REDIRECTION1_TOKEN -50
+# define REDIRECTION2_TOKEN -60
+# define REDIRECTION3_TOKEN -70
+# define DOLLAR_TOKEN -80
+# define BACKSLASH_TOKEN -90
+
+# include <stdio.h>
+# include <sys/types.h>
+# include <unistd.h>
+# include <string.h>
+# include <stdio.h>
+# include <fcntl.h>
+# include <stdlib.h>
+
+typedef struct	s_element
+{
+	void				*obj1;
+	void				*obj2;
+	struct s_element	*next;
+}
+				t_element;
+
+typedef struct		s_args
+{
+	char			*arg;
+	struct	s_args	*next;
+}					t_args;
+
+
+typedef struct s_simple_cmd
+{
+	int		id;
+	char	*cmd;
+	t_args	*args;
+	int		fd;
+	struct s_simple_cmd *next;
+} t_simple_cmd;
+
+typedef struct s_minishell
+{
+
+	char		*line;
+	char		c;
+	int			is_beginning_of_line;
+	int			is_an_escape_character;
+	int			status;
+	t_simple_cmd *simple_cmd;
+	char		**enviroment;
+	char		*cmd;
+    int 		choice;
+	t_args		*args;
+    t_element	*shell;
+}				t_minishell;
+
+void	ft_putstr_parse(char *str);
+void	prompt(int status);
+int		get_next_line(char **line);
+int		ft_strncmp(const char *s1, const char *s2, size_t n);
+void    ft_lexer(t_minishell *cli);
+void    lexer_debugger(t_minishell *cli);
+char	*ft_minisubstr(char const *src, unsigned int start, size_t n);
+void	create_simple_cmd(char *line, int *i, int *start, t_simple_cmd **simple_cmd);
+void	add_simple_cmd_node(t_simple_cmd **simple_cmd, char *cmd);
+void	simple_cmd_printer(t_simple_cmd *s);
+void	ft_putnbr_fd(int n, int fd);
+char	*ft_substr(char const *src, unsigned int start, size_t n);
+int		ft_strlen(const char *s);
+
+
+char **ft_split(char const *s, char c);
+void fill_list(char **var,t_minishell *shell);
+void fill_dispatcher(t_minishell shell);
+#endif
