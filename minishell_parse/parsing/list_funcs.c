@@ -46,10 +46,35 @@ void				insert_cmd(t_simple_cmd **s, char *cmd)
 				p = p->next;
 			p->next = (t_args*)malloc(sizeof(t_args));
 			p->next->arg = cmd;
+			ft_putstr_parse("inside insert_cmd: ");
+			ft_putstr_parse(p->next->arg);
+			ft_putstr_parse("\n");
 			p->next->next = NULL;
 		}
 	}
 	
+}
+
+char			*arg_correction(char *s)
+{
+	int i;
+	int j;
+
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == BACKSLASH_TOKEN || s[i] == SINGLE_QUOTE_TOKEN || s[i] == DOUBLE_QUOTE_TOKEN)
+		{
+			j = i;
+			while (s[j])
+			{
+				s[j] = s[j + 1];
+				j++;
+			}
+		}
+		i++;
+	}
+	return (s);
 }
 
 t_simple_cmd	*create_simple_cmd_node(char *cmd)
@@ -58,10 +83,8 @@ t_simple_cmd	*create_simple_cmd_node(char *cmd)
 	int i;
 	int size;
 	int start;
+	char *c;
 
-	ft_putstr_parse("cmd inside create_simple_cmd_node:");
-	ft_putstr_parse(cmd);
-	ft_putstr_parse("\n");
 	i = 0;
 	start = 0;
 	s = (t_simple_cmd *)malloc(sizeof(t_simple_cmd));
@@ -71,6 +94,9 @@ t_simple_cmd	*create_simple_cmd_node(char *cmd)
 	while (cmd[i])
 	{
 		size = 0;
+		while (cmd[i] && cmd[i] == ' ')
+			i++;
+		start = i;
 		while (cmd[i] && cmd[i] != ' ')
 		{
 			if (cmd[i] == SINGLE_QUOTE_TOKEN || cmd[i] == DOUBLE_QUOTE_TOKEN)
@@ -86,10 +112,9 @@ t_simple_cmd	*create_simple_cmd_node(char *cmd)
 			size++;
 			i++;
 		}
-		ft_putstr_parse("cmd BEFORE INSTERT:");
-		insert_cmd(&s, ft_substr(cmd, start, size));
-		ft_putstr_parse("\n");
-		ft_putstr_parse(ft_substr(cmd, start, size));
+		c = ft_substr(cmd, start, size);
+		c = arg_correction(c);
+		insert_cmd(&s, c);
 		start = i + 1;
 		if (cmd[i])
 			i++;
@@ -102,10 +127,7 @@ void	add_simple_cmd_node(t_simple_cmd **simple_cmd, char *cmd)
 	t_simple_cmd *p;
 
 	if (*simple_cmd == NULL)
-	{
-		ft_putstr_parse("here\n");
 		*simple_cmd = create_simple_cmd_node(cmd);
-	}
 	else
 	{
 		p = *simple_cmd;
