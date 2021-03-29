@@ -19,7 +19,9 @@ char	*ft_system(t_minishell *shell)
 			if(j < 0)
 				i++;
 		}
-		exit(0);
+		ft_putstr("ayoub-shell: ",1);
+		ft_putstr(shell->cmd, 1);
+		ft_putstr(": command not found\n", 1);
 	}
 	wait(0);
 	return ("");
