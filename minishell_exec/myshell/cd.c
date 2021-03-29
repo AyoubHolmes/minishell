@@ -1,4 +1,4 @@
-#include "includes.h"
+#include "minishell.h"
 
 void edit_elem(char *elm1,char *elm2,t_element **shell_)
 {

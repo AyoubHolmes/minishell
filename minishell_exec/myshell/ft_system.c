@@ -1,8 +1,9 @@
-#include "includes.h"
+#include "minishell.h"
 
 char	*ft_system(t_minishell *shell)
 {
-	int		pid;
+	
+	/* int		pid;
 	char*	binary_path;
 	binary_path = ft_strjoin(ft_strdup("/bin/"),ft_strdup(shell->cmd));
 	pid = fork();
@@ -14,6 +15,7 @@ char	*ft_system(t_minishell *shell)
 		int i = execve(binary_path, argv, shell->enviroment);
 		ft_putnbr_fd(i, 1);
 		ft_putstr("\n",1);
-	}
+	} */
+	ft_putstr_parse("i m system skip me \n");
 	return ("");
 }

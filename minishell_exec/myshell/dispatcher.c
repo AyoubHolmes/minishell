@@ -1,4 +1,4 @@
-#include "includes.h"
+#include "minishell.h"
 
 char *clear_(t_minishell *shell) 
 {
@@ -11,7 +11,6 @@ void fill_dispatcher(t_minishell *shell)
 {
 	char *(*command[9])(t_minishell *);
 
-	printf("%s\n", shell->cmd);
 	if(shell->choice <= 8 && shell->choice >=0)
 	{
 		command[0] = ft_system;

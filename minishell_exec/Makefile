@@ -16,7 +16,7 @@ SRC  =	myshell/dispatcher.c\
 		myshell_utils/ft_putstr.c\
 		myshell_utils/fill_list_to_sort.c\
 		\
-		get_next_line/get_next_line_utils_bonus.c\
+		myshell_utils/some_utils.c\
 		#get_next_line/get_next_line_bonus.c\
 
 

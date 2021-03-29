@@ -1,4 +1,4 @@
-#include "includes.h"
+#include "minishell.h"
 
 char *echo(t_minishell *shell)
 {
