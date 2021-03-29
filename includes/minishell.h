@@ -66,6 +66,8 @@ typedef struct s_minishell
     int 		choice;
 	t_args		*args;
     t_element	*shell;
+	 t_element	*oldpwd;
+    char		**path;
 }				t_minishell;
 
 void	ft_putstr_parse(char *str);
@@ -85,5 +87,5 @@ int		ft_strlen(const char *s);
 
 char **ft_split(char const *s, char c);
 void fill_list(char **var,t_minishell *shell);
-void fill_dispatcher(t_minishell shell);
+void fill_dispatcher(t_minishell *shell);
 #endif

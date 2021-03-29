@@ -1,5 +1,21 @@
 #include "minishell.h"
+#include "includes.h"
 
+t_element *catch_elem(char *elm1,t_element **shell_)
+{
+	t_element *list;
+
+	list = *shell_;
+	if(list == NULL)
+		return(NULL);
+	while(list->next)
+	{
+		if(strcmp(list->next->obj1,elm1) == 0)
+				return (list->next);
+		list = list->next;
+	}
+	return(NULL);
+}
 void ft_exec_(t_minishell *cli)
 {
 	char **var;
@@ -10,7 +26,10 @@ void ft_exec_(t_minishell *cli)
         i++;
     	fill_list(var,cli);
     }
-	fill_dispatcher(*cli);
+	cli->shell = add_end(&cli->shell,"OLDPWD",NULL,sizeof(char *));
+	cli->oldpwd = catch_elem("OLDPWD",&cli->shell);
+	cli->path = ft_split(catch_elem("PATH",&cli->shell)->obj2,':');
+	fill_dispatcher(cli);
 }
 
 int	ft_strncmp(const char *s1, const char *s2, size_t n)
@@ -25,7 +44,14 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 	return (0);
 }
 
+void	ft_fill_exec(t_minishell *cli)
+{
+	t_simple_cmd *p_cmd;
 
+	cli->choice = cli->simple_cmd->id;
+	cli->cmd = cli->simple_cmd->cmd;
+	cli->args = cli->simple_cmd->args;
+}
 
 void    ft_parser(t_minishell *cli)
 {
@@ -40,9 +66,9 @@ void    ft_parser(t_minishell *cli)
 	while (cli->line[i])
 	{
 		create_simple_cmd(cli->line, &i, &start, &cli->simple_cmd);
-		simple_cmd_printer(cli->simple_cmd);
-		//ft_fill_exec(cli);
-		//ft_exec_(cli);
+		//simple_cmd_printer(cli->simple_cmd);
+		ft_fill_exec(cli);
+		ft_exec_(cli);
 		if (cli->line[i])
 			i++;
 	}

@@ -7,8 +7,16 @@ char *export_(t_minishell *shell_)
 	filling(&p,shell_->shell);
 	sort_l(p);
 	while (p != NULL)
-	{
-		printf("declare -x %s=\"%s\"\n", p->obj1,p->obj2);
+	{				
+		ft_putstr("declare -x ", 1);
+		ft_putstr(p->obj1,1);
+		if (p->obj2)
+		{
+			ft_putstr("=\"",1);
+			ft_putstr(p->obj2,1);
+			ft_putstr("\"",1);
+		}
+		ft_putstr("\n",1);
 		p = p->next;
 	}
 	return("");

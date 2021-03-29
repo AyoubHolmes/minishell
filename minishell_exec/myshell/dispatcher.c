@@ -7,11 +7,12 @@ char *clear_(t_minishell *shell)
 	return("");
 }
 
-void fill_dispatcher(t_minishell shell)
+void fill_dispatcher(t_minishell *shell)
 {
 	char *(*command[9])(t_minishell *);
-	
-	if(shell.choice <= 8 && shell.choice >=0)
+
+	printf("%s\n", shell->cmd);
+	if(shell->choice <= 8 && shell->choice >=0)
 	{
 		command[0] = ft_system;
 		command[2] = pwd;
@@ -22,7 +23,7 @@ void fill_dispatcher(t_minishell shell)
 		command[6] = env_;
 		command[7] = exit_;
 		command[8] = clear_;
-		ft_putstr(command[shell.choice](&shell),1);
+		command[shell->choice](shell);
 	}
 	else
 		ft_putstr(" :command not found\n",1);

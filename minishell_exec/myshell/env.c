@@ -6,7 +6,13 @@ char *env_(t_minishell *shell_)
 	p = shell_->shell;
 	while (p != NULL)
     {
-		printf("%s=%s\n", p->obj1,p->obj2);
+		if (p->obj2)
+		{
+			ft_putstr(p->obj1,1);
+			ft_putstr("=",1);
+			ft_putstr(p->obj2,1);
+			ft_putstr("\n",1);
+		}
 		p = p->next;
 	}
 	return("");

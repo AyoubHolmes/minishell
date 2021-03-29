@@ -1,56 +1,66 @@
 #include "includes.h"
-int ft_find_elem(char *elm1,char *elm2,t_element **shell_)
+
+void edit_elem(char *elm1,char *elm2,t_element **shell_)
 {
 	t_element *list;
 
 	list = *shell_;
 	if(list == NULL)
-		return(0);
+		return;
 	while(list->next)
 	{
 		if(strcmp(list->next->obj1,elm1) == 0)
 			{
 				list->next->obj2 = elm2;
-				return(1);
+				return;
 			}
 		list = list->next;
 	}
-	return(0);
 }
-char *ft_cases(char *case_,int id,char *oldpwd,char *pwd)
+
+char *ft_cases(char *case_,char *oldpwd,char *pwd)
 {
-	printf("%d\n",id);
 	if(strcmp(case_,"~") == 0 ||strcmp(case_,"~/") == 0)
 		return("/Users/shikma");
-	else if(strcmp(case_,"-") == 0 && id == 3)
-		printf("bash: cd: OLDPWD not set\n");
-	else if(strcmp(case_,"-") == 0 && id == 1)
+	else if(strcmp(case_,"-") == 0 && oldpwd == NULL)
+	{
+		ft_putstr("bash: cd: OLDPWD not set\n",1);
+		return (NULL);
+	}
+	else if(strcmp(case_,"-") == 0 && oldpwd != NULL)
+	{
+		ft_putstr(oldpwd,1);
+		ft_putstr("\n",1);
 		return(oldpwd);
-	return(pwd);
+	}
+	return(case_);
 }
 char *cd(t_minishell *shell) 
 {
-		char *s = shell->args->arg;
-		char *oldpwd;
-		DIR *folder = opendir(s);
-		char cwd[PATH_MAX];
-		int i;
+	char *s;
+	DIR *folder;
+	char *cwd;
+	char *oldpwd;
+
+	cwd = (char *)malloc(PATH_MAX);
+	oldpwd = getcwd(cwd, PATH_MAX);
+	s = shell->args->arg;
+	s = ft_cases(shell->args->arg, shell->oldpwd->obj2,s);
+	if (s != NULL)
+	{
+		folder = opendir(s);
+		chdir(s);
 		if(folder == NULL)
 		{
-			ft_putstr("bash: cd: ",1);
+			ft_putstr("ayoub-shell: cd: ",1);
 			ft_putstr(s,1);
-			ft_putstr(": No such file or directory\n",1);
-			return("");
-		} 
-		else
-		{
-   			if (getcwd(cwd, sizeof(cwd)) != NULL)
-				oldpwd = ft_strdup(cwd);
-			i = ft_find_elem("OLDPWD",oldpwd,&shell->shell);
-			s = ft_cases(s,3,oldpwd,cwd);
-			if(i == 0)
-				shell->shell = add_end(&shell->shell,"OLDPWD",oldpwd, sizeof(char *));
-			chdir(s);
+			ft_putstr(": ",1);
+			ft_putstr(strerror(errno),1);
+			ft_putstr("\n",1);
 		}
-		return("");
+		else
+			shell->oldpwd->obj2 = oldpwd;
+		free(cwd);
+	}
+	return("");
 }

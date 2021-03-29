@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aboulbaz <aboulbaz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shikma <shikma@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/24 18:12:16 by shikma            #+#    #+#             */
-/*   Updated: 2021/03/24 12:05:52 by aboulbaz         ###   ########.fr       */
+/*   Updated: 2021/03/26 17:55:12 by shikma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ char	*ft_strchr(const char *s, int c)
 		return (0);
 }
 
-char	*ft_strdup(const char *src)
+/* char	*ft_strdup(const char *src)
 {
 	int		i;
 	char	*dest;
@@ -94,7 +94,7 @@ char	*ft_strdup(const char *src)
 	dest[i] = '\0';
 	return (dest);
 }
-
+ */
 // size_t	ft_strlen(const char *str)
 // {
 // 	size_t i;

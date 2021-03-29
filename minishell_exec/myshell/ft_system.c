@@ -4,24 +4,16 @@ char	*ft_system(t_minishell *shell)
 {
 	int		pid;
 	char*	binary_path;
-
+	binary_path = ft_strjoin(ft_strdup("/bin/"),ft_strdup(shell->cmd));
 	pid = fork();
 	if (pid > 0)
 		wait(NULL);
 	else
 	{
-		
-		binary_path = "/bin/ls";
 		char *const argv[] = {binary_path,NULL};
-		int i = 0;
-	//	while(shell->enviroment[i])
-	//	{
-	//		printf("%s\n",shell->enviroment[i]);
-	//		i++;
-	//	}
-	//	printf("++++\n");
-		int a = execve(binary_path, argv, shell->enviroment);
-		printf("%d\n",a);
+		int i = execve(binary_path, argv, shell->enviroment);
+		ft_putnbr_fd(i, 1);
+		ft_putstr("\n",1);
 	}
 	return ("");
 }

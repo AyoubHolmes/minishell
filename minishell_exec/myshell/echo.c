@@ -1,6 +1,6 @@
 #include "includes.h"
 
-char *echo(t_minishell *shell) 
+char *echo(t_minishell *shell)
 {
      int fd2;
     char *str = NULL;
