@@ -3,19 +3,59 @@
 char	*ft_system(t_minishell *shell)
 {
 	
-	/* int		pid;
+	int		pid;
 	char*	binary_path;
-	binary_path = ft_strjoin(ft_strdup("/bin/"),ft_strdup(shell->cmd));
+	int i = 0;
 	pid = fork();
-	if (pid > 0)
-		wait(NULL);
-	else
+	if(pid == 0)
 	{
-		char *const argv[] = {binary_path,NULL};
-		int i = execve(binary_path, argv, shell->enviroment);
-		ft_putnbr_fd(i, 1);
-		ft_putstr("\n",1);
-	} */
-	ft_putstr_parse("i m system skip me \n");
+		while(shell->path[i])
+		{
+			binary_path = ft_strjoin(shell->path[i],"/");
+			binary_path = ft_strjoin(binary_path,shell->cmd);
+			char *const argv[] = {binary_path,NULL};
+			int j = execve(binary_path, argv, shell->enviroment);
+			// ft_putnbr_fd(j, 1);
+			if(j < 0)
+				i++;
+		}
+		exit(0);
+	}
+	wait(0);
 	return ("");
 }
+
+/*
+char	*ft_system(t_minishell *shell)
+{
+	int		pid;
+	char*	binary_path;
+	struct stat buff;
+	int i = 0;
+	pid = fork();
+	if (pid > 0)
+	{
+		wait(NULL);
+	}
+	else
+	{
+		//binary_path = NULL;
+		while(shell->path[i])
+		{
+			//printf("youhou\n");
+	
+			printf("lol\n");
+			binary_path = ft_strdup("/bin/ls");
+			printf("%s\n", binary_path);
+			// binary_path = ft_strjoin(ft_strdup(shell->path[i]),ft_strdup("/"));
+			// binary_path	= ft_strjoin(ft_strdup(binary_path), ft_strdup(shell->cmd));
+			char *const argv[] = {binary_path,NULL};
+			if(!(stat(binary_path, &buff)))
+				execve(binary_path, argv, shell->enviroment);
+			//if(j == -1)
+				i++;
+		}
+	}
+	return ("");
+}
+*/

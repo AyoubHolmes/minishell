@@ -1,2 +1,3 @@
-make fclean && make && ./minishell
+make fclean 
+ make && ./minishell
 

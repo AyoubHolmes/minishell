@@ -20,9 +20,10 @@ void ft_exec_(t_minishell *cli)
 {
 	char **var;
 	int i = 0;
+	
     while(cli->enviroment[i])
     {
-    	var =ft_split(cli->enviroment[i],'=');
+    	var = ft_split(cli->enviroment[i],'=');
         i++;
     	fill_list(var,cli);
     }

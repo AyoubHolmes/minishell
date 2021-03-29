@@ -43,7 +43,7 @@ char *cd(t_minishell *shell)
 	char *oldpwd;
 
 	cwd = (char *)malloc(PATH_MAX);
-	oldpwd = getcwd(cwd, PATH_MAX);
+	getcwd(cwd, PATH_MAX);
 	s = shell->args->arg;
 	s = ft_cases(shell->args->arg, shell->oldpwd->obj2,s);
 	if (s != NULL)
@@ -59,8 +59,9 @@ char *cd(t_minishell *shell)
 			ft_putstr("\n",1);
 		}
 		else
-			shell->oldpwd->obj2 = oldpwd;
-		free(cwd);
+		{
+			shell->oldpwd->obj2 = cwd;
+		}
 	}
 	return("");
 }

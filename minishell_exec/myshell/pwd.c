@@ -2,10 +2,12 @@
 
 char *pwd(t_minishell *shell)
 {
-    char *cwd;
+    char *position;
 
-    cwd = malloc(PATH_MAX); 
-    ft_putstr(getcwd(cwd, PATH_MAX),1);
+    position = malloc(PATH_MAX); 
+    if(getcwd(position, PATH_MAX)!= NULL)
+        ft_putstr(position,1);
+    free(position);
     write(1,"\n",1);
     return("");
 }
