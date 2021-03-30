@@ -46,9 +46,9 @@ void				insert_cmd(t_simple_cmd **s, char *cmd)
 				p = p->next;
 			p->next = (t_args*)malloc(sizeof(t_args));
 			p->next->arg = cmd;
-			ft_putstr_parse("inside insert_cmd: ");
-			ft_putstr_parse(p->next->arg);
-			ft_putstr_parse("\n");
+		//	ft_putstr_parse("inside insert_cmd: ");
+		//	ft_putstr_parse(p->next->arg);
+		//	ft_putstr_parse("\n");
 			p->next->next = NULL;
 		}
 	}
