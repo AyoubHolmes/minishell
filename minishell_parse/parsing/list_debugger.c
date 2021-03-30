@@ -30,6 +30,9 @@ void simple_cmd_printer(t_simple_cmd *s)
 		ft_putnbr_fd(p->id, 1);
 		ft_putstr_parse("}\n");
 		args_printer(p->args);
+		ft_putstr_parse("fd {");
+		ft_putnbr_fd(p->fd, 1);
+		ft_putstr_parse("}\n");
 		ft_putstr_parse("----------------\n");
 		p = p->next;
 	}

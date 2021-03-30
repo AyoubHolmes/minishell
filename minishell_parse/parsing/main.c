@@ -65,10 +65,10 @@ void    ft_parser(t_minishell *cli)
 	while (cli->line[i])
 	{
 		create_simple_cmd(cli->line, &i, &start, &cli->simple_cmd);
-		//simple_cmd_printer(cli->simple_cmd);
-		ft_fill_exec(cli);
+		simple_cmd_printer(cli->simple_cmd);
+		// ft_fill_exec(cli);
 		//ft_exec_(cli);
-		fill_dispatcher(cli);
+		//fill_dispatcher(cli);
 		if (cli->line[i])
 			i++;
 	}
@@ -111,16 +111,16 @@ void	free_simple_cmd(t_simple_cmd *simple_cmd)
 int     main(int argc,char **argv,char **env)
 {
 	t_minishell cli;
+
 	cli.simple_cmd = NULL;
 	cli.enviroment = env;
-
     prompt(0);
 	ft_exec_(&cli);
     while(1)
     {
         get_next_line(&cli.line);
         ft_lexer(&cli);
-       // lexer_debugger(&cli);
+       	lexer_debugger(&cli);
 		if (cli.status == 0)
 			ft_parser(&cli);
 		//free_pipline(&cli);
