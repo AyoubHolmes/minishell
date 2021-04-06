@@ -66,7 +66,7 @@ void    ft_tokenizer(char *c, char *line, int *escape)
 {
 	if (*line == '|' && is_not_a_string(*c))
 		ft_lexer_token_helper(c, line, PIPE_SETTER, PIPE_TOKEN);
-	else if (*line == ';' && is_not_a_string(*c))
+	else if (*line == ';' && *escape == 0 && is_not_a_string(*c))
 		ft_lexer_token_helper(c, line, SEMICOLONE_SETTER, SEMICOLONE_TOKEN);
 	else if (*line == '\'' && (*c & DOUBLE_QUOTE_SETTER) == 0)
 		ft_lexer_token_helper(c, line, SINGLE_QUOTE_SETTER, SINGLE_QUOTE_TOKEN);
@@ -98,7 +98,7 @@ int     redirection_operator(char c)
 
 int    ft_error_checker(char *c, char *line, t_minishell *cli)
 {
-	if ((*line == '|' || *line == ';' || *line == '\\')\
+	if ((*line == '|' || *line == ';' || (*line == '\\' && *(line + 1) == '\0'))\
 		&& cli->is_beginning_of_line == 1)
 		return (1);
 	if ((is_a_redirection(line) || is_first_quotation(*c, line) || *line == '|' )\

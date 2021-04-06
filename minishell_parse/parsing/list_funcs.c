@@ -75,6 +75,35 @@ char			*arg_correction(char *s)
 	return (s);
 }
 
+int		get_fd_file(char *cmd, int *i)
+{
+	int start;
+	int size;
+	char *filename;
+	int fd;
+	char redirect;
+
+	redirect = cmd[*i];
+	(*i)++;
+	while (cmd[*i] && cmd[*i] == ' ')
+		(*i)++;
+	start = (*i);
+	size = 0;
+	while (cmd[*i] && cmd[*i] != ' ')
+	{
+		(*i)++;
+		size++;
+	}
+	filename = ft_substr(cmd, start, size);
+	if (redirect == REDIRECTION1_TOKEN)
+		fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC);
+	else if (redirect == REDIRECTION2_TOKEN)
+		fd = open(filename, O_RDONLY);
+	else if (redirect == REDIRECTION3_TOKEN)
+		fd = open(filename, O_CREAT | O_WRONLY | O_APPEND);
+	return (fd);
+}
+
 t_simple_cmd	*create_simple_cmd_node(char *cmd)
 {
 	t_simple_cmd *s;
@@ -87,11 +116,27 @@ t_simple_cmd	*create_simple_cmd_node(char *cmd)
 	start = 0;
 	s = (t_simple_cmd *)malloc(sizeof(t_simple_cmd));
 	s->id = -1;
+	s->fd = 1;
 	s->args = NULL;
 	s->next = NULL;
 	while (cmd[i])
 	{
 		size = 0;
+		if(cmd[i] == REDIRECTION1_TOKEN || cmd[i] == REDIRECTION2_TOKEN\
+				|| cmd[i] == REDIRECTION3_TOKEN)
+		{
+			ft_putstr_parse("Fd tester: ");
+			ft_putnbr_fd(s->fd, 1);
+			ft_putstr_parse("\n");
+			if(s->fd != 1)
+			{
+				int test = close(s->fd);
+				ft_putstr_parse("Fd tester: ");
+				ft_putnbr_fd(test, 1);
+				ft_putstr_parse("\n");
+			}
+			s->fd = get_fd_file(cmd, &i);
+		}
 		while (cmd[i] && cmd[i] == ' ')
 			i++;
 		start = i;
@@ -110,10 +155,13 @@ t_simple_cmd	*create_simple_cmd_node(char *cmd)
 			size++;
 			i++;
 		}
-		c = ft_substr(cmd, start, size);
-		c = arg_correction(c);
-		insert_cmd(&s, c);
-		start = i + 1;
+		if (size != 0)
+		{
+			c = ft_substr(cmd, start, size);
+			c = arg_correction(c);
+			insert_cmd(&s, c);
+			start = i + 1;
+		}
 		if (cmd[i])
 			i++;
 	}
