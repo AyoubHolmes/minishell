@@ -15,7 +15,6 @@ int len_list(t_args *arg)
 void	ft_args_printer(char **args, int size)
 {
 	int i = 0;
-	puts("here we are!");
 	while(i < size)
 	{
 		puts(args[i]);
@@ -24,7 +23,7 @@ void	ft_args_printer(char **args, int size)
 }
 
 
-char **fill_args(char **argv,t_args *elm)
+char **fill_args(char **argv,t_args *elm, char *binary)
 {
 	int i;
 	t_args *tmp;
@@ -32,7 +31,7 @@ char **fill_args(char **argv,t_args *elm)
 
 	len =len_list(elm);
 	argv = (char **)malloc((len * sizeof(char *)) + 2);
-	argv[0] = "NULL";
+	argv[0] = binary;
 	if(len == 0)
 	{
 		argv[1] = NULL;
@@ -52,35 +51,36 @@ char **fill_args(char **argv,t_args *elm)
 
 
 char	*ft_system(t_minishell *shell)
-{
-	
+{	
 	int		pid;
 	char*	binary_path;
 	char **argv;
-	int i = 0;
+	int i;
 	struct stat buff;
+	int a;
 
-	argv = fill_args(argv,shell->args);
 	pid = fork();
 	if(pid == 0)
 	{
+		i = 0;
 		while(shell->path[i])
-		{
+		{	
 			binary_path = ft_strjoin(ft_strjoin(shell->path[i],"/"),shell->cmd);
-			argv[0] = binary_path;
-			if(!(stat(binary_path, &buff)))
-				execve(binary_path, argv, shell->enviroment);
+			a = stat(binary_path, &buff);
+			if(a == 0)
+			{
+				argv = fill_args(argv,shell->args, binary_path);
+				execve(argv[0], argv, shell->enviroment);
+			}
 			i++;
-			
-			//if(j < 0)
-			//{
-			//shell->status = 8;
-			//ft_putstr("ayoub-shell: ",1);
-			//ft_putstr(shell->cmd, 1);
-			//ft_putstr(": command not found\n", 1);
-			//}
 		}
-		
+		if(a < 0)
+		{
+			shell->status = 8;
+			ft_putstr("ayoub-shell: ",1);
+			ft_putstr(shell->cmd, 1);
+			ft_putstr(": command not found\n", 1);
+		}
 		exit(0);
 	}
 	wait(0);

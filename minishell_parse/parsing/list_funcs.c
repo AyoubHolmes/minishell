@@ -16,8 +16,6 @@ int				dispatcher_id(char *cmd)
 		return (6);
 	if (ft_strncmp(cmd, "exit", 6) == 0)
 		return (7);
-	if (!ft_strncmp(cmd, "clear", 5))
-		return (8);
 	return (0);
 }
 

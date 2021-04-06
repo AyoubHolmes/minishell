@@ -1,15 +1,8 @@
 #include "minishell.h"
 
-char *clear_(t_minishell *shell) 
-{
-	const char *CLEAR_SCREEN_ANSI = "\e[1;1H\e[2J\n";
-  	write(STDOUT_FILENO, CLEAR_SCREEN_ANSI, 12);
-	return("");
-}
-
 void fill_dispatcher(t_minishell *shell)
 {
-	char *(*command[9])(t_minishell *);
+	char *(*command[8])(t_minishell *);
 	command[0] = ft_system;
 	command[2] = pwd;
 	command[1] = echo;
@@ -18,6 +11,5 @@ void fill_dispatcher(t_minishell *shell)
 	command[5] = unset;
 	command[6] = env_;
 	command[7] = exit_;
-	command[8] = clear_;
 	command[shell->choice](shell);
 }
