@@ -53,7 +53,9 @@ typedef struct s_simple_cmd
 	int		id;
 	char	*cmd;
 	t_args	*args;
-	int		fd;
+	int		out_fd;
+	int		in_fd;
+	int		err_fd;
 	struct s_simple_cmd *next;
 } t_simple_cmd;
 
@@ -71,8 +73,11 @@ typedef struct s_minishell
     int 		choice;
 	t_args		*args;
     t_element	*shell;
-	 t_element	*oldpwd;
+	t_element	*oldpwd;
     char		**path;
+	int			old_stdout;
+	int			old_stdin;
+	int			old_stderror;
 }				t_minishell;
 
 void	ft_putstr_parse(char *str);

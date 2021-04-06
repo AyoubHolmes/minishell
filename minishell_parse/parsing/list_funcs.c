@@ -77,12 +77,11 @@ char			*arg_correction(char *s)
 	return (s);
 }
 
-int		get_fd_file(char *cmd, int *i)
+void		get_fd_file(char *cmd, int *i, t_simple_cmd **s)
 {
 	int start;
 	int size;
 	char *filename;
-	int fd;
 	char redirect;
 
 	redirect = cmd[*i];
@@ -97,13 +96,15 @@ int		get_fd_file(char *cmd, int *i)
 		size++;
 	}
 	filename = ft_substr(cmd, start, size);
+	ft_putstr_parse("FILENAME = ");
+	ft_putstr_parse(filename);
+	ft_putstr_parse("\n");
 	if (redirect == REDIRECTION1_TOKEN)
-		fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC);
+		(*s)->out_fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC);
 	else if (redirect == REDIRECTION2_TOKEN)
-		fd = open(filename, O_RDONLY);
+		(*s)->in_fd = open(filename, O_RDONLY);
 	else if (redirect == REDIRECTION3_TOKEN)
-		fd = open(filename, O_CREAT | O_WRONLY | O_APPEND);
-	return (fd);
+		(*s)->out_fd = open(filename, O_CREAT | O_WRONLY | O_APPEND);
 }
 
 t_simple_cmd	*create_simple_cmd_node(char *cmd)
@@ -118,7 +119,9 @@ t_simple_cmd	*create_simple_cmd_node(char *cmd)
 	start = 0;
 	s = (t_simple_cmd *)malloc(sizeof(t_simple_cmd));
 	s->id = -1;
-	s->fd = 1;
+	s->in_fd = 0;
+	s->out_fd = 1;
+	s->err_fd = 2;
 	s->args = NULL;
 	s->next = NULL;
 	while (cmd[i])
@@ -127,17 +130,8 @@ t_simple_cmd	*create_simple_cmd_node(char *cmd)
 		if(cmd[i] == REDIRECTION1_TOKEN || cmd[i] == REDIRECTION2_TOKEN\
 				|| cmd[i] == REDIRECTION3_TOKEN)
 		{
-			ft_putstr_parse("Fd tester: ");
-			ft_putnbr_fd(s->fd, 1);
-			ft_putstr_parse("\n");
-			if(s->fd != 1)
-			{
-				int test = close(s->fd);
-				ft_putstr_parse("Fd tester: ");
-				ft_putnbr_fd(test, 1);
-				ft_putstr_parse("\n");
-			}
-			s->fd = get_fd_file(cmd, &i);
+			get_fd_file(cmd, &i, &s);
+			i++;
 		}
 		while (cmd[i] && cmd[i] == ' ')
 			i++;
@@ -203,6 +197,7 @@ void	create_simple_cmd(char *line, int *i, int *start, t_simple_cmd **simple_cmd
 		cmd = ft_substr(line, *start, size);
 		*start = *i + 1;
 		add_simple_cmd_node(simple_cmd, cmd);
+		free(cmd);
 		if (line[*i] != SEMICOLONE_TOKEN && line[*i])
 			(*i)++;
 	}

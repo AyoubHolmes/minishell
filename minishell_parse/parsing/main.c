@@ -1,5 +1,4 @@
 #include "minishell.h"
-#include "minishell.h"
 
 t_element *catch_elem(char *elm1,t_element **shell_)
 {
@@ -69,6 +68,8 @@ void    ft_parser(t_minishell *cli)
 		// ft_fill_exec(cli);
 		//ft_exec_(cli);
 		//fill_dispatcher(cli);
+		free(cli->simple_cmd);
+		cli->simple_cmd = NULL;
 		if (cli->line[i])
 			i++;
 	}
@@ -107,23 +108,22 @@ void	free_simple_cmd(t_simple_cmd *simple_cmd)
 	}
 }
 
-
 int     main(int argc,char **argv,char **env)
 {
-	t_minishell cli;
+	t_minishell *cli;
 
-	cli.simple_cmd = NULL;
-	cli.enviroment = env;
+	cli = (t_minishell *)malloc(sizeof(t_minishell));
+	cli->simple_cmd = NULL;
+	cli->enviroment = env;
     prompt(0);
-	ft_exec_(&cli);
+	ft_exec_(cli);
     while(1)
     {
-        get_next_line(&cli.line);
-        ft_lexer(&cli);
-       	lexer_debugger(&cli);
-		if (cli.status == 0)
-			ft_parser(&cli);
-		//free_pipline(&cli);
-		prompt(cli.status);
+        get_next_line(&cli->line);
+        ft_lexer(cli);
+       	lexer_debugger(cli);
+		if (cli->status == 0)
+			ft_parser(cli);
+		prompt(cli->status);
 	}
 }
