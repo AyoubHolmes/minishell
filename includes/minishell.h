@@ -72,6 +72,7 @@ typedef struct s_minishell
 	t_args		*args;
     t_element	*shell;
 	 t_element	*oldpwd;
+	 t_element	*home;
     char		**path;
 }				t_minishell;
 
@@ -109,7 +110,7 @@ t_element	*add_end(t_element **liste, void *elt1,void *elt2, size_t data_size);
 void delete_elem(char *elm,t_element *shell_);
 void sort_l(t_element *list);
 void filling(t_element **p,t_element *list);
-
+int		len_list(t_args *arg);
 char	*ft_strchr(const char *s, int c);
 char	*ft_strjoin(char *s1, char *s2);
 char	*ft_strdup(const char *src);

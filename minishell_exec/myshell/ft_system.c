@@ -11,7 +11,7 @@ int len_list(t_args *arg)
 	}
 	return(i);
 }
-
+//delete the part below this line 
 void	ft_args_printer(char **args, int size)
 {
 	int i = 0;
@@ -21,7 +21,7 @@ void	ft_args_printer(char **args, int size)
 		i++;
 	}
 }
-
+//delete the above
 
 char **fill_args(char **argv,t_args *elm, char *binary)
 {
