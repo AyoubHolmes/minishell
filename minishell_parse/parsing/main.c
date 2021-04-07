@@ -137,7 +137,7 @@ int     main(int argc,char **argv,char **env)
     {
         get_next_line(&cli->line);
         ft_lexer(cli);
-       	// lexer_debugger(cli);
+       	lexer_debugger(cli);
 		if (cli->status == 0)
 			ft_parser(cli);
 		prompt(cli->status); 
