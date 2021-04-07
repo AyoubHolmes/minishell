@@ -53,7 +53,9 @@ typedef struct s_simple_cmd
 	int		id;
 	char	*cmd;
 	t_args	*args;
-	int		fd;
+	int		out_fd;
+	int		in_fd;
+	int		err_fd;
 	struct s_simple_cmd *next;
 } t_simple_cmd;
 
@@ -74,6 +76,9 @@ typedef struct s_minishell
 	 t_element	*oldpwd;
 	 t_element	*home;
     char		**path;
+	int			old_stdout;
+	int			old_stdin;
+	int			old_stderror;
 }				t_minishell;
 
 void	ft_putstr_parse(char *str);
@@ -89,6 +94,7 @@ void	simple_cmd_printer(t_simple_cmd *s);
 void	ft_putnbr_fd(int n, int fd);
 char	*ft_substr(char const *src, unsigned int start, size_t n);
 int		ft_strlen(const char *s);
+int     is_a_redirection(char *line);
 
 //exec
 char **ft_split(char const *s, char c);
