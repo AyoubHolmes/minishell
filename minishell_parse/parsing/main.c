@@ -65,6 +65,9 @@ void    ft_parser(t_minishell *cli)
 	{
 		create_simple_cmd(cli->line, &i, &start, &cli->simple_cmd);
 		simple_cmd_printer(cli->simple_cmd);
+		/* dup2(cli->old_stdin, 0);
+		dup2(cli->old_stdout, 1);
+		dup2(cli->old_stderror, 2); */
 		// ft_fill_exec(cli);
 		//ft_exec_(cli);
 		//fill_dispatcher(cli);
@@ -108,6 +111,19 @@ void	free_simple_cmd(t_simple_cmd *simple_cmd)
 	}
 }
 
+void	env_printer(t_minishell *cli)
+{
+	t_element *p;
+
+	p = cli->shell;
+	while(p)
+	{
+		ft_putstr_parse(p->obj1);
+		ft_putstr_parse("\n");
+		p = p->next;
+	}
+}
+
 int     main(int argc,char **argv,char **env)
 {
 	t_minishell *cli;
@@ -115,8 +131,12 @@ int     main(int argc,char **argv,char **env)
 	cli = (t_minishell *)malloc(sizeof(t_minishell));
 	cli->simple_cmd = NULL;
 	cli->enviroment = env;
-    prompt(0);
+	cli->old_stdin = dup(0);
+	cli->old_stdout = dup(1);
+	cli->old_stderror = dup(2);
 	ft_exec_(cli);
+	//env_printer(cli);
+    prompt(0);
     while(1)
     {
         get_next_line(&cli->line);
@@ -124,6 +144,6 @@ int     main(int argc,char **argv,char **env)
        	lexer_debugger(cli);
 		if (cli->status == 0)
 			ft_parser(cli);
-		prompt(cli->status);
+		prompt(cli->status); 
 	}
 }

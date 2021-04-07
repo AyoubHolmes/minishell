@@ -107,15 +107,14 @@ int    ft_error_checker(char *c, char *line, t_minishell *cli)
 	if (seperator_is_set(*c) && is_a_separatore(line) && is_not_a_string(*c))
 		return (3);
 	if (is_alphanum(*line) && is_not_a_string(*c) && !redirection_operator(*c))
-	{
-		cli->is_an_escape_character = 0;
 		*c = 0;
-	}
 	return (0);
 }
 
 void    ft_lexer_checker(char *c, char *line, t_minishell *cli)
 {
+	if (cli->is_an_escape_character == 1)
+		cli->is_an_escape_character = 0;
 	cli->status = ft_error_checker(c, line, cli);
 	if (cli->status == 0)
 		ft_tokenizer(c, line, &cli->is_an_escape_character);
@@ -134,6 +133,8 @@ void    ft_lexer(t_minishell *cli)
 	{
 		if (cli->line[i] != ' ')
 		{
+			ft_putnbr_fd(cli->is_an_escape_character, 1);
+			ft_putstr_parse("\n");
 			ft_lexer_checker(&cli->c, &cli->line[i], cli);
 			if (cli->status != 0)
 				break;
