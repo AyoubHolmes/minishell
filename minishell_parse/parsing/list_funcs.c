@@ -17,6 +17,8 @@ int				dispatcher_id(char *cmd)
 		return (6);
 	if (ft_strncmp(cmd, "exit", 6) == 0)
 		return (7);
+	if (!ft_strncmp(cmd, "clear", 5))
+		return (8);
 	return (0);
 }
 
@@ -67,6 +69,15 @@ char			*arg_correction(char *s)
 				s[j] = s[j + 1];
 				j++;
 			}
+			i--;
+		}
+		if (s[i] == DOLLAR_TOKEN)
+		{
+			j = ++i;
+			while(s[j] && (s[j] != BACKSLASH_TOKEN || s[j] != SINGLE_QUOTE_TOKEN || s[j] == DOUBLE_QUOTE_TOKEN))
+			{
+				j++;
+			}
 		}
 		i++;
 	}
@@ -82,6 +93,11 @@ void		get_fd_file(char *cmd, int *i, t_simple_cmd **s)
 
 	redirect = cmd[*i];
 	(*i)++;
+	ft_putstr_parse("REDIRECT = ");
+	ft_putstr_parse(&cmd[*i]);
+	ft_putstr_parse("\n");
+	if (cmd[*i] == REDIRECTION3_TOKEN)
+		(*i)++;
 	while (cmd[*i] && cmd[*i] == ' ')
 		(*i)++;
 	start = (*i);
@@ -103,7 +119,13 @@ void		get_fd_file(char *cmd, int *i, t_simple_cmd **s)
 		(*s)->out_fd = open(filename, O_CREAT | O_WRONLY | O_APPEND, 0666);
 }
 
-t_simple_cmd	*create_simple_cmd_node(char *cmd)
+int     is_a_redirection_token(char *line)
+{
+	return (*line == REDIRECTION1_TOKEN || *line == REDIRECTION2_TOKEN || *line == REDIRECTION3_TOKEN);
+}
+
+
+t_simple_cmd	*create_simple_cmd_node(char *cmd, t_element *env)
 {
 	t_simple_cmd *s;
 	int i;
@@ -125,8 +147,9 @@ t_simple_cmd	*create_simple_cmd_node(char *cmd)
 		size = 0;
 		while (cmd[i] && cmd[i] == ' ')
 			i++;
-		if(is_a_redirection(&cmd[i]))
+		if(is_a_redirection_token(&cmd[i]))
 		{
+			ft_putstr_parse("ENTERED\n");
 			get_fd_file(cmd, &i, &s);
 			continue ;
 		}
@@ -159,18 +182,18 @@ t_simple_cmd	*create_simple_cmd_node(char *cmd)
 	return (s);
 }
 
-void	add_simple_cmd_node(t_simple_cmd **simple_cmd, char *cmd)
+void	add_simple_cmd_node(t_simple_cmd **simple_cmd, char *cmd, t_element *env)
 {
 	t_simple_cmd *p;
 
 	if (*simple_cmd == NULL)
-		*simple_cmd = create_simple_cmd_node(cmd);
+		*simple_cmd = create_simple_cmd_node(cmd, env);
 	else
 	{
 		p = *simple_cmd;
 		while(p->next)
 			p = p->next;
-		p->next = create_simple_cmd_node(cmd);
+		p->next = create_simple_cmd_node(cmd, env);
 	}
 }
 
@@ -182,26 +205,26 @@ void	ft_expanding(t_simple_cmd **simple_cmd)
 
 }
 
-void	create_simple_cmd(char *line, int *i, int *start, t_simple_cmd **simple_cmd)
+void	create_simple_cmd(t_minishell *cli, int *i, int *start, t_simple_cmd **simple_cmd)
 {
 	char *cmd;
 	int size;
 
-	while (line[*i] && line[*i] != SEMICOLONE_TOKEN)
+	while (cli->line[*i] && cli->line[*i] != SEMICOLONE_TOKEN)
 	{
 		size = 0;
-		while (line[*i] && line[*i] != PIPE_TOKEN)
+		while (cli->line[*i] && cli->line[*i] != PIPE_TOKEN)
 		{
-			if (line[*i] == SEMICOLONE_TOKEN)
+			if (cli->line[*i] == SEMICOLONE_TOKEN)
 				break;
 			size++;
 			(*i)++;
 		}
-		cmd = ft_substr(line, *start, size);
+		cmd = ft_substr(cli->line, *start, size);
 		*start = *i + 1;
-		add_simple_cmd_node(simple_cmd, cmd);
+		add_simple_cmd_node(simple_cmd, cmd, cli->shell);
 		free(cmd);
-		if (line[*i] != SEMICOLONE_TOKEN && line[*i])
+		if (cli->line[*i] != SEMICOLONE_TOKEN && cli->line[*i])
 			(*i)++;
 	}
 }

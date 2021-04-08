@@ -1,4 +1,4 @@
- #include "minishell.h"
+#include "minishell.h"
 
 void edit_elem(char *elm1,char *elm2,t_element **shell_)
 {
@@ -18,22 +18,22 @@ void edit_elem(char *elm1,char *elm2,t_element **shell_)
 	}
 }
 
-char *ft_cases(t_minishell *shell,char *oldpwd)
+char *ft_cases(char *case_,char *oldpwd,char *pwd)
 {
-	if(!shell->args || strcmp(shell->args->arg,"~") == 0 || strcmp(shell->args->arg,"~/") == 0)
-		return(shell->home->obj2);
-	else if(strcmp(shell->args->arg,"-") == 0 && oldpwd == NULL)
+	if(strcmp(case_,"~") == 0 ||strcmp(case_,"~/") == 0)
+		return("/Users/shikma");
+	else if(strcmp(case_,"-") == 0 && oldpwd == NULL)
 	{
 		ft_putstr("bash: cd: OLDPWD not set\n",1);
 		return (NULL);
 	}
-	else if(strcmp(shell->args->arg,"-") == 0 && oldpwd != NULL)
+	else if(strcmp(case_,"-") == 0 && oldpwd != NULL)
 	{
 		ft_putstr(oldpwd,1);
 		ft_putstr("\n",1);
 		return(oldpwd);
 	}
-	return(shell->args->arg);
+	return(case_);
 }
 char *cd(t_minishell *shell) 
 {
@@ -44,7 +44,8 @@ char *cd(t_minishell *shell)
 
 	cwd = (char *)malloc(PATH_MAX);
 	getcwd(cwd, PATH_MAX);
-	s = ft_cases(shell, shell->oldpwd->obj2);
+	s = shell->args->arg;
+	s = ft_cases(shell->args->arg, shell->oldpwd->obj2,s);
 	if (s != NULL)
 	{
 		folder = opendir(s);
