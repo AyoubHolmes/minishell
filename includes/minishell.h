@@ -100,7 +100,7 @@ int     is_a_redirection(char *line);
 char **ft_split(char const *s, char c);
 void fill_list(char **var,t_minishell *shell);
 void fill_dispatcher(t_minishell *shell);
-
+t_element *catch_elem(char *elm1,t_element **shell_);
 char *ft_system(t_minishell *shell);
 void ft_putstr(char *str,int fd);
 char *echo(t_minishell *shell);

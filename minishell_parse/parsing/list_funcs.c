@@ -53,10 +53,11 @@ void				insert_cmd(t_simple_cmd **s, char *cmd)
 	
 }
 
-char			*arg_correction(char *s)
+char			*arg_correction(char *s, t_element *env)
 {
 	int i;
 	int j;
+	char *env_var;
 
 	i = 0;
 	while (s[i])
@@ -73,11 +74,18 @@ char			*arg_correction(char *s)
 		}
 		if (s[i] == DOLLAR_TOKEN)
 		{
-			j = ++i;
-			while(s[j] && (s[j] != BACKSLASH_TOKEN || s[j] != SINGLE_QUOTE_TOKEN || s[j] == DOUBLE_QUOTE_TOKEN))
+			i++;
+			j = 0;
+			while(s[i] && s[i] != BACKSLASH_TOKEN && s[i] != SINGLE_QUOTE_TOKEN && s[i] != DOUBLE_QUOTE_TOKEN && s[i] != ' ')
 			{
 				j++;
+				i++;
 			}
+			env_var = ft_substr(&s[i - j], 0, j);
+			ft_putstr_parse(env_var);
+			ft_putstr_parse("\n");
+			//env_var = catch_elem(ft_substr(&s[i - j], 0, j), &env)->obj2;
+			i--;
 		}
 		i++;
 	}
@@ -93,24 +101,17 @@ void		get_fd_file(char *cmd, int *i, t_simple_cmd **s)
 
 	redirect = cmd[*i];
 	(*i)++;
-	ft_putstr_parse("REDIRECT = ");
-	ft_putstr_parse(&cmd[*i]);
-	ft_putstr_parse("\n");
 	if (cmd[*i] == REDIRECTION3_TOKEN)
 		(*i)++;
 	while (cmd[*i] && cmd[*i] == ' ')
 		(*i)++;
-	start = (*i);
 	size = 0;
 	while (cmd[*i] && cmd[*i] != ' ')
 	{
 		(*i)++;
 		size++;
 	}
-	filename = ft_substr(cmd, start, size);
-	ft_putstr_parse("FILENAME = ");
-	ft_putstr_parse(filename);
-	ft_putstr_parse("\n");
+	filename = ft_substr(&cmd[(*i) - size], 0, size);
 	if (redirect == REDIRECTION1_TOKEN)
 		(*s)->out_fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0666);
 	else if (redirect == REDIRECTION2_TOKEN)
@@ -149,7 +150,6 @@ t_simple_cmd	*create_simple_cmd_node(char *cmd, t_element *env)
 			i++;
 		if(is_a_redirection_token(&cmd[i]))
 		{
-			ft_putstr_parse("ENTERED\n");
 			get_fd_file(cmd, &i, &s);
 			continue ;
 		}
@@ -172,7 +172,7 @@ t_simple_cmd	*create_simple_cmd_node(char *cmd, t_element *env)
 		if (size != 0)
 		{
 			c = ft_substr(cmd, start, size);
-			c = arg_correction(c);
+			c = arg_correction(c, env);
 			insert_cmd(&s, c);
 			start = i + 1;
 		}
