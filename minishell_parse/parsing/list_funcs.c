@@ -50,7 +50,6 @@ void				insert_cmd(t_simple_cmd **s, char *cmd)
 			p->next->next = NULL;
 		}
 	}
-	
 }
 
 char			*arg_correction(char *s, t_element *env)
@@ -84,7 +83,9 @@ char			*arg_correction(char *s, t_element *env)
 			env_var = ft_substr(&s[i - j], 0, j);
 			ft_putstr_parse(env_var);
 			ft_putstr_parse("\n");
-			//env_var = catch_elem(ft_substr(&s[i - j], 0, j), &env)->obj2;
+			env_var = catch_elem(ft_substr(&s[i - j], 0, j), &env)->obj2;
+			ft_putstr_parse(env_var);
+			ft_putstr_parse("\n");
 			i--;
 		}
 		i++;
@@ -125,6 +126,19 @@ int     is_a_redirection_token(char *line)
 	return (*line == REDIRECTION1_TOKEN || *line == REDIRECTION2_TOKEN || *line == REDIRECTION3_TOKEN);
 }
 
+t_simple_cmd			*simple_cmd_node_init()
+{
+	t_simple_cmd *s;
+
+	s = (t_simple_cmd *)malloc(sizeof(t_simple_cmd));
+	s->id = -1;
+	s->in_fd = 0;
+	s->out_fd = 1;
+	s->err_fd = 2;
+	s->args = NULL;
+	s->next = NULL;
+	return (s);
+}
 
 t_simple_cmd	*create_simple_cmd_node(char *cmd, t_element *env)
 {
@@ -136,13 +150,7 @@ t_simple_cmd	*create_simple_cmd_node(char *cmd, t_element *env)
 
 	i = 0;
 	start = 0;
-	s = (t_simple_cmd *)malloc(sizeof(t_simple_cmd));
-	s->id = -1;
-	s->in_fd = 0;
-	s->out_fd = 1;
-	s->err_fd = 2;
-	s->args = NULL;
-	s->next = NULL;
+	s = simple_cmd_node_init();
 	while (cmd[i])
 	{
 		size = 0;
