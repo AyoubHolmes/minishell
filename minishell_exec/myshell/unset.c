@@ -2,6 +2,12 @@
 
 char *unset(t_minishell *shell)
 {
-    delete_elem(shell->args->arg,shell->shell);
+    t_args *tmp;
+    tmp = shell->args;
+    while(tmp)
+    {
+        delete_elem(tmp->arg,shell->shell);
+        tmp = tmp->next;
+    }
     return("");
 }

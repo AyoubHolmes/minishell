@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aboulbaz <aboulbaz@student.42.fr>          +#+  +:+       +#+         #
+#    By: shikma <shikma@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/26 18:39:42 by aboulbaz          #+#    #+#              #
-#    Updated: 2021/03/24 12:15:26 by aboulbaz         ###   ########.fr        #
+#    Updated: 2021/04/08 11:53:58 by shikma           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,11 +20,15 @@ ft_strlen.o ft_strmapi.o ft_strncmp.o ft_strnstr.o ft_strrchr.o ft_strtrim.o ft_
 BONUS = ft_lstadd_front_bonus.c ft_lstclear_bonus.c ft_lstdelone_bonus.c ft_lstiter_bonus.c ft_lstlast_bonus.c ft_lstnew_bonus.c ft_lstsize_bonus.c ft_lstadd_back_bonus.c ft_lstmap_bonus.c
 BONUS_O = ft_lstadd_front_bonus.o ft_lstclear_bonus.o ft_lstdelone_bonus.o ft_lstiter_bonus.o ft_lstlast_bonus.o ft_lstnew_bonus.o ft_lstsize_bonus.o ft_lstadd_back_bonus.o ft_lstmap_bonus.o
 CC = gcc -Wall -Wextra -Werror 
+HEADERS = ../../../includes
 
 all: $(NAME)
 
-$(NAME): $(FUNCTIONS_O) libft.h
+$(NAME): $(FUNCTIONS_O)
 	ar rc $(NAME) ${FUNCTIONS_O}
+
+%.o: %.c
+	@gcc -I $(HEADERS) -o $@ -c $<
 
 clean:
 	rm -rf ${FUNCTIONS_O} ${BONUS_O}

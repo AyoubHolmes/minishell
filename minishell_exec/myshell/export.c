@@ -1,23 +1,89 @@
 #include "minishell.h"
 
-char *export_(t_minishell *shell_)
+void edit_or_add(char *elm1,char *elm2,t_element **shell_)
 {
-	t_element *p;
-	p = NULL;
-	filling(&p,shell_->shell);
-	sort_l(p);
-	while (p != NULL)
-	{				
-		ft_putstr("declare -x ", 1);
-		ft_putstr(p->obj1,1);
-		if (p->obj2)
+	t_element *list;
+
+	list = *shell_;
+	if(list == NULL)
+		return;
+	while(list->next)
+	{
+		if(strcmp(list->next->obj1,elm1) == 0)
 		{
-			ft_putstr("=\"",1);
-			ft_putstr(p->obj2,1);
-			ft_putstr("\"",1);
+			if(elm2 == NULL)
+				return;
+			list->next->obj2 = elm2;
+			return;
 		}
-		ft_putstr("\n",1);
-		p = p->next;
+		list = list->next;
+	}
+	add_end(shell_,elm1,elm2,sizeof(char *));
+}
+
+char	**var_split(char *str)
+{
+	char	**res;
+	int		i;
+
+	i = 0;
+	res = malloc(sizeof(char *) * 3);
+	while(str[i] && str[i] != '=')
+		i++;
+
+	res[0] = ft_substr(str,0,i);
+	res[1] = ft_substr(str,i+1,ft_strlen(str));
+	if(str[i])
+		res[1] = str + i + 1;
+	else
+		res[1] = NULL;
+	
+	return(res);
+}
+void	export_to_liste(t_minishell *shell)
+{
+	t_args *tmp;
+	char **str;
+	tmp = shell->args;
+	while(tmp)
+	{
+		if(tmp->arg[0] == '=')
+		{
+
+			ft_putstr("ayoub-shell: export: `",1);
+			ft_putstr(tmp->arg,1);
+			ft_putstr("': not a valid identifier\n",1);
+		}
+		str = var_split(tmp->arg);
+		edit_or_add(str[0],str[1],&shell->shell);
+		tmp = tmp->next;
+	}
+}
+
+char	*export_(t_minishell *shell_)
+{
+	t_element	*p;
+
+	p = NULL;
+	if(shell_->args != NULL)
+		export_to_liste(shell_);
+	else
+	{
+		filling(&p,shell_->shell);
+		sort_l(p);
+		while (p != NULL)
+		{				
+			ft_putstr("declare -x ", 1);
+			ft_putstr(p->obj1,1);
+			if (p->obj2)
+			{
+				ft_putstr("=\"",1);
+				ft_putstr(p->obj2,1);
+				ft_putstr("\"",1);
+			}
+			ft_putstr("\n",1);
+			p = p->next;
+		}
 	}
 	return("");
 }

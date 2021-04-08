@@ -32,6 +32,7 @@
 #include <dirent.h>
 #include <errno.h>
 #include <limits.h>
+#include "libft.h"
 
 typedef struct	s_element
 {
@@ -93,7 +94,7 @@ void	add_simple_cmd_node(t_simple_cmd **simple_cmd, char *cmd);
 void	simple_cmd_printer(t_simple_cmd *s);
 void	ft_putnbr_fd(int n, int fd);
 char	*ft_substr(char const *src, unsigned int start, size_t n);
-int		ft_strlen(const char *s);
+//int		ft_strlen(const char *s);
 int     is_a_redirection(char *line);
 
 //exec
@@ -118,6 +119,6 @@ void sort_l(t_element *list);
 void filling(t_element **p,t_element *list);
 int		len_list(t_args *arg);
 char	*ft_strchr(const char *s, int c);
-char	*ft_strjoin(char *s1, char *s2);
+//char	*ft_strjoin(char *s1, char *s2);
 char	*ft_strdup(const char *src);
 #endif

@@ -6,7 +6,7 @@
 /*   By: shikma <shikma@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/24 18:12:16 by shikma            #+#    #+#             */
-/*   Updated: 2021/03/30 11:19:25 by shikma           ###   ########.fr       */
+/*   Updated: 2021/04/08 11:55:17 by shikma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@
 // 	return (string2);
 // }
 
-char	*ft_strjoin(char *s1, char *s2)
+/* char	*ft_strjoin(char *s1, char *s2)
 {
 	char				*s3;
 	char				*str1;
@@ -60,7 +60,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	free(s1);
 	s3[len] = '\0';
 	return (s3);
-}
+} */
 
 char	*ft_strchr(const char *s, int c)
 {

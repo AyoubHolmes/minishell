@@ -26,6 +26,7 @@ void ft_exec_(t_minishell *cli)
         i++;
     	fill_list(var,cli);
     }
+	delete_elem("OLDPWD",cli->shell);
 	cli->shell = add_end(&cli->shell,"OLDPWD",NULL,sizeof(char *));
 	cli->oldpwd = catch_elem("OLDPWD",&cli->shell);
 	cli->home = catch_elem("HOME",&cli->shell);
@@ -137,7 +138,7 @@ int     main(int argc,char **argv,char **env)
     {
         get_next_line(&cli->line);
         ft_lexer(cli);
-       	lexer_debugger(cli);
+       	//lexer_debugger(cli);
 		if (cli->status == 0)
 			ft_parser(cli);
 		prompt(cli->status); 

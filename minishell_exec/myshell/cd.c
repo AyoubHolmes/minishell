@@ -20,6 +20,9 @@ void edit_elem(char *elm1,char *elm2,t_element **shell_)
 
 char *ft_cases(t_minishell *shell,char *oldpwd)
 {
+	DIR *folder;
+
+	folder = opendir(oldpwd);
 	if(!shell->args || strcmp(shell->args->arg,"~") == 0 || strcmp(shell->args->arg,"~/") == 0)
 		return(shell->home->obj2);
 	else if(strcmp(shell->args->arg,"-") == 0 && oldpwd == NULL)
@@ -29,7 +32,8 @@ char *ft_cases(t_minishell *shell,char *oldpwd)
 	}
 	else if(strcmp(shell->args->arg,"-") == 0 && oldpwd != NULL)
 	{
-		ft_putstr(oldpwd,1);
+		if(folder != NULL)
+			ft_putstr(oldpwd,1);
 		ft_putstr("\n",1);
 		return(oldpwd);
 	}
@@ -58,9 +62,7 @@ char *cd(t_minishell *shell)
 			ft_putstr("\n",1);
 		}
 		else
-		{
 			shell->oldpwd->obj2 = cwd;
-		}
 	}
 	return("");
 }
