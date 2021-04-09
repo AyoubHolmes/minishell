@@ -32,9 +32,11 @@ char *ft_cases(t_minishell *shell,char *oldpwd)
 	}
 	else if(strcmp(shell->args->arg,"-") == 0 && oldpwd != NULL)
 	{
-		if(folder != NULL)
+		if(folder != NULL || strcmp(oldpwd,"") == 0)
+		{
 			ft_putstr(oldpwd,1);
-		ft_putstr("\n",1);
+			ft_putstr("\n",1);
+		}
 		return(oldpwd);
 	}
 	return(shell->args->arg);
@@ -55,11 +57,16 @@ char *cd(t_minishell *shell)
 		chdir(s);
 		if(folder == NULL)
 		{
-			ft_putstr("ayoub-shell: cd: ",1);
-			ft_putstr(s,1);
-			ft_putstr(": ",1);
-			ft_putstr(strerror(errno),1);
-			ft_putstr("\n",1);
+			if(shell->oldpwd->obj2 && strcmp((char*)shell->oldpwd->obj2, "") == 0)
+				shell->oldpwd->obj2 = cwd;
+			else
+			{
+				ft_putstr("ayoub-shell: cd: ",1);
+				ft_putstr(s,1);
+				ft_putstr(": ",1);
+				ft_putstr(strerror(errno),1);
+				ft_putstr("\n",1);
+			}
 		}
 		else
 			shell->oldpwd->obj2 = cwd;
