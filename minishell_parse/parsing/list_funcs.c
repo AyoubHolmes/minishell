@@ -1,5 +1,9 @@
 #include "minishell.h"
 
+int     is_a_redirection_token(char *line)
+{
+	return (*line == REDIRECTION1_TOKEN || *line == REDIRECTION2_TOKEN || *line == REDIRECTION3_TOKEN);
+}
 
 int				dispatcher_id(char *cmd)
 {
@@ -56,7 +60,8 @@ char			*arg_correction(char *s, t_element *env)
 {
 	int i;
 	int j;
-	char *env_var;
+	t_element *env_var;
+	char *tmp;
 
 	i = 0;
 	while (s[i])
@@ -80,12 +85,14 @@ char			*arg_correction(char *s, t_element *env)
 				j++;
 				i++;
 			}
-			env_var = ft_substr(&s[i - j], 0, j);
-			ft_putstr_parse(env_var);
-			ft_putstr_parse("\n");
-			env_var = catch_elem(ft_substr(&s[i - j], 0, j), &env)->obj2;
-			ft_putstr_parse(env_var);
-			ft_putstr_parse("\n");
+			tmp = ft_substr(&s[i - j], 0, j);
+			env_var = catch_elem(tmp, &env);
+			if (env_var)
+			{
+				tmp = ft_strjoin(ft_substr(s, 0, i - j - 1), env_var->obj2);
+				s = ft_strjoin(tmp, ft_substr(&s[i], 0, ft_strlen(s) - i));
+				i = (i - j) + ft_strlen(env_var->obj2) - 1;
+			}
 			i--;
 		}
 		i++;
@@ -107,7 +114,7 @@ void		get_fd_file(char *cmd, int *i, t_simple_cmd **s)
 	while (cmd[*i] && cmd[*i] == ' ')
 		(*i)++;
 	size = 0;
-	while (cmd[*i] && cmd[*i] != ' ')
+	while (cmd[*i] && cmd[*i] != ' ' && !is_a_redirection_token(&cmd[*i]))
 	{
 		(*i)++;
 		size++;
@@ -119,11 +126,6 @@ void		get_fd_file(char *cmd, int *i, t_simple_cmd **s)
 		(*s)->in_fd = open(filename, O_RDONLY, 0666);
 	else if (redirect == REDIRECTION3_TOKEN)
 		(*s)->out_fd = open(filename, O_CREAT | O_WRONLY | O_APPEND, 0666);
-}
-
-int     is_a_redirection_token(char *line)
-{
-	return (*line == REDIRECTION1_TOKEN || *line == REDIRECTION2_TOKEN || *line == REDIRECTION3_TOKEN);
 }
 
 t_simple_cmd			*simple_cmd_node_init()
