@@ -28,20 +28,7 @@ void ft_exec_(t_minishell *cli)
     }
 	cli->shell = add_end(&cli->shell,"OLDPWD",NULL,sizeof(char *));
 	cli->oldpwd = catch_elem("OLDPWD",&cli->shell);
-	cli->home = catch_elem("HOME",&cli->shell);
 	cli->path = ft_split(catch_elem("PATH",&cli->shell)->obj2,':');
-}
-
-int	ft_strncmp(const char *s1, const char *s2, size_t n)
-{
-	while (n-- && (*s1 || *s2))
-	{
-		if ((unsigned char)*s1 != (unsigned char)*s2)
-			return ((unsigned char)*s1 - (unsigned char)*s2);
-		s1++;
-		s2++;
-	}
-	return (0);
 }
 
 void	ft_fill_exec(t_minishell *cli)
@@ -64,9 +51,14 @@ void    ft_parser(t_minishell *cli)
 	cli->simple_cmd = NULL;
 	while (cli->line[i])
 	{
-		create_simple_cmd(cli->line, &i, &start, &cli->simple_cmd);
-		ft_fill_exec(cli);
-		fill_dispatcher(cli);
+		create_simple_cmd(cli, &i, &start, &cli->simple_cmd);
+		simple_cmd_printer(cli->simple_cmd);
+		/* dup2(cli->old_stdin, 0);
+		dup2(cli->old_stdout, 1);
+		dup2(cli->old_stderror, 2); */
+		// ft_fill_exec(cli);
+		//ft_exec_(cli);
+		//fill_dispatcher(cli);
 		free(cli->simple_cmd);
 		cli->simple_cmd = NULL;
 		if (cli->line[i])
@@ -131,7 +123,7 @@ int     main(int argc,char **argv,char **env)
 	cli->old_stdout = dup(1);
 	cli->old_stderror = dup(2);
 	ft_exec_(cli);
-	//env_printer(cli);
+	// env_printer(cli);
     prompt(0);
     while(1)
     {

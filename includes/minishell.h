@@ -32,6 +32,7 @@
 #include <dirent.h>
 #include <errno.h>
 #include <limits.h>
+//#include "libf.h"
 
 typedef struct	s_element
 {
@@ -73,8 +74,7 @@ typedef struct s_minishell
     int 		choice;
 	t_args		*args;
     t_element	*shell;
-	 t_element	*oldpwd;
-	 t_element	*home;
+	t_element	*oldpwd;
     char		**path;
 	int			old_stdout;
 	int			old_stdin;
@@ -88,8 +88,8 @@ int		ft_strncmp(const char *s1, const char *s2, size_t n);
 void    ft_lexer(t_minishell *cli);
 void    lexer_debugger(t_minishell *cli);
 char	*ft_minisubstr(char const *src, unsigned int start, size_t n);
-void	create_simple_cmd(char *line, int *i, int *start, t_simple_cmd **simple_cmd);
-void	add_simple_cmd_node(t_simple_cmd **simple_cmd, char *cmd);
+void	create_simple_cmd(t_minishell *cli, int *i, int *start, t_simple_cmd **simple_cmd);
+void	add_simple_cmd_node(t_simple_cmd **simple_cmd, char *cmd, t_element *env);
 void	simple_cmd_printer(t_simple_cmd *s);
 void	ft_putnbr_fd(int n, int fd);
 char	*ft_substr(char const *src, unsigned int start, size_t n);
@@ -100,7 +100,7 @@ int     is_a_redirection(char *line);
 char **ft_split(char const *s, char c);
 void fill_list(char **var,t_minishell *shell);
 void fill_dispatcher(t_minishell *shell);
-
+t_element *catch_elem(char *elm1,t_element **shell_);
 char *ft_system(t_minishell *shell);
 void ft_putstr(char *str,int fd);
 char *echo(t_minishell *shell);
@@ -116,7 +116,7 @@ t_element	*add_end(t_element **liste, void *elt1,void *elt2, size_t data_size);
 void delete_elem(char *elm,t_element *shell_);
 void sort_l(t_element *list);
 void filling(t_element **p,t_element *list);
-int		len_list(t_args *arg);
+
 char	*ft_strchr(const char *s, int c);
 char	*ft_strjoin(char *s1, char *s2);
 char	*ft_strdup(const char *src);
