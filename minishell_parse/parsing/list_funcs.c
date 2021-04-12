@@ -158,13 +158,13 @@ t_simple_cmd	*create_simple_cmd_node(char *cmd, t_element *env)
 		size = 0;
 		while (cmd[i] && cmd[i] == ' ')
 			i++;
-		if(is_a_redirection_token(&cmd[i]))
+		/* if(is_a_redirection_token(&cmd[i]))
 		{
 			get_fd_file(cmd, &i, &s);
 			continue ;
-		}
+		} */
 		start = i;
-		while (cmd[i] && cmd[i] != ' ' && !is_a_redirection(&cmd[i]))
+		while (cmd[i] && cmd[i] != ' ' && !is_a_redirection_token(&cmd[i]))
 		{
 			if (cmd[i] == SINGLE_QUOTE_TOKEN || cmd[i] == DOUBLE_QUOTE_TOKEN)
 			{
@@ -179,7 +179,12 @@ t_simple_cmd	*create_simple_cmd_node(char *cmd, t_element *env)
 			size++;
 			i++;
 		}
-		if (size != 0)
+		if(is_a_redirection_token(&cmd[i]))
+		{
+			get_fd_file(cmd, &i, &s);
+			continue ;
+		}
+		else if (size != 0)
 		{
 			c = ft_substr(cmd, start, size);
 			c = arg_correction(c, env);
