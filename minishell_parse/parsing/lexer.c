@@ -40,7 +40,11 @@ int     is_alphanum(char c)
 void    ft_lexer_token_helper(char *c, char *line, int setter, int token)
 {
 	if (token == SINGLE_QUOTE_TOKEN || token == DOUBLE_QUOTE_TOKEN)
+	{
 		*c ^= setter;
+		*c &= 4294967294;
+		*c &= 4294967293;
+	}
 	else
 		*c |= setter;
 	*line = token;
@@ -62,31 +66,29 @@ int     is_first_quotation(char c, char *line)
 }
 
 // -----------------------TOKENIZER ------------------------------------
+
 void    ft_tokenizer(char *c, char *line, int *escape)
 {
-	if (*line == '|' && is_not_a_string(*c))
+	if (*line == '|' && is_not_a_string(*c) && *escape == 0)
 		ft_lexer_token_helper(c, line, PIPE_SETTER, PIPE_TOKEN);
 	else if (*line == ';' && *escape == 0 && is_not_a_string(*c))
 		ft_lexer_token_helper(c, line, SEMICOLONE_SETTER, SEMICOLONE_TOKEN);
-	else if (*line == '\'' && (*c & DOUBLE_QUOTE_SETTER) == 0)
+	else if (*line == '\'' && (*c & DOUBLE_QUOTE_SETTER) == 0 && *escape == 0)
 		ft_lexer_token_helper(c, line, SINGLE_QUOTE_SETTER, SINGLE_QUOTE_TOKEN);
 	else if (*line == '"' && *escape == 0 && (*c & SINGLE_QUOTE_SETTER) == 0)
 		ft_lexer_token_helper(c, line, DOUBLE_QUOTE_SETTER, DOUBLE_QUOTE_TOKEN);
-	else if ((*line == '>' && *(line + 1) == '>' && is_not_a_string(*c))\
-		|| (*c & REDIRECTION3_SETTER && *line == '>' && is_not_a_string(*c)) != 0)
-	{
-		ft_putstr_parse("here i am \n");
+	else if (((*line == '>' && *(line + 1) == '>' && is_not_a_string(*c))\
+		|| (*c & REDIRECTION3_SETTER && *line == '>' && is_not_a_string(*c)) != 0) && *escape == 0)
 		ft_lexer_token_helper(c, line, REDIRECTION3_SETTER, REDIRECTION3_TOKEN);
-	}
-	else if (*line == '>' && is_not_a_string(*c))
+	else if (*line == '>' && is_not_a_string(*c) && *escape == 0)
 		ft_lexer_token_helper(c, line, REDIRECTION1_SETTER, REDIRECTION1_TOKEN);
-	else if (*line == '<' && is_not_a_string(*c))
+	else if (*line == '<' && is_not_a_string(*c) && *escape == 0)
 		ft_lexer_token_helper(c, line, REDIRECTION2_SETTER, REDIRECTION2_TOKEN);
 	else if (*line == '$' && *escape == 0 && (is_not_a_string(*c) ||\
 		(*c & DOUBLE_QUOTE_SETTER) != 0) && is_alphanum(*(line + 1)))
 		ft_lexer_token_helper(c, line, DOLLAR_SETTER, DOLLAR_TOKEN);
 	else if (*line == '\\' && *escape == 0 && (is_not_a_string(*c) ||\
-		((*c & DOUBLE_QUOTE_SETTER) != 0 && (*(line + 1) == '`' || *(line + 1) == '$' || *(line + 1) == '"'))))
+		((*c & DOUBLE_QUOTE_SETTER) != 0 && (*(line + 1) == '`' || *(line + 1) == '$' || *(line + 1) == '"' || *(line + 1) == '\\'))))
 	{
 		*line = BACKSLASH_TOKEN;
 		*escape = 1;
@@ -96,23 +98,19 @@ void    ft_tokenizer(char *c, char *line, int *escape)
 }
 // -----------------------ERROR HANDLERS ------------------------------------
 
-int     redirection_operator(char c)
-{
-	return((c & REDIRECTION1_TOKEN) != 0 || (c & REDIRECTION2_TOKEN) != 0 ||\
-		   (c & REDIRECTION3_TOKEN) != 0);
-}
-
 int    ft_error_checker(char *c, char *line, t_minishell *cli)
 {
 	if ((*line == '|' || *line == ';' || (*line == '\\' && *(line + 1) == '\0'))\
-		&& cli->is_beginning_of_line == 1)
+		&& cli->is_beginning_of_line == 1 && cli->is_an_escape_character == 0)
 		return (1);
-	if ((is_a_redirection(line) || is_first_quotation(*c, line) || *line == '|' )\
-		&& *(line + 1) == '\0')
+	if ((is_a_redirection(line) || is_first_quotation(*c, line) || *line == '|'\
+		|| (*line == '\\' && cli->is_an_escape_character == 0)) && *(line + 1) == '\0' && cli->is_an_escape_character == 0)
 		return (2);
 	if (seperator_is_set(*c) && is_a_separatore(line) && is_not_a_string(*c))
 		return (3);
-	if (is_alphanum(*line) && is_not_a_string(*c) && !redirection_operator(*c))
+	if (*line == '<' && *(line - 1) == REDIRECTION1_TOKEN)
+		return (4);
+	if (is_alphanum(*line) && is_not_a_string(*c))
 		*c = 0;
 	return (0);
 }
@@ -135,14 +133,18 @@ void    ft_lexer(t_minishell *cli)
 	cli->is_an_escape_character = 0;
 	while (cli->line[i])
 	{
-		if (cli->line[i] != ' ')
+		while (cli->line[i] && cli->line[i] != ' ')
 		{
 			ft_lexer_checker(&cli->c, &cli->line[i], cli);
 			if (cli->status != 0)
 				break;
 			if (cli->is_beginning_of_line == 1)
 				cli->is_beginning_of_line = 0;
+			i++;
 		}
+		if (cli->status != 0)
+			break;
+		cli->is_an_escape_character = 0;
 		i++;
 	}
 	if (!is_not_a_string(cli->c))
