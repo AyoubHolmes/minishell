@@ -72,12 +72,13 @@ void    ft_tokenizer(char *c, char *line, int *escape)
 		ft_lexer_token_helper(c, line, SINGLE_QUOTE_SETTER, SINGLE_QUOTE_TOKEN);
 	else if (*line == '"' && *escape == 0 && (*c & SINGLE_QUOTE_SETTER) == 0)
 		ft_lexer_token_helper(c, line, DOUBLE_QUOTE_SETTER, DOUBLE_QUOTE_TOKEN);
+	else if ((*line == '>' && *(line + 1) == '>' && is_not_a_string(*c))\
+		|| (*c & REDIRECTION3_SETTER && *line == '>' && is_not_a_string(*c)) != 0)
+		ft_lexer_token_helper(c, line, REDIRECTION3_SETTER, REDIRECTION3_TOKEN);
 	else if (*line == '>' && is_not_a_string(*c))
 		ft_lexer_token_helper(c, line, REDIRECTION1_SETTER, REDIRECTION1_TOKEN);
 	else if (*line == '<' && is_not_a_string(*c))
 		ft_lexer_token_helper(c, line, REDIRECTION2_SETTER, REDIRECTION2_TOKEN);
-	else if (ft_strncmp(line, ">>", 2) == 0 && is_not_a_string(*c))
-		ft_lexer_token_helper(c, line, REDIRECTION3_SETTER, REDIRECTION3_TOKEN);
 	else if (*line == '$' && *escape == 0 && (is_not_a_string(*c) ||\
 		(*c & DOUBLE_QUOTE_SETTER) != 0) && is_alphanum(*(line + 1)))
 		ft_lexer_token_helper(c, line, DOLLAR_SETTER, DOLLAR_TOKEN);
@@ -87,6 +88,8 @@ void    ft_tokenizer(char *c, char *line, int *escape)
 		*line = BACKSLASH_TOKEN;
 		*escape = 1;
 	}
+	else if (*escape == 1)
+		*escape = 0;
 }
 // -----------------------ERROR HANDLERS ------------------------------------
 
@@ -113,8 +116,6 @@ int    ft_error_checker(char *c, char *line, t_minishell *cli)
 
 void    ft_lexer_checker(char *c, char *line, t_minishell *cli)
 {
-	if (cli->is_an_escape_character == 1)
-		cli->is_an_escape_character = 0;
 	cli->status = ft_error_checker(c, line, cli);
 	if (cli->status == 0)
 		ft_tokenizer(c, line, &cli->is_an_escape_character);
@@ -144,6 +145,8 @@ void    ft_lexer(t_minishell *cli)
 	if (!is_not_a_string(cli->c))
 		cli->status = 4;
 }
+
+
 
 void    lexer_debugger(t_minishell *cli)
 {

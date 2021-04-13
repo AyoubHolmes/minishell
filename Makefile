@@ -11,6 +11,7 @@ $(NAME):
 	@mv ./minishell_parse/minishell_parse.a .
 	@mv ./minishell_exec/minishell_exec.a .
 	@gcc $(FLAGS) minishell_exec.a minishell_parse.a libft.a -o $(NAME)
+	@rm *.a
 	
 
 
@@ -19,7 +20,6 @@ all: $(NAME)
 clean:
 	@make clean -sC $(PARSE)
 	@make clean -sC $(EXEC)
-	@rm minishell_parse.a minishell_exec.a libft.a
 
 fclean: clean
 	@rm -f $(NAME)

@@ -21,7 +21,7 @@ int compare_n(char *str)
     
 }
 
-void    check_echo_args(t_args *elm,int *n)
+void    check_echo_args(t_args *elm,int *n,int out_fd)
 {
 	t_args *tmp;
     int a;
@@ -34,10 +34,10 @@ void    check_echo_args(t_args *elm,int *n)
     }
     while(tmp)
     {
-	    ft_putstr(tmp->arg,1);
+	    ft_putstr(tmp->arg,out_fd);
 	    tmp = tmp->next;
         if(tmp)
-            ft_putstr(" ",1);
+            ft_putstr(" ",out_fd);
     }
 }
 
@@ -45,11 +45,14 @@ char *echo(t_minishell *shell)
 {
     int     n;
     int i;
-    int len = 0;
+    int len;
 
+    len = 0;
     n = 0;
-    check_echo_args(shell->args,&n);
+    check_echo_args(shell->args,&n,shell->out_fd);
     if(n == 0)
-        ft_putstr("\n",1);
+        ft_putstr("\n",shell->out_fd);
+    close(shell->out_fd);
+    dup2(shell->old_stdout, 1);
     return("");
 }

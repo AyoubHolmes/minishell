@@ -50,9 +50,9 @@ void	export_to_liste(t_minishell *shell)
 		if(tmp->arg[0] == '=')
 		{
 
-			ft_putstr("ayoub-shell: export: `",1);
-			ft_putstr(tmp->arg,1);
-			ft_putstr("': not a valid identifier\n",1);
+			ft_putstr("ayoub-shell: export: `",shell->err_fd);
+			ft_putstr(tmp->arg,shell->err_fd);
+			ft_putstr("': not a valid identifier\n",shell->err_fd);
 		}
 		str = var_split(tmp->arg);
 		edit_or_add(str[0],str[1],&shell->shell);
@@ -73,17 +73,20 @@ char	*export_(t_minishell *shell_)
 		sort_l(p);
 		while (p != NULL)
 		{				
-			ft_putstr("declare -x ", 1);
-			ft_putstr(p->obj1,1);
+			ft_putstr("declare -x ", shell_->out_fd);
+			ft_putstr(p->obj1,shell_->out_fd);
 			if (p->obj2)
 			{
-				ft_putstr("=\"",1);
-				ft_putstr(p->obj2,1);
-				ft_putstr("\"",1);
+				ft_putstr("=\"",shell_->out_fd);
+				ft_putstr(p->obj2,shell_->out_fd);
+				ft_putstr("\"",shell_->out_fd);
 			}
-			ft_putstr("\n",1);
+			ft_putstr("\n",shell_->out_fd);
 			p = p->next;
 		}
 	}
+	close(shell_->out_fd);
+	dup2(shell_->old_stdout, 1);
+	dup2(shell_->old_stdin, 0);
 	return("");
 }

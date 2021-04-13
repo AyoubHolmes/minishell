@@ -64,25 +64,35 @@ char	*ft_system(t_minishell *shell)
 	{
 		i = 0;
 		while(shell->path[i])
-		{	
-			binary_path = ft_strjoin(ft_strjoin(shell->path[i],"/"),shell->cmd);
-			a = stat(binary_path, &buff);
+		{	if((a = stat(shell->cmd, &buff)) != 0)
+			{
+				binary_path = ft_strjoin(ft_strjoin(shell->path[i],"/"),shell->cmd);
+				a = stat(binary_path, &buff);
+			}
+			else
+				binary_path = shell->cmd;
 			if(a == 0)
 			{
+				dup2(shell->out_fd,1);
+				dup2(shell->in_fd,0);
 				argv = fill_args(argv,shell->args, binary_path);
 				execve(argv[0], argv, shell->enviroment);
+				close(shell->out_fd);
+				close(shell->in_fd);
 			}
 			i++;
 		}
 		if(a < 0)
-		{
+		{ 
 			shell->status = 8;
-			ft_putstr("ayoub-shell: ",1);
-			ft_putstr(shell->cmd, 1);
-			ft_putstr(": command not found\n", 1);
+			ft_putstr("ayoub-shell: ",shell->err_fd);
+			ft_putstr(shell->cmd, shell->err_fd);
+			ft_putstr(": command not found\n", shell->err_fd);
 		}
 		exit(0);
 	}
 	wait(0);
+	dup2(shell->old_stdout, 1);
+	dup2(shell->old_stdin, 0);
 	return ("");
 }
