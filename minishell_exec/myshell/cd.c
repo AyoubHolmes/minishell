@@ -72,5 +72,8 @@ char *cd(t_minishell *shell)
 			shell->oldpwd->obj2 = cwd;
 	}
 	close(shell->out_fd);
+	close(shell->in_fd);
+    dup2(shell->old_stdout, 1);
+	dup2(shell->old_stdin, 0);
 	return("");
 }
