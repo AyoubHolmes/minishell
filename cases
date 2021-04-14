@@ -19,7 +19,14 @@ echo <<<
 --------------
 ls ; ls ";";"
 --------------
-echo "\n\1\;\ \"\\" \n\1\;\'\"\\ '\n\1\;\"\\' // ONE
+echo "\n\1\;\ \"\\" \n\1\;\'\"\\ '\n\1\;\"\\'
 -------- not fixed -------
 echo >      \; ONE
 ; ;;
+
+>>>>
+>>>
+echo hello ;;
+echo $_
+cat > | f1
+syntax error near unexpected token

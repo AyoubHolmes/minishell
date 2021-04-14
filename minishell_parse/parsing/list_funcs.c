@@ -212,14 +212,6 @@ void	add_simple_cmd_node(t_simple_cmd **simple_cmd, char *cmd, t_element *env)
 	}
 }
 
-void	ft_expanding(t_simple_cmd **simple_cmd)
-{
-	t_args *p;
-
-	p = (*simple_cmd)->args;
-
-}
-
 void	create_simple_cmd(t_minishell *cli, int *i, int *start, t_simple_cmd **simple_cmd)
 {
 	char *cmd;
@@ -236,6 +228,9 @@ void	create_simple_cmd(t_minishell *cli, int *i, int *start, t_simple_cmd **simp
 			(*i)++;
 		}
 		cmd = ft_substr(cli->line, *start, size);
+		ft_putstr_parse("HERE: ");
+		ft_putstr_parse(cmd);
+		ft_putstr_parse("\n");
 		*start = *i + 1;
 		add_simple_cmd_node(simple_cmd, cmd, cli->shell);
 		free(cmd);

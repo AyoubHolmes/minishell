@@ -1,5 +1,16 @@
 #include "minishell.h"
 
+int	ft_str(char c1, char *s)
+{
+	while(*s)
+	{
+		if (c1 == *s)
+			return (1);
+		s++;
+	}
+	return (0);
+}
+
 // ---------------------------- DEFINING THE TOKENS ------------------------
 
 int     is_a_quotation(char *line)
@@ -102,14 +113,26 @@ int    ft_error_checker(char *c, char *line, t_minishell *cli)
 {
 	if ((*line == '|' || *line == ';' || (*line == '\\' && *(line + 1) == '\0'))\
 		&& cli->is_beginning_of_line == 1 && cli->is_an_escape_character == 0)
+	{
+		cli->helper = line;
 		return (1);
+	}
 	if ((is_a_redirection(line) || is_first_quotation(*c, line) || *line == '|'\
 		|| (*line == '\\' && cli->is_an_escape_character == 0)) && *(line + 1) == '\0' && cli->is_an_escape_character == 0)
+	{
+		cli->helper = line;
 		return (2);
+	}
 	if (seperator_is_set(*c) && is_a_separatore(line) && is_not_a_string(*c))
+	{
+		cli->helper = line;
 		return (3);
+	}
 	if (*line == '<' && *(line - 1) == REDIRECTION1_TOKEN)
+	{
+		cli->helper = line;
 		return (4);
+	}
 	if (is_alphanum(*line) && is_not_a_string(*c))
 		*c = 0;
 	return (0);
@@ -148,16 +171,42 @@ void    ft_lexer(t_minishell *cli)
 		i++;
 	}
 	if (!is_not_a_string(cli->c))
-		cli->status = 4;
+		cli->status = 5;
 }
-
-
 
 void    lexer_debugger(t_minishell *cli)
 {
+	char c;
+
 	ft_putstr_parse("Line After Lexer: ");
 	ft_putstr_parse(cli->line);
 	ft_putstr_parse("\n");
-	ft_putnbr_fd(cli->status, 1);
-	ft_putstr_parse("\n");
+	if (cli->status != 0)
+	{
+		ft_putstr("cool-shell: ", 2);
+		if (!ft_str(*cli->helper, "\\\"'"))
+		{
+			ft_putstr("syntax error near unexpected token `", 2);
+			if (*cli->helper == ';' || *cli->helper == '|')
+			{
+				write(2, cli->helper, 1);
+				if (*(cli->helper + 1) == *(cli->helper))
+					write(2, cli->helper, 1);
+			}
+			else if (*(cli->helper - 1) == REDIRECTION1_TOKEN && *(cli->helper) == '<')
+				ft_putstr("<", 2);
+			else if (*(cli->helper - 2) == REDIRECTION3_TOKEN && *(cli->helper - 1) == REDIRECTION3_TOKEN\
+			&& *(cli->helper) == '>')
+			{
+				ft_putstr(">", 2);
+				if (*(cli->helper - 3) == REDIRECTION3_TOKEN)
+					ft_putstr(">", 2);
+			}
+			else if (ft_str(*cli->helper, "><"))
+				ft_putstr("newline", 2);
+			ft_putstr("'\n", 2);
+		}
+		else
+			ft_putstr("multi-line commands are not allowed.\n", 2);
+	}
 }

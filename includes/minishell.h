@@ -68,6 +68,7 @@ typedef struct s_minishell
 	int			is_beginning_of_line;
 	int			is_an_escape_character;
 	int			status;
+	char		*helper;
 	t_simple_cmd *simple_cmd;
 	char		**enviroment;
 	char		*cmd;
