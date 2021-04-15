@@ -1,91 +1,83 @@
 #include "minishell.h"
 
-int len_list(t_args *arg)
+int	len_list(t_args *arg)
 {
-	t_args *p = arg;
-	int i = 0;
-	while(p)
+	t_args	*p;
+	int		i;
+
+	p = arg;
+	i = 0;
+	while (p)
 	{
 		p = p->next;
 		i++;
 	}
-	return(i);
+	return (i);
 }
-//delete the part below this line 
-void	ft_args_printer(char **args, int size)
-{
-	int i = 0;
-	while(i < size)
-	{
-		puts(args[i]);
-		i++;
-	}
-}
-//delete the above
 
-char **fill_args(char **argv,t_args *elm, char *binary)
+char	**fill_args(char **argv, t_args *elm, char *binary)
 {
-	int i;
-	t_args *tmp;
-	int len;
+	int		i;
+	t_args	*tmp;
+	int		len;
 
-	len =len_list(elm);
+	len = len_list(elm);
 	argv = (char **)malloc((len * sizeof(char *)) + 2);
 	argv[0] = binary;
-	if(len == 0)
+	if (len == 0)
 	{
 		argv[1] = NULL;
-		return(argv);
+		return (argv);
 	}
 	i = 1;
 	tmp = elm;
-	while(tmp)
+	while (tmp)
 	{
 		argv[i] = tmp->arg;
 		tmp = tmp->next;
 		i++;
 	}
 	argv[i] = NULL;
-	return(argv);
+	return (argv);
 }
-
 
 char	*ft_system(t_minishell *shell)
 {	
-	int		pid;
-	char*	binary_path;
-	char **argv;
-	int i;
-	struct stat buff;
-	int a;
+	int			pid;
+	char		*binary_path;
+	char		**argv;
+	int			i;
+	struct stat	buff;
+	int			a;
 
 	pid = fork();
-	if(pid == 0)
+	if (pid == 0)
 	{
 		i = 0;
-		while(shell->path[i])
-		{	if((a = stat(shell->cmd, &buff)) != 0)
+		while (shell->path[i])
+		{
+			if ((a = stat(shell->cmd, &buff)) != 0)
 			{
-				binary_path = ft_strjoin(ft_strjoin(shell->path[i],"/"),shell->cmd);
+				binary_path = ft_strjoin(ft_strjoin(shell->path[i], "/"), shell->cmd);
 				a = stat(binary_path, &buff);
 			}
 			else
 				binary_path = shell->cmd;
-			if(a == 0)
+			if (a == 0)
 			{
-				dup2(shell->out_fd,1);
-				dup2(shell->in_fd,0);
-				argv = fill_args(argv,shell->args, binary_path);
+				dup2(shell->out_fd, 1);
+				dup2(shell->in_fd, 0);
+				argv = fill_args(argv, shell->args, binary_path);
 				execve(argv[0], argv, shell->enviroment);
 				close(shell->out_fd);
 				close(shell->in_fd);
 			}
 			i++;
 		}
-		if(a < 0)
-		{ 
+		if (a < 0)
+		{
 			shell->status = 8;
-			ft_putstr("ayoub-shell: ",shell->err_fd);
+			ft_putstr("ayoub-shell: ", shell->err_fd);
 			ft_putstr(shell->cmd, shell->err_fd);
 			ft_putstr(": command not found\n", shell->err_fd);
 		}

@@ -1,8 +1,9 @@
 #include "minishell.h"
 
-void fill_dispatcher(t_minishell *shell)
+void	fill_dispatcher(t_minishell *shell)
 {
-	char *(*command[8])(t_minishell *);
+	char	*(*command[8])(t_minishell *);
+
 	command[0] = ft_system;
 	command[2] = pwd;
 	command[1] = echo;
