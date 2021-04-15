@@ -71,6 +71,11 @@ int     seperator_is_set(char c)
 	return((c & SEMICOLONE_SETTER) != 0 || (c & PIPE_SETTER) != 0);
 }
 
+int     redirection_is_set(char c)
+{
+	return((c & REDIRECTION1_SETTER) != 0 || (c & REDIRECTION2_SETTER) != 0 || (c & REDIRECTION3_SETTER) != 0);
+}
+
 int     is_first_quotation(char c, char *line)
 {
 	return (is_not_a_string(c) && is_a_quotation(line));
@@ -117,7 +122,7 @@ int    ft_error_checker(char *c, char *line, t_minishell *cli)
 		cli->helper = line;
 		return (1);
 	}
-	if ((is_a_redirection(line) || is_first_quotation(*c, line) || *line == '|'\
+	if ((/* is_a_redirection(line) ||  */is_first_quotation(*c, line) || *line == '|'\
 		|| (*line == '\\' && cli->is_an_escape_character == 0)) && *(line + 1) == '\0' && cli->is_an_escape_character == 0)
 	{
 		cli->helper = line;
@@ -132,6 +137,11 @@ int    ft_error_checker(char *c, char *line, t_minishell *cli)
 	{
 		cli->helper = line;
 		return (4);
+	}
+	if (redirection_is_set(*c) && is_a_redirection(line))
+	{
+		cli->helper = cli->line;
+		return (5);
 	}
 	if (is_alphanum(*line) && is_not_a_string(*c))
 		*c = 0;
@@ -183,6 +193,15 @@ void    lexer_debugger(t_minishell *cli)
 	ft_putstr_parse("\n");
 	if (cli->status != 0)
 	{
+		ft_putstr_parse("Line Helper: ");
+		ft_putstr_parse(cli->helper);
+		ft_putstr_parse("\n");
+		ft_putstr_parse("Error ID: ");
+		ft_putnbr_fd(cli->status, 1);
+		ft_putstr_parse("\n");
+	}
+	if (cli->status != 0)
+	{
 		ft_putstr("cool-shell: ", 2);
 		if (!ft_str(*cli->helper, "\\\"'"))
 		{
@@ -190,16 +209,16 @@ void    lexer_debugger(t_minishell *cli)
 			if (*cli->helper == ';' || *cli->helper == '|')
 			{
 				write(2, cli->helper, 1);
-				if (*(cli->helper + 1) == *(cli->helper))
+				if (*(cli->helper + 1) == *(cli->helper) ||\
+				(*(cli->helper) == ';' &&  *(cli->helper - 1) == SEMICOLONE_TOKEN))
 					write(2, cli->helper, 1);
 			}
 			else if (*(cli->helper - 1) == REDIRECTION1_TOKEN && *(cli->helper) == '<')
 				ft_putstr("<", 2);
-			else if (*(cli->helper - 2) == REDIRECTION3_TOKEN && *(cli->helper - 1) == REDIRECTION3_TOKEN\
-			&& *(cli->helper) == '>')
+			else if ((cli->c & REDIRECTION3_SETTER) != 0 && *(cli->helper) == '>')
 			{
 				ft_putstr(">", 2);
-				if (*(cli->helper - 3) == REDIRECTION3_TOKEN)
+				if (*(cli->helper + 1) == '>')
 					ft_putstr(">", 2);
 			}
 			else if (ft_str(*cli->helper, "><"))

@@ -158,11 +158,6 @@ t_simple_cmd	*create_simple_cmd_node(char *cmd, t_element *env)
 		size = 0;
 		while (cmd[i] && cmd[i] == ' ')
 			i++;
-		/* if(is_a_redirection_token(&cmd[i]))
-		{
-			get_fd_file(cmd, &i, &s);
-			continue ;
-		} */
 		start = i;
 		while (cmd[i] && cmd[i] != ' ' && !is_a_redirection_token(&cmd[i]))
 		{
@@ -180,11 +175,8 @@ t_simple_cmd	*create_simple_cmd_node(char *cmd, t_element *env)
 			i++;
 		}
 		if(is_a_redirection_token(&cmd[i]))
-		{
 			get_fd_file(cmd, &i, &s);
-			continue ;
-		}
-		else if (size != 0)
+		if (size != 0)
 		{
 			c = ft_substr(cmd, start, size);
 			c = arg_correction(c, env);
@@ -228,9 +220,6 @@ void	create_simple_cmd(t_minishell *cli, int *i, int *start, t_simple_cmd **simp
 			(*i)++;
 		}
 		cmd = ft_substr(cli->line, *start, size);
-		ft_putstr_parse("HERE: ");
-		ft_putstr_parse(cmd);
-		ft_putstr_parse("\n");
 		*start = *i + 1;
 		add_simple_cmd_node(simple_cmd, cmd, cli->shell);
 		free(cmd);
