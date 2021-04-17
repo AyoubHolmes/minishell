@@ -32,7 +32,7 @@ void ft_exec_(t_minishell *cli)
 	cli->path = ft_split(catch_elem("PATH",&cli->shell)->obj2,':');
 }
 
-void	ft_fill_exec(t_minishell *cli)
+/* void	ft_fill_exec(t_minishell *cli)
 {
 
 	cli->choice = cli->simple_cmd->id;
@@ -41,7 +41,7 @@ void	ft_fill_exec(t_minishell *cli)
 	cli->in_fd = cli->simple_cmd->in_fd;
 	cli->out_fd = cli->simple_cmd->out_fd;
 	cli->err_fd = cli->simple_cmd->err_fd;
-}
+} */
 
 void    ft_parser(t_minishell *cli)
 {
@@ -56,12 +56,13 @@ void    ft_parser(t_minishell *cli)
 	while (cli->line[i])
 	{
 		create_simple_cmd(cli, &i, &start, &cli->simple_cmd);
-		//simple_cmd_printer(cli->simple_cmd);
+		// simple_cmd_printer(cli->simple_cmd);
 		/* dup2(cli->old_stdin, 0);
 		dup2(cli->old_stdout, 1);
 		dup2(cli->old_stderror, 2); */
-		ft_fill_exec(cli);
-		fill_dispatcher(cli);
+		//ft_fill_exec(cli);
+		//fill_dispatcher(cli);
+		ft_pipe(cli);
 		free(cli->simple_cmd);
 		cli->simple_cmd = NULL;
 		if (cli->line[i])

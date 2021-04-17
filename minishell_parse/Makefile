@@ -8,6 +8,7 @@ SRC = 	./parsing/main.c \
 		./parsing/lexer.c\
 		./parsing/list_funcs.c\
 		./parsing/list_debugger.c\
+		./parsing/pipeline_exec.c\
 
 OBJECT = $(SRC:.c=.o)
 LIBFT = ./parsing/libft

@@ -120,7 +120,7 @@ t_element	*add_end(t_element **liste, void *elt1,void *elt2, size_t data_size);
 void delete_elem(char *elm,t_element *shell_);
 void sort_l(t_element *list);
 void filling(t_element **p,t_element *list);
-
+void ft_pipe(t_minishell *cli);
 char	*ft_strchr(const char *s, int c);
 //char	*ft_strjoin(char *s1, char *s2);
 char	*ft_strdup(const char *src);
