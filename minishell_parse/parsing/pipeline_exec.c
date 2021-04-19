@@ -55,8 +55,5 @@ void ft_pipe(t_minishell *cli)
 		in = fd[0];
 		tmp = tmp->next;
 	}
-	if (in != 0)
-		dup2 (in, 0);
-	ft_fill_exec(cli,tmp);
-	fill_dispatcher(cli);
+	process_(in, fd[1], cli, tmp);
 }
