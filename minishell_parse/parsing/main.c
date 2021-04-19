@@ -53,6 +53,7 @@ void    ft_parser(t_minishell *cli)
 	{
 		create_simple_cmd(cli, &i, &start, &cli->simple_cmd);
 		simple_cmd_printer(cli->simple_cmd);
+		// ft_putstr_parse("here\n");
 		/* dup2(cli->old_stdin, 0);
 		dup2(cli->old_stdout, 1);
 		dup2(cli->old_stderror, 2); */
@@ -115,6 +116,7 @@ void	env_printer(t_minishell *cli)
 int     main(int argc,char **argv,char **env)
 {
 	t_minishell *cli;
+	char		*tmp;
 
 	cli = (t_minishell *)malloc(sizeof(t_minishell));
 	cli->simple_cmd = NULL;
@@ -123,15 +125,19 @@ int     main(int argc,char **argv,char **env)
 	cli->old_stdout = dup(1);
 	cli->old_stderror = dup(2);
 	ft_exec_(cli);
-	// env_printer(cli);
     prompt(0);
     while(1)
     {
-        get_next_line(&cli->line);
+		cli->status = 0;
+		cli->line = NULL;
+        get_next_line(&tmp);
+		cli->line = ft_strtrim(tmp, " ");
         ft_lexer(cli);
        	lexer_debugger(cli);
 		if (cli->status == 0)
 			ft_parser(cli);
+		free(tmp);
+		free(cli->line);
 		prompt(cli->status); 
 	}
 }

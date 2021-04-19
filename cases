@@ -35,3 +35,8 @@ syntax error near unexpected token
 bugs to fix:
 - ls >> \>
 -ls >> \\
+
+
+------------------
+Redirection's error messages:
+>

@@ -95,6 +95,7 @@ void	simple_cmd_printer(t_simple_cmd *s);
 void	ft_putnbr_fd(int n, int fd);
 char	*ft_substr(char const *src, unsigned int start, size_t n);
 int		ft_strlen(const char *s);
+char	*ft_strtrim(char const *s1, char const *set);
 int     is_a_redirection(char *line);
 
 //exec

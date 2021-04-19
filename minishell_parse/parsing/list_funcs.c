@@ -100,7 +100,7 @@ char			*arg_correction(char *s, t_element *env)
 	return (s);
 }
 
-void		get_fd_file(char *cmd, int *i, t_simple_cmd **s)
+void		get_fd_file(char *cmd, int *i, t_simple_cmd **s, t_element *env)
 {
 	int start;
 	int size;
@@ -120,12 +120,14 @@ void		get_fd_file(char *cmd, int *i, t_simple_cmd **s)
 		size++;
 	}
 	filename = ft_substr(&cmd[(*i) - size], 0, size);
+	filename = arg_correction(filename, env);
 	if (redirect == REDIRECTION1_TOKEN)
 		(*s)->out_fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0666);
 	else if (redirect == REDIRECTION2_TOKEN)
 		(*s)->in_fd = open(filename, O_RDONLY, 0666);
 	else if (redirect == REDIRECTION3_TOKEN)
 		(*s)->out_fd = open(filename, O_CREAT | O_WRONLY | O_APPEND, 0666);
+	free(filename);
 }
 
 t_simple_cmd			*simple_cmd_node_init()
@@ -175,7 +177,7 @@ t_simple_cmd	*create_simple_cmd_node(char *cmd, t_element *env)
 			i++;
 		}
 		if(is_a_redirection_token(&cmd[i]))
-			get_fd_file(cmd, &i, &s);
+			get_fd_file(cmd, &i, &s, env);
 		if (size != 0)
 		{
 			c = ft_substr(cmd, start, size);

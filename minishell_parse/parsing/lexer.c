@@ -20,6 +20,8 @@ int     is_a_quotation(char *line)
 
 int     is_a_redirection(char *line)
 {
+	// if (ft_strncmp(line, ">>", 2) == 0)
+	// 	ft_putstr_parse("here\n");
 	return (*line == '>' || *line == '<' || ft_strncmp(line, ">>", 2) == 0);
 }
 
@@ -59,6 +61,11 @@ void    ft_lexer_token_helper(char *c, char *line, int setter, int token)
 	else
 		*c |= setter;
 	*line = token;
+	if (*line == REDIRECTION3_TOKEN && *(line + 1) == '>' && *(line - 1) != REDIRECTION3_TOKEN )
+	{
+		(*line)++;
+		*line = REDIRECTION3_TOKEN;
+	}
 }
 // ------------------------ Checking functions ----------------------
 int     is_not_a_string(char c)
@@ -71,9 +78,12 @@ int     seperator_is_set(char c)
 	return((c & SEMICOLONE_SETTER) != 0 || (c & PIPE_SETTER) != 0);
 }
 
-int     redirection_is_set(char c)
+int     redirection_is_set(char *c, char *line)
 {
-	return((c & REDIRECTION1_SETTER) != 0 || (c & REDIRECTION2_SETTER) != 0 || (c & REDIRECTION3_SETTER) != 0);
+	if ((*c & REDIRECTION3_SETTER) != 0)
+		ft_putstr_parse("found it\n");
+	return(((*c & REDIRECTION3_SETTER) != 0 && *line == '>') ||\
+		(*c & REDIRECTION1_SETTER) != 0 || (*c & REDIRECTION2_SETTER) != 0 );
 }
 
 int     is_first_quotation(char c, char *line)
@@ -116,33 +126,20 @@ void    ft_tokenizer(char *c, char *line, int *escape)
 
 int    ft_error_checker(char *c, char *line, t_minishell *cli)
 {
+	cli->helper = line;
 	if ((*line == '|' || *line == ';' || (*line == '\\' && *(line + 1) == '\0'))\
 		&& cli->is_beginning_of_line == 1 && cli->is_an_escape_character == 0)
-	{
-		cli->helper = line;
 		return (1);
-	}
-	if ((/* is_a_redirection(line) ||  */is_first_quotation(*c, line) || *line == '|'\
-		|| (*line == '\\' && cli->is_an_escape_character == 0)) && *(line + 1) == '\0' && cli->is_an_escape_character == 0)
-	{
-		cli->helper = line;
+	else if ((is_first_quotation(*c, line)\
+	|| *line == '|' || *line == '\\')\
+	&& *(line + 1) == '\0' && cli->is_an_escape_character == 0)
 		return (2);
-	}
-	if (seperator_is_set(*c) && is_a_separatore(line) && is_not_a_string(*c))
-	{
-		cli->helper = line;
+	else if (seperator_is_set(*c) && is_a_separatore(line)\
+		&& is_not_a_string(*c))
 		return (3);
-	}
-	if (*line == '<' && *(line - 1) == REDIRECTION1_TOKEN)
-	{
-		cli->helper = line;
+	else if (cli->is_an_escape_character == 0 && ((redirection_is_set(c, line) && is_a_redirection(line)) ||\
+		(is_a_redirection(line) && !redirection_is_set(c, line) && *(line + 1) == '\0')))
 		return (4);
-	}
-	if (redirection_is_set(*c) && is_a_redirection(line))
-	{
-		cli->helper = cli->line;
-		return (5);
-	}
 	if (is_alphanum(*line) && is_not_a_string(*c))
 		*c = 0;
 	return (0);
@@ -184,10 +181,69 @@ void    ft_lexer(t_minishell *cli)
 		cli->status = 5;
 }
 
+void	redirection_error_messages(t_minishell *cli)
+{
+	if ((cli->c & REDIRECTION1_SETTER) != 0 ||((cli->c & REDIRECTION2_SETTER) == 0 && (cli->c & REDIRECTION3_SETTER) == 0 && *(cli->helper) == '>'))
+	{
+		if (*(cli->helper) == '>' && (cli->c & REDIRECTION1_SETTER) != 0)
+		{
+			ft_putstr(">", 2);
+			if( *(cli->helper + 1) == '>')
+				ft_putstr(">", 2);
+		}
+		else if (*cli->helper == '<')
+		{
+			ft_putstr("<", 2);
+			if( *(cli->helper + 1) == '<')
+				ft_putstr("<", 2);
+			if( *(cli->helper + 2) == '<')
+				ft_putstr("<", 2);
+		}
+		else
+			ft_putstr("newline", 2);
+	}
+	else if ((cli->c & REDIRECTION2_SETTER) != 0 || ((cli->c & REDIRECTION1_SETTER) == 0 && (cli->c & REDIRECTION3_SETTER) == 0 && *(cli->helper) == '<'))
+	{
+		if (*(cli->helper) == '<' && (cli->c & REDIRECTION2_SETTER) != 0)
+		{
+			ft_putstr("<", 2);
+			if( *(cli->helper + 1) == '<')
+				ft_putstr("<", 2);
+			if( *(cli->helper + 2) == '<')
+				ft_putstr("<", 2);
+		}
+		else if (*cli->helper == '>')
+		{
+			ft_putstr(">", 2);
+			if( *(cli->helper + 1) == '>')
+				ft_putstr(">", 2);
+		}
+		else
+			ft_putstr("newline", 2);
+	}
+	if ((cli->c & REDIRECTION3_SETTER) != 0)
+	{
+		if (*(cli->helper) == '>' && (*(cli->helper - 1) != REDIRECTION3_TOKEN  || *(cli->helper - 2) == REDIRECTION3_TOKEN))
+		{
+			ft_putstr(">", 2);
+			if( *(cli->helper + 1) == '>')
+				ft_putstr(">", 2);
+		}
+		else if (*(cli->helper) == '<')
+		{
+			ft_putstr("<", 2);
+			if( *(cli->helper + 1) == '<')
+				ft_putstr("<", 2);
+		}
+		else
+			ft_putstr("newline", 2);
+	}
+}
+
 void    lexer_debugger(t_minishell *cli)
 {
 	char c;
-
+//  ----------	ERROR MESSAGE DEBUGGING -----------
 	ft_putstr_parse("Line After Lexer: ");
 	ft_putstr_parse(cli->line);
 	ft_putstr_parse("\n");
@@ -200,6 +256,7 @@ void    lexer_debugger(t_minishell *cli)
 		ft_putnbr_fd(cli->status, 1);
 		ft_putstr_parse("\n");
 	}
+//	-----------------------------------------------
 	if (cli->status != 0)
 	{
 		ft_putstr("cool-shell: ", 2);
@@ -213,16 +270,8 @@ void    lexer_debugger(t_minishell *cli)
 				(*(cli->helper) == ';' &&  *(cli->helper - 1) == SEMICOLONE_TOKEN))
 					write(2, cli->helper, 1);
 			}
-			else if (*(cli->helper - 1) == REDIRECTION1_TOKEN && *(cli->helper) == '<')
-				ft_putstr("<", 2);
-			else if ((cli->c & REDIRECTION3_SETTER) != 0 && *(cli->helper) == '>')
-			{
-				ft_putstr(">", 2);
-				if (*(cli->helper + 1) == '>')
-					ft_putstr(">", 2);
-			}
-			else if (ft_str(*cli->helper, "><"))
-				ft_putstr("newline", 2);
+			else if (cli->status == 4)
+				redirection_error_messages(cli);
 			ft_putstr("'\n", 2);
 		}
 		else
