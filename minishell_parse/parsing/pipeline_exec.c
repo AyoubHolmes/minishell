@@ -47,13 +47,21 @@ void ft_pipe(t_minishell *cli)
 
 	in = 0;
 	tmp = cli->simple_cmd;
-	while(tmp->next)
+	if(!tmp->next)
 	{
-		pipe(fd);
-		process_(in, fd[1], cli, tmp);
-		close (fd[1]);
-		in = fd[0];
-		tmp = tmp->next;
+		ft_fill_exec(cli,tmp);
+		fill_dispatcher(cli);
 	}
-	process_(in, fd[1], cli, tmp);
+	else
+	{
+		while(tmp->next)
+		{
+			pipe(fd);
+			process_(in, fd[1], cli, tmp);
+			close (fd[1]);
+			in = fd[0];
+			tmp = tmp->next;
+		}
+		process_(in, fd[1], cli, tmp);
+	}
 }
