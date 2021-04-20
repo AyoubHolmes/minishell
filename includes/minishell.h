@@ -90,7 +90,7 @@ void    ft_lexer(t_minishell *cli);
 void    lexer_debugger(t_minishell *cli);
 char	*ft_minisubstr(char const *src, unsigned int start, size_t n);
 void	create_simple_cmd(t_minishell *cli, int *i, int *start, t_simple_cmd **simple_cmd);
-void	add_simple_cmd_node(t_simple_cmd **simple_cmd, char *cmd, t_element *env);
+int		add_simple_cmd_node(t_simple_cmd **simple_cmd, char *cmd, t_element *env);
 void	simple_cmd_printer(t_simple_cmd *s);
 void	ft_putnbr_fd(int n, int fd);
 char	*ft_substr(char const *src, unsigned int start, size_t n);

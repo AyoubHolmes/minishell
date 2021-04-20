@@ -1,7 +1,7 @@
 ----------------
-cmd {}
-cmd-id {-1}
+cmd {ls}
+cmd-id {0}
 in_fd {0}
-out_fd {18}
+out_fd {6}
 err_fd {2}
 ----------------

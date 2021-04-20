@@ -26,7 +26,7 @@ int				dispatcher_id(char *cmd)
 	return (0);
 }
 
-void				insert_cmd(t_simple_cmd **s, char *cmd)
+int				insert_cmd(t_simple_cmd **s, char *cmd)
 {
 	t_args *p;
 
@@ -40,7 +40,8 @@ void				insert_cmd(t_simple_cmd **s, char *cmd)
 		if ((*s)->args == NULL)
 		{
 			
-			(*s)->args = (t_args*)malloc(sizeof(t_args));
+			if (!((*s)->args = (t_args*)malloc(sizeof(t_args))))
+				return (6);
 			(*s)->args->arg = cmd;
 			(*s)->args->next = NULL;
 		}
@@ -49,11 +50,13 @@ void				insert_cmd(t_simple_cmd **s, char *cmd)
 			p = (*s)->args;
 			while(p->next)
 				p = p->next;
-			p->next = (t_args*)malloc(sizeof(t_args));
+			if (!(p->next = (t_args*)malloc(sizeof(t_args))))
+				return (6);
 			p->next->arg = cmd;
 			p->next->next = NULL;
 		}
 	}
+	return (0);
 }
 
 char			*arg_correction(char *s, t_element *env)
@@ -100,7 +103,7 @@ char			*arg_correction(char *s, t_element *env)
 	return (s);
 }
 
-void		get_fd_file(char *cmd, int *i, t_simple_cmd **s, t_element *env)
+int		get_fd_file(char *cmd, int *i, t_simple_cmd **s, t_element *env)
 {
 	int start;
 	int size;
@@ -119,8 +122,8 @@ void		get_fd_file(char *cmd, int *i, t_simple_cmd **s, t_element *env)
 		(*i)++;
 		size++;
 	}
-	filename = ft_substr(&cmd[(*i) - size], 0, size);
-	filename = arg_correction(filename, env);
+	// filename = ft_substr(&cmd[(*i) - size], 0, size);
+	filename = arg_correction(ft_substr(&cmd[(*i) - size], 0, size), env);
 	if (redirect == REDIRECTION1_TOKEN)
 		(*s)->out_fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0666);
 	else if (redirect == REDIRECTION2_TOKEN)
@@ -128,6 +131,20 @@ void		get_fd_file(char *cmd, int *i, t_simple_cmd **s, t_element *env)
 	else if (redirect == REDIRECTION3_TOKEN)
 		(*s)->out_fd = open(filename, O_CREAT | O_WRONLY | O_APPEND, 0666);
 	free(filename);
+	if (errno != 0)
+	{
+		if (!(*s)->cmd)
+			ft_putstr("minishell", 2);
+		else	
+			ft_putstr((*s)->cmd, 2);
+		ft_putstr(": ", 2);
+		ft_putstr(filename, 2);
+		ft_putstr(": ", 2);
+		ft_putstr(strerror(errno), 2);
+		ft_putstr("\n", 2);
+		return (9);
+	}
+	return (0);
 }
 
 t_simple_cmd			*simple_cmd_node_init()
@@ -144,13 +161,14 @@ t_simple_cmd			*simple_cmd_node_init()
 	return (s);
 }
 
-t_simple_cmd	*create_simple_cmd_node(char *cmd, t_element *env)
+t_simple_cmd	*create_simple_cmd_node(char *cmd, t_element *env, int *stat)
 {
 	t_simple_cmd *s;
 	int i;
 	int size;
 	int start;
 	char *c;
+	
 
 	i = 0;
 	start = 0;
@@ -177,43 +195,48 @@ t_simple_cmd	*create_simple_cmd_node(char *cmd, t_element *env)
 			i++;
 		}
 		if(is_a_redirection_token(&cmd[i]))
-			get_fd_file(cmd, &i, &s, env);
+			*stat = get_fd_file(cmd, &i, &s, env);
 		if (size != 0)
 		{
-			c = ft_substr(cmd, start, size);
-			c = arg_correction(c, env);
-			insert_cmd(&s, c);
+			// c = ft_substr(cmd, start, size);
+			c = arg_correction(ft_substr(cmd, start, size), env);
+			*stat = insert_cmd(&s, c);
 			start = i + 1;
 		}
-		if (cmd[i])
+		if (cmd[i] && !(*stat))
 			i++;
 	}
 	return (s);
 }
 
-void	add_simple_cmd_node(t_simple_cmd **simple_cmd, char *cmd, t_element *env)
+int		add_simple_cmd_node(t_simple_cmd **simple_cmd, char *cmd, t_element *env)
 {
 	t_simple_cmd *p;
+	int stat;
 
+	stat = 0;
 	if (*simple_cmd == NULL)
-		*simple_cmd = create_simple_cmd_node(cmd, env);
+		*simple_cmd = create_simple_cmd_node(cmd, env, &stat);
 	else
 	{
 		p = *simple_cmd;
 		while(p->next)
 			p = p->next;
-		p->next = create_simple_cmd_node(cmd, env);
+		p->next = create_simple_cmd_node(cmd, env, &stat);
 	}
+	return (stat);
 }
 
 void	create_simple_cmd(t_minishell *cli, int *i, int *start, t_simple_cmd **simple_cmd)
 {
 	char *cmd;
 	int size;
+	int stat;
 
 	while (cli->line[*i] && cli->line[*i] != SEMICOLONE_TOKEN)
 	{
 		size = 0;
+		stat = 0;
 		while (cli->line[*i] && cli->line[*i] != PIPE_TOKEN)
 		{
 			if (cli->line[*i] == SEMICOLONE_TOKEN)
@@ -223,9 +246,10 @@ void	create_simple_cmd(t_minishell *cli, int *i, int *start, t_simple_cmd **simp
 		}
 		cmd = ft_substr(cli->line, *start, size);
 		*start = *i + 1;
-		add_simple_cmd_node(simple_cmd, cmd, cli->shell);
+		stat = add_simple_cmd_node(simple_cmd, cmd, cli->shell);
 		free(cmd);
-		if (cli->line[*i] != SEMICOLONE_TOKEN && cli->line[*i])
+		if (cli->line[*i] != SEMICOLONE_TOKEN && cli->line[*i] && !stat)
 			(*i)++;
 	}
+	cli->status = stat;
 }

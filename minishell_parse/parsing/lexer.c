@@ -20,8 +20,6 @@ int     is_a_quotation(char *line)
 
 int     is_a_redirection(char *line)
 {
-	// if (ft_strncmp(line, ">>", 2) == 0)
-	// 	ft_putstr_parse("here\n");
 	return (*line == '>' || *line == '<' || ft_strncmp(line, ">>", 2) == 0);
 }
 
@@ -63,8 +61,8 @@ void    ft_lexer_token_helper(char *c, char *line, int setter, int token)
 	*line = token;
 	if (*line == REDIRECTION3_TOKEN && *(line + 1) == '>' && *(line - 1) != REDIRECTION3_TOKEN )
 	{
-		(*line)++;
-		*line = REDIRECTION3_TOKEN;
+		//line += 1;
+		*(line + 1) = REDIRECTION3_TOKEN;
 	}
 }
 // ------------------------ Checking functions ----------------------
@@ -80,9 +78,7 @@ int     seperator_is_set(char c)
 
 int     redirection_is_set(char *c, char *line)
 {
-	if ((*c & REDIRECTION3_SETTER) != 0)
-		ft_putstr_parse("found it\n");
-	return(((*c & REDIRECTION3_SETTER) != 0 && *line == '>') ||\
+	return(((*c & REDIRECTION3_SETTER) != 0) ||\
 		(*c & REDIRECTION1_SETTER) != 0 || (*c & REDIRECTION2_SETTER) != 0 );
 }
 
@@ -122,7 +118,6 @@ void    ft_tokenizer(char *c, char *line, int *escape)
 	else if (*escape == 1)
 		*escape = 0;
 }
-// -----------------------ERROR HANDLERS ------------------------------------
 
 int    ft_error_checker(char *c, char *line, t_minishell *cli)
 {
@@ -138,7 +133,8 @@ int    ft_error_checker(char *c, char *line, t_minishell *cli)
 		&& is_not_a_string(*c))
 		return (3);
 	else if (cli->is_an_escape_character == 0 && ((redirection_is_set(c, line) && is_a_redirection(line)) ||\
-		(is_a_redirection(line) && !redirection_is_set(c, line) && *(line + 1) == '\0')))
+		(is_a_redirection(line) && !redirection_is_set(c, line) && *(line + 1) == '\0') ||\
+		(*c & REDIRECTION3_SETTER && *line == REDIRECTION3_TOKEN && *(line - 1) == REDIRECTION3_TOKEN && *(line + 1) == '\0')))
 		return (4);
 	if (is_alphanum(*line) && is_not_a_string(*c))
 		*c = 0;
@@ -223,7 +219,7 @@ void	redirection_error_messages(t_minishell *cli)
 	}
 	if ((cli->c & REDIRECTION3_SETTER) != 0)
 	{
-		if (*(cli->helper) == '>' && (*(cli->helper - 1) != REDIRECTION3_TOKEN  || *(cli->helper - 2) == REDIRECTION3_TOKEN))
+		if (*(cli->helper) == '>')
 		{
 			ft_putstr(">", 2);
 			if( *(cli->helper + 1) == '>')
@@ -243,8 +239,8 @@ void	redirection_error_messages(t_minishell *cli)
 void    lexer_debugger(t_minishell *cli)
 {
 	char c;
-//  ----------	ERROR MESSAGE DEBUGGING -----------
-	ft_putstr_parse("Line After Lexer: ");
+
+	/* ft_putstr_parse("Line After Lexer: ");
 	ft_putstr_parse(cli->line);
 	ft_putstr_parse("\n");
 	if (cli->status != 0)
@@ -255,8 +251,7 @@ void    lexer_debugger(t_minishell *cli)
 		ft_putstr_parse("Error ID: ");
 		ft_putnbr_fd(cli->status, 1);
 		ft_putstr_parse("\n");
-	}
-//	-----------------------------------------------
+	} */
 	if (cli->status != 0)
 	{
 		ft_putstr("cool-shell: ", 2);
