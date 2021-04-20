@@ -76,7 +76,7 @@ char	*ft_system(t_minishell *shell)
 		}
 		if (a < 0)
 		{
-			shell->status = 8;
+			shell->status = 10;
 			ft_putstr("ayoub-shell: ", shell->err_fd);
 			ft_putstr(shell->cmd, shell->err_fd);
 			ft_putstr(": command not found\n", shell->err_fd);

@@ -64,6 +64,7 @@ char	*cd(t_minishell *shell)
 				shell->oldpwd->obj2 = cwd;
 			else
 			{
+				shell->status = 10;
 				ft_putstr("ayoub-shell: cd: ", shell->err_fd);
 				ft_putstr(s, shell->err_fd);
 				ft_putstr(": ", shell->err_fd);
