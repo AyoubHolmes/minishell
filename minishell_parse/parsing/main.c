@@ -31,6 +31,39 @@ void ft_exec_(t_minishell *cli)
 	cli->path = ft_split(catch_elem("PATH",&cli->shell)->obj2,':');
 }
 
+void	free_args(t_args *args)
+{
+	t_args	*p;
+	t_args	*q;
+
+	p = args;
+	while (p != NULL)
+	{
+		q = p;
+		p = p->next;
+		free(q->arg);
+		q->arg = NULL;
+	}
+}
+
+void	free_simple_cmd(t_simple_cmd **simple_cmd)
+{
+	t_simple_cmd *p;
+	t_simple_cmd *q;
+
+	p = *simple_cmd;
+	while (p != NULL)
+	{
+		q = p;
+		p = p->next;
+		free_args(q->args);
+		free(q->cmd);
+		q->cmd = NULL;
+		free(q);
+		q = NULL;
+	}
+}
+
 void	ft_fill_exec(t_minishell *cli)
 {
 
@@ -52,50 +85,14 @@ void    ft_parser(t_minishell *cli)
 	while (cli->line[i])
 	{
 		create_simple_cmd(cli, &i, &start, &cli->simple_cmd);
-		simple_cmd_printer(cli->simple_cmd);
-		/* dup2(cli->old_stdin, 0);
-		dup2(cli->old_stdout, 1);
-		dup2(cli->old_stderror, 2); */
-		// ft_fill_exec(cli);
-		//ft_exec_(cli);
-		//fill_dispatcher(cli);
-		free(cli->simple_cmd);
-		cli->simple_cmd = NULL;
+		if (!cli->status)
+			simple_cmd_printer(cli->simple_cmd);
+		if (cli->simple_cmd)
+		{	free_simple_cmd(&cli->simple_cmd);
+			cli->simple_cmd = NULL;
+		}
 		if (cli->line[i])
 			i++;
-	}
-}
-
-void	free_args(t_args *args)
-{
-	t_args	*p;
-	t_args	*q;
-
-	p = args;
-	while (p != NULL)
-	{
-		q = p;
-		p = p->next;
-		free(q->arg);
-		q->arg = NULL;
-	}
-}
-
-void	free_simple_cmd(t_simple_cmd *simple_cmd)
-{
-	t_simple_cmd *p;
-	t_simple_cmd *q;
-
-	p = simple_cmd;
-	while (p != NULL)
-	{
-		q = p;
-		p = p->next;
-		free_args(q->args);
-		free(q->cmd);
-		q->cmd = NULL;
-		free(q);
-		q = NULL;
 	}
 }
 
@@ -115,6 +112,7 @@ void	env_printer(t_minishell *cli)
 int     main(int argc,char **argv,char **env)
 {
 	t_minishell *cli;
+	char		*tmp;
 
 	cli = (t_minishell *)malloc(sizeof(t_minishell));
 	cli->simple_cmd = NULL;
@@ -123,15 +121,19 @@ int     main(int argc,char **argv,char **env)
 	cli->old_stdout = dup(1);
 	cli->old_stderror = dup(2);
 	ft_exec_(cli);
-	// env_printer(cli);
     prompt(0);
     while(1)
     {
-        get_next_line(&cli->line);
+		cli->status = 0;
+		cli->line = NULL;
+        get_next_line(&tmp);
+		cli->line = ft_strtrim(tmp, " ");
         ft_lexer(cli);
        	lexer_debugger(cli);
 		if (cli->status == 0)
 			ft_parser(cli);
+		free(tmp);
+		free(cli->line);
 		prompt(cli->status); 
 	}
 }
