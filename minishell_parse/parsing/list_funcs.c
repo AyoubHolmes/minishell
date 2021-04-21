@@ -90,12 +90,19 @@ char			*arg_correction(char *s, t_element *env)
 			}
 			tmp = ft_substr(&s[i - j], 0, j);
 			env_var = catch_elem(tmp, &env);
-			if (env_var)
+			if (env_var->obj2 && env_var)
 			{
 				tmp = ft_strjoin(ft_substr(s, 0, i - j - 1), env_var->obj2);
 				s = ft_strjoin(tmp, ft_substr(&s[i], 0, ft_strlen(s) - i));
 				i = (i - j) + ft_strlen(env_var->obj2) - 1;
 			}
+			else
+			{
+				tmp = ft_strjoin(ft_substr(s, 0, i - j - 1), "");
+				s = ft_strjoin(tmp, ft_substr(&s[i], 0, ft_strlen(s) - i));
+				i = (i - j) + ft_strlen("") - 1;
+			}
+			
 			i--;
 		}
 		i++;
