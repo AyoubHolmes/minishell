@@ -11,6 +11,8 @@ void	edit_or_add(char *elm1, char *elm2, t_element **shell_)
 	{
 		if (strcmp(list->next->obj1, elm1) == 0)
 		{
+
+			list->next->id = 0;
 			if (elm2 == NULL)
 				return ;
 			list->next->obj2 = ft_strdup(elm2);
@@ -18,7 +20,7 @@ void	edit_or_add(char *elm1, char *elm2, t_element **shell_)
 		}
 		list = list->next;
 	}
-	add_end(shell_, elm1, elm2, sizeof(char *));
+	add_end(shell_, elm1, elm2, sizeof(char *),0);
 }
 
 char	**var_split(char *str)
@@ -71,16 +73,19 @@ char	*export_(t_minishell *shell_)
 		filling(&p, shell_->shell);
 		sort_l(p);
 		while (p != NULL)
-		{				
-			ft_putstr("declare -x ", shell_->out_fd);
-			ft_putstr(p->obj1, shell_->out_fd);
-			if (p->obj2)
-			{
-				ft_putstr("=\"", shell_->out_fd);
-				ft_putstr(p->obj2, shell_->out_fd);
-				ft_putstr("\"", shell_->out_fd);
+		{
+			if (p->id == 0)
+			{			
+				ft_putstr("declare -x ", shell_->out_fd);
+				ft_putstr(p->obj1, shell_->out_fd);
+				if (p->obj2)
+				{
+					ft_putstr("=\"", shell_->out_fd);
+					ft_putstr(p->obj2, shell_->out_fd);
+					ft_putstr("\"", shell_->out_fd);
+				}
+				ft_putstr("\n", shell_->out_fd);
 			}
-			ft_putstr("\n", shell_->out_fd);
 			p = p->next;
 		}
 	}

@@ -63,6 +63,7 @@ char			*arg_correction(char *s, t_element *env)
 	int j;
 	t_element *env_var;
 	char *tmp;
+	char *dollar;
 
 	i = 0;
 	while (s[i])
@@ -88,19 +89,13 @@ char			*arg_correction(char *s, t_element *env)
 			}
 			tmp = ft_substr(&s[i - j], 0, j);
 			env_var = catch_elem(tmp, &env);
-			if (env_var->obj2 && env_var)
-			{
-				tmp = ft_strjoin(ft_substr(s, 0, i - j - 1), env_var->obj2);
-				s = ft_strjoin(tmp, ft_substr(&s[i], 0, ft_strlen(s) - i));
-				i = (i - j) + ft_strlen(env_var->obj2) - 1;
-			}
+			if (!env_var || !env_var->obj2)
+				dollar = "";
 			else
-			{
-				tmp = ft_strjoin(ft_substr(s, 0, i - j - 1), "");
-				s = ft_strjoin(tmp, ft_substr(&s[i], 0, ft_strlen(s) - i));
-				i = (i - j) + ft_strlen("") - 1;
-			}
-			
+				dollar = env_var->obj2;
+			tmp = ft_strjoin(ft_substr(s, 0, i - j - 1), dollar);
+			s = ft_strjoin(tmp, ft_substr(&s[i], 0, ft_strlen(s) - i));
+			i = (i - j) + ft_strlen(dollar) - 1;
 			i--;
 		}
 		i++;
@@ -127,7 +122,6 @@ int		get_fd_file(char *cmd, int *i, t_simple_cmd **s, t_element *env)
 		(*i)++;
 		size++;
 	}
-	// filename = ft_substr(&cmd[(*i) - size], 0, size);
 	filename = arg_correction(ft_substr(&cmd[(*i) - size], 0, size), env);
 	if (redirect == REDIRECTION1_TOKEN)
 		(*s)->out_fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0666);

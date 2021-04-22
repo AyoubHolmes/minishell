@@ -38,6 +38,7 @@ typedef struct	s_element
 {
 	void				*obj1;
 	void				*obj2;
+	int					id;
 	struct s_element	*next;
 }
 				t_element;
@@ -107,7 +108,6 @@ int     is_a_redirection(char *line);
 char **ft_split(char const *s, char c);
 void fill_list(char **var,t_minishell *shell);
 void fill_dispatcher(t_minishell *shell);
-t_element *catch_elem(char *elm1,t_element **shell_);
 char *ft_system(t_minishell *shell);
 void ft_putstr(char *str,int fd);
 char *echo(t_minishell *shell);
@@ -118,8 +118,8 @@ char *unset(t_minishell *shell);
 char *env_(t_minishell *shell);
 char *exit_(t_minishell *shell);
 char *clear_(t_minishell *shell);
-t_element	*create_list(void *elt1,void *elt2, size_t data_size);
-t_element	*add_end(t_element **liste, void *elt1,void *elt2, size_t data_size);
+t_element	*create_list(void *elt1,void *elt2, size_t data_size,int id);
+t_element	*add_end(t_element **liste, void *elt1,void *elt2, size_t data_size,int id);
 void delete_elem(char *elm,t_element *shell_);
 void sort_l(t_element *list);
 void filling(t_element **p,t_element *list);
@@ -127,4 +127,5 @@ void ft_pipe(t_minishell *cli);
 char	*ft_strchr(const char *s, int c);
 //char	*ft_strjoin(char *s1, char *s2);
 char	*ft_strdup(const char *src);
+t_element *catch_elem(char *elm1,t_element **shell_);
 #endif

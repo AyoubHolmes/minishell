@@ -26,9 +26,8 @@ void ft_exec_(t_minishell *cli)
         i++;
     	fill_list(var,cli);
     }
-	delete_elem("OLDPWD",cli->shell);
-	cli->shell = add_end(&cli->shell,"OLDPWD",NULL,sizeof(char *));
 	cli->oldpwd = catch_elem("OLDPWD",&cli->shell);
+	cli->oldpwd->obj2 = NULL;
 	cli->pwd = catch_elem("PWD",&cli->shell);
 	cli->home = catch_elem("HOME",&cli->shell);
 	cli->path = ft_split(catch_elem("PATH",&cli->shell)->obj2,':');
@@ -83,8 +82,8 @@ void    ft_parser(t_minishell *cli)
 	{
 		create_simple_cmd(cli, &i, &start, &cli->simple_cmd);
 		if (!cli->status)
-			simple_cmd_printer(cli->simple_cmd);
-			// ft_pipe(cli);
+			// simple_cmd_printer(cli->simple_cmd);
+			ft_pipe(cli);
 		if (cli->simple_cmd)
 		{	free_simple_cmd(&cli->simple_cmd);
 			cli->simple_cmd = NULL;
@@ -148,6 +147,8 @@ int     main(int argc,char **argv,char **env)
     	lexer_debugger(cli);
 		if (cli->status == 0)
 			ft_parser(cli);
-
+		// free(tmp);
+		// free(cli->line);
+		// prompt(cli->status);
 	}
 }
