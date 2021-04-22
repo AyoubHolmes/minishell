@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   some_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shikma <shikma@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aboulbaz <aboulbaz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/24 18:12:16 by shikma            #+#    #+#             */
-/*   Updated: 2021/03/30 11:19:25 by shikma           ###   ########.fr       */
+/*   Updated: 2021/04/22 13:10:17 by aboulbaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	while (*str2)
 		s3[len++] = *(str2++);
 	free(s1);
+	// free(s2);
 	s3[len] = '\0';
 	return (s3);
 }

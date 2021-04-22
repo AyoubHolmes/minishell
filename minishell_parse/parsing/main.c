@@ -136,4 +136,5 @@ int     main(int argc,char **argv,char **env)
 		free(cli->line);
 		prompt(cli->status);
 	}
+	return (0);
 }
