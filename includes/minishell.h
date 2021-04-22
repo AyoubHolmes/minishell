@@ -68,6 +68,7 @@ typedef struct s_minishell
 	int			is_beginning_of_line;
 	int			is_an_escape_character;
 	int			status;
+	char		*helper;
 	t_simple_cmd *simple_cmd;
 	char		**enviroment;
 	char		*cmd;
@@ -75,6 +76,7 @@ typedef struct s_minishell
 	t_args		*args;
     t_element	*shell;
 	t_element	*oldpwd;
+	t_element	*pwd;
 	t_element	*home;
     char		**path;
 	int			old_stdout;
@@ -93,11 +95,12 @@ void    ft_lexer(t_minishell *cli);
 void    lexer_debugger(t_minishell *cli);
 char	*ft_minisubstr(char const *src, unsigned int start, size_t n);
 void	create_simple_cmd(t_minishell *cli, int *i, int *start, t_simple_cmd **simple_cmd);
-void	add_simple_cmd_node(t_simple_cmd **simple_cmd, char *cmd, t_element *env);
+int		add_simple_cmd_node(t_simple_cmd **simple_cmd, char *cmd, t_element *env);
 void	simple_cmd_printer(t_simple_cmd *s);
 void	ft_putnbr_fd(int n, int fd);
 char	*ft_substr(char const *src, unsigned int start, size_t n);
 //int		ft_strlen(const char *s);
+char	*ft_strtrim(char const *s1, char const *set);
 int     is_a_redirection(char *line);
 
 //exec

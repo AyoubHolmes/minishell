@@ -29,45 +29,9 @@ void ft_exec_(t_minishell *cli)
 	delete_elem("OLDPWD",cli->shell);
 	cli->shell = add_end(&cli->shell,"OLDPWD",NULL,sizeof(char *));
 	cli->oldpwd = catch_elem("OLDPWD",&cli->shell);
+	cli->pwd = catch_elem("PWD",&cli->shell);
+	cli->home = catch_elem("HOME",&cli->shell);
 	cli->path = ft_split(catch_elem("PATH",&cli->shell)->obj2,':');
-}
-
-/* void	ft_fill_exec(t_minishell *cli)
-{
-
-	cli->choice = cli->simple_cmd->id;
-	cli->cmd = cli->simple_cmd->cmd;
-	cli->args = cli->simple_cmd->args;
-	cli->in_fd = cli->simple_cmd->in_fd;
-	cli->out_fd = cli->simple_cmd->out_fd;
-	cli->err_fd = cli->simple_cmd->err_fd;
-} */
-
-void    ft_parser(t_minishell *cli)
-{
-	int i;
-	int size;
-	int start;
-	char *cmd;
-
-	i = 0;
-	start = 0;
-	cli->simple_cmd = NULL;
-	while (cli->line[i])
-	{
-		create_simple_cmd(cli, &i, &start, &cli->simple_cmd);
-		// simple_cmd_printer(cli->simple_cmd);
-		/* dup2(cli->old_stdin, 0);
-		dup2(cli->old_stdout, 1);
-		dup2(cli->old_stderror, 2); */
-		//ft_fill_exec(cli);
-		//fill_dispatcher(cli);
-		ft_pipe(cli);
-		free(cli->simple_cmd);
-		cli->simple_cmd = NULL;
-		if (cli->line[i])
-			i++;
-	}
 }
 
 void	free_args(t_args *args)
@@ -85,12 +49,12 @@ void	free_args(t_args *args)
 	}
 }
 
-void	free_simple_cmd(t_simple_cmd *simple_cmd)
+void	free_simple_cmd(t_simple_cmd **simple_cmd)
 {
 	t_simple_cmd *p;
 	t_simple_cmd *q;
 
-	p = simple_cmd;
+	p = *simple_cmd;
 	while (p != NULL)
 	{
 		q = p;
@@ -100,6 +64,33 @@ void	free_simple_cmd(t_simple_cmd *simple_cmd)
 		q->cmd = NULL;
 		free(q);
 		q = NULL;
+	}
+}
+
+
+
+void    ft_parser(t_minishell *cli)
+{
+	int i;
+	int size;
+	int start;
+	char *cmd;
+
+	i = 0;
+	start = 0;
+	cli->simple_cmd = NULL;
+	while (cli->line[i])
+	{
+		create_simple_cmd(cli, &i, &start, &cli->simple_cmd);
+		if (!cli->status)
+			simple_cmd_printer(cli->simple_cmd);
+			// ft_pipe(cli);
+		if (cli->simple_cmd)
+		{	free_simple_cmd(&cli->simple_cmd);
+			cli->simple_cmd = NULL;
+		}
+		if (cli->line[i])
+			i++;
 	}
 }
 
@@ -119,6 +110,7 @@ void	env_printer(t_minishell *cli)
 int     main(int argc,char **argv,char **env)
 {
 	t_minishell *cli;
+	char		*tmp;
 
 	cli = (t_minishell *)malloc(sizeof(t_minishell));
 	cli->simple_cmd = NULL;
@@ -126,16 +118,36 @@ int     main(int argc,char **argv,char **env)
 	cli->old_stdin = dup(0);
 	cli->old_stdout = dup(1);
 	cli->old_stderror = dup(2);
+	// signal(SIGINT, SIG_IGN);
+	//signal(SIGQUIT, SIG_IGN);
 	ft_exec_(cli);
-	// env_printer(cli);
-    prompt(0);
-    while(1)
-    {
-        get_next_line(&cli->line);
-        ft_lexer(cli);
-       	//lexer_debugger(cli);
+    if (argc == 1)
+	{
+		prompt(0);
+    	while(1)
+    	{
+			cli->status = 0;
+			cli->line = NULL;
+    	    get_next_line(&tmp);
+			cli->line = ft_strtrim(tmp, " ");
+    	    ft_lexer(cli);
+    	   	lexer_debugger(cli);
+			if (cli->status == 0)
+				ft_parser(cli);
+			free(tmp);
+			free(cli->line);
+			prompt(cli->status); 
+		}
+	}
+	else if(argc == 3 && !strcmp(argv[1], "-c"))
+	{
+		cli->status = 0;
+		tmp = argv[2];
+		cli->line = ft_strtrim(tmp, " ");
+    	ft_lexer(cli);
+    	lexer_debugger(cli);
 		if (cli->status == 0)
 			ft_parser(cli);
-		prompt(cli->status); 
+
 	}
 }

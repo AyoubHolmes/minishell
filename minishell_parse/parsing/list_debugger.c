@@ -20,9 +20,9 @@ void simple_cmd_printer(t_simple_cmd *s)
 	t_simple_cmd *p;
 
 	p = s;
-	ft_putstr("-------- PIPELINE ----------\n", 1);
 	while (p != NULL)
 	{
+		ft_putstr("-------- PIPELINE ----------\n", 1);
 		/* dup2(p->in_fd, 0);
 		dup2(p->out_fd, 1);
 		dup2(p->err_fd, 2); */

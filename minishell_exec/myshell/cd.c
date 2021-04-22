@@ -51,7 +51,6 @@ char	*cd(t_minishell *shell)
 	char	*oldpwd;
 
 	cwd = (char *)malloc(PATH_MAX);
-	getcwd(cwd, PATH_MAX);
 	s = ft_cases(shell, shell->oldpwd->obj2);
 	if (s != NULL)
 	{
@@ -61,7 +60,7 @@ char	*cd(t_minishell *shell)
 		{
 			if (shell->oldpwd->obj2
 				&& strcmp((char *)shell->oldpwd->obj2, "") == 0)
-				shell->oldpwd->obj2 = cwd;
+				shell->oldpwd->obj2 = shell->pwd->obj2;
 			else
 			{
 				shell->status = 10;
@@ -73,7 +72,11 @@ char	*cd(t_minishell *shell)
 			}
 		}
 		else
-			shell->oldpwd->obj2 = cwd;
+		{
+			shell->oldpwd->obj2 = shell->pwd->obj2;
+			getcwd(cwd, PATH_MAX);
+			shell->pwd->obj2 = cwd;
+		}
 	}
 	close(shell->out_fd);
 	close(shell->in_fd);

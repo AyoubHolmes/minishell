@@ -64,8 +64,8 @@ void	delete_elem(char *elm, t_element *shell_)
 		{
 			p = list->next;
 			list->next = list->next->next;
-			free(p);
-			p = NULL;
+			//free(p);
+			//p = NULL;
 			break ;
 		}
 		list = list->next;
