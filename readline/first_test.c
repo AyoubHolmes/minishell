@@ -5,6 +5,7 @@
 #include <curses.h>
 #include <term.h>
 
+
 int init_term()
 {
 	int ret;

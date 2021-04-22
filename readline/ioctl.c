@@ -35,6 +35,11 @@ set_input_mode (void)
   tcsetattr (STDIN_FILENO, TCSAFLUSH, &tattr);
 }
 
+void ft_atexit()
+{
+  exit (0);
+}
+
 int
 main (void)
 {
@@ -46,7 +51,9 @@ main (void)
     {
       read (STDIN_FILENO, &c, 1);
       if (c == /* '\004' */0x04)          /* C-d */
-        break;
+        // break;
+        // reset_input_mode();
+        ft_atexit();
       else
         putchar (c);
     }
