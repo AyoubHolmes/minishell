@@ -134,6 +134,6 @@ int     main(int argc,char **argv,char **env)
 			ft_parser(cli);
 		free(tmp);
 		free(cli->line);
-		prompt(cli->status); 
+		prompt(cli->status);
 	}
 }
