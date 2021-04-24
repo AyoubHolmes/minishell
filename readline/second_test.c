@@ -6,6 +6,7 @@
 #include <term.h>
 #include <termios.h>
 #include <termcap.h>
+#include <signal.h>
 
 struct termios saved_attributes;
 
@@ -27,9 +28,8 @@ void    set_input_mode (void)
   tcgetattr (STDIN_FILENO, &saved_attributes);
   atexit (reset_input_mode);
   tcgetattr (STDIN_FILENO, &tattr);
-  tattr.c_lflag &= ~(ICANON|ECHO); /* Clear ICANON and ECHO. */
-  tattr.c_cc[VMIN] = 1;
-  tattr.c_cc[VTIME] = 0;
+  tattr.c_lflag &= ~(ICANON); /* Clear ICANON and ECHO. */
+  tattr.c_lflag &= ~(ECHO); /* Clear ICANON and ECHO. */
   tcsetattr (STDIN_FILENO, TCSAFLUSH, &tattr);
 }
 
@@ -57,6 +57,20 @@ int init_term()
 	}
 	return(0);
 }
+void handler(int sig)
+{
+
+    printf("here i am ");
+    signal(SIGINT,SIG_IGN);
+  
+}
+// printf("%d | %d | %d | %d\n", c&0xFF, (c >> 8)&0xFF, (c >> 16)&0xFF, (c >> 24)&0xFF);
+
+int is_up_or_down(int c)
+{
+  return ((c&0xFF) == 27 && ((c >> 8)&0xFF) == 91 && ((c >> 24)&0xFF) == 0);
+}
+
 
 int main(int argc, char const *argv[])
 {
@@ -64,14 +78,15 @@ int main(int argc, char const *argv[])
 	int column_count;
 	int line_count;
 	char *cl_cap;
-    char c;
+  int c;
 
 	ret = init_term();
-    set_input_mode ();
+  set_input_mode ();
 	if (ret == 0)
 	{
         while (1)
         {
+           
             cl_cap = tgetstr("md", NULL);
             tputs(cl_cap, 1, putchar);
             cl_cap = tgetstr("us", NULL);
@@ -87,13 +102,23 @@ int main(int argc, char const *argv[])
             //     printf("yes man\n");
             // tputs(tgoto(cl_cap, 10, 18), 1, putchar);
             // printf("yes man\n");
-            read (STDIN_FILENO, &c, 1);
-            if (c == /* '\004' */0x04)         
-                // break;
-                // reset_input_mode();
-                exit(0);
+            // signal(SIGINT,handler); 
+            c = 0;
+            read (STDIN_FILENO, &c, 4);
+            if (is_up_or_down(c))
+            {
+              if (((c >> 16)&0xFF) == 65)
+                printf("Up\n");
+              else if (((c >> 16)&0xFF) == 66)
+                printf("Down\n");
+            }
             else
-                putchar (c);
+            write(1, &c, 4);
+           /*  printf("%d | %d | %d | %d\n", c&0xFF, (c >> 8)&0xFF, (c >> 16)&0xFF, (c >> 24)&0xFF);
+            printf("%d | %d | %d | %d\n", c, (c >> 8), (c >> 16), (c >> 24)); */
+            // printf("%x | %x | %x | %x\n", c&0xFF, (c >> 8)&0xFF, (c >> 16)&0xFF, (c >> 24)&0xFF);
+            // printf("%c | %c | %c | %c\n", c&0xFF, (c >> 8)&0xFF, (c >> 16)&0xFF, (c >> 24)&0xFF);
+            // puts (c);
         }
 	}
     return 0;

@@ -32,7 +32,12 @@ int				insert_cmd(t_simple_cmd **s, char *cmd)
 
 	if ((*s)->id == -1)
 	{
-		(*s)->cmd = cmd;
+		if (cmd)
+			(*s)->cmd = cmd;
+		else
+		{
+			(*s)->cmd = NULL;
+		}
 		(*s)->id = dispatcher_id(cmd);
 	}
 	else
@@ -68,6 +73,7 @@ char			*arg_correction(char *s, t_element *env)
 	char *dollar;
 
 	i = 0;
+	dollar = "";
 	while (s[i])
 	{
 		if (s[i] == BACKSLASH_TOKEN || s[i] == SINGLE_QUOTE_TOKEN || s[i] == DOUBLE_QUOTE_TOKEN)
@@ -84,17 +90,24 @@ char			*arg_correction(char *s, t_element *env)
 		{
 			i++;
 			j = 0;
-			while(s[i] && s[i] != BACKSLASH_TOKEN && s[i] != SINGLE_QUOTE_TOKEN && s[i] != DOUBLE_QUOTE_TOKEN && s[i] != ' ')
+			if (!(s[i] >= '0' && s[i] <= '9'))
 			{
-				j++;
-				i++;
+				while(s[i] && s[i] != DOLLAR_TOKEN && s[i] != BACKSLASH_TOKEN && s[i] != SINGLE_QUOTE_TOKEN && s[i] != DOUBLE_QUOTE_TOKEN && s[i] != ' ')
+				{
+					j++;
+					i++;
+				}
+				tmp[0] = ft_substr(&s[i - j], 0, j);
+				env_var = catch_elem(tmp[0], &env);
+				free(tmp[0]);
+				if (env_var && env_var->obj2)
+					dollar = env_var->obj2;
 			}
-			tmp[0] = ft_substr(&s[i - j], 0, j);
-			env_var = catch_elem(tmp[0], &env);
-			if (!env_var || !env_var->obj2)
-				dollar = "";
 			else
-				dollar = env_var->obj2;
+			{
+				i++;
+				j++;
+			}
 			tmp[0] = ft_strjoin(ft_substr(s, 0, i - j - 1), dollar);
 			tmp[1] = s;
 			s = ft_strjoin(tmp[0], ft_substr(&s[i], 0, ft_strlen(s) - i));
@@ -157,6 +170,7 @@ t_simple_cmd			*simple_cmd_node_init()
 
 	s = (t_simple_cmd *)malloc(sizeof(t_simple_cmd));
 	s->id = -1;
+	s->cmd = NULL;
 	s->in_fd = 0;
 	s->out_fd = 1;
 	s->err_fd = 2;
@@ -200,7 +214,7 @@ t_simple_cmd	*create_simple_cmd_node(char *cmd, t_element *env, int *stat)
 		}
 		if(is_a_redirection_token(&cmd[i]))
 			*stat = get_fd_file(cmd, &i, &s, env);
-		if (size != 0)
+		else if (size != 0)
 		{
 			c = arg_correction(ft_substr(cmd, start, size), env);
 			*stat = insert_cmd(&s, c);
