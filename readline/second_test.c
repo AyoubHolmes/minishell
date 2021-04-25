@@ -64,7 +64,6 @@ void handler(int sig)
     signal(SIGINT,SIG_IGN);
   
 }
-// printf("%d | %d | %d | %d\n", c&0xFF, (c >> 8)&0xFF, (c >> 16)&0xFF, (c >> 24)&0xFF);
 
 int is_up_or_down(int c)
 {
@@ -86,12 +85,6 @@ int main(int argc, char const *argv[])
 	{
         while (1)
         {
-           
-            cl_cap = tgetstr("md", NULL);
-            tputs(cl_cap, 1, putchar);
-            cl_cap = tgetstr("us", NULL);
-            tputs(cl_cap, 1, putchar);
-            cl_cap = tgetstr("cm", NULL);
             //printf("game starts\n");
             column_count = tgetnum("co");
             line_count = tgetnum("li");
@@ -107,18 +100,16 @@ int main(int argc, char const *argv[])
             read (STDIN_FILENO, &c, 4);
             if (is_up_or_down(c))
             {
+              // tputs(tgoto(tgetstr("cm", NULL), 0, 5), 1, putchar);
+              cl_cap = tgetstr("le", NULL);
+              tputs(cl_cap, 1, putchar);
               if (((c >> 16)&0xFF) == 65)
-                printf("Up\n");
+                write(1, "U", 1);
               else if (((c >> 16)&0xFF) == 66)
-                printf("Down\n");
+                 write(1, "D", 1);
             }
             else
-            write(1, &c, 4);
-           /*  printf("%d | %d | %d | %d\n", c&0xFF, (c >> 8)&0xFF, (c >> 16)&0xFF, (c >> 24)&0xFF);
-            printf("%d | %d | %d | %d\n", c, (c >> 8), (c >> 16), (c >> 24)); */
-            // printf("%x | %x | %x | %x\n", c&0xFF, (c >> 8)&0xFF, (c >> 16)&0xFF, (c >> 24)&0xFF);
-            // printf("%c | %c | %c | %c\n", c&0xFF, (c >> 8)&0xFF, (c >> 16)&0xFF, (c >> 24)&0xFF);
-            // puts (c);
+              write(1, &c, 4);
         }
 	}
     return 0;
