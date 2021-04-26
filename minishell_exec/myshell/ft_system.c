@@ -50,13 +50,13 @@ char	*ft_system(t_minishell *shell)
 	struct stat	buff;
 	int			a;
 
-	pid = fork();
-	if (pid == 0)
-	{
+	//pid = fork();
+	//if (pid == 0)
+	//{
 		i = 0;
 		while (shell->path[i])
 		{
-			if ((a = stat(shell->cmd, &buff)) != 0)
+			if ((a = stat(shell->cmd, &buff)) != 0 && shell->paths->id == 0)
 			{
 				binary_path = ft_strjoin(ft_strjoin(shell->path[i], "/"), shell->cmd);
 				a = stat(binary_path, &buff);
@@ -79,11 +79,13 @@ char	*ft_system(t_minishell *shell)
 			shell->status = 10;
 			ft_putstr("ayoub-shell: ", shell->err_fd);
 			ft_putstr(shell->cmd, shell->err_fd);
-			ft_putstr(": command not found\n", shell->err_fd);
+			ft_putstr(" ", shell->err_fd);
+			ft_putstr(strerror(errno), shell->err_fd);
+			ft_putstr("\n", shell->err_fd);
 		}
-		exit(0);
-	}
-	wait(0);
+		//exit(0);
+	//}
+	//wait(0);
 	dup2(shell->old_stdout, 1);
 	dup2(shell->old_stdin, 0);
 	return ("");

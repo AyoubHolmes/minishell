@@ -58,5 +58,6 @@ char	*echo(t_minishell *shell)
 	close(shell->in_fd);
 	dup2(shell->old_stdout, 1);
 	dup2(shell->old_stdin, 0);
+	exit(0);
 	return ("");
 }

@@ -2,7 +2,11 @@
 
 char	*exit_(t_minishell *shell)
 {
-	ft_putstr("exit\n",1);
-	exit(0);
-	return ("");
+	char *nb;
+	if(shell->simple_cmd->args)
+		nb = shell->simple_cmd->args->arg;
+	else
+		nb = "0";
+	exit(atoi(nb));
+	return (nb);
 }

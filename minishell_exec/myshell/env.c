@@ -20,5 +20,6 @@ char	*env_(t_minishell *shell_)
 	close(shell_->in_fd);
 	dup2(shell_->old_stdout, 1);
 	dup2(shell_->old_stdin, 0);
+	exit(0);
 	return ("");
 }

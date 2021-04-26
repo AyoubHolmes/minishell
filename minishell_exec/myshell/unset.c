@@ -11,5 +11,6 @@ char	*unset(t_minishell *shell)
 		delete_elem(tmp->arg, shell->shell);
 		tmp = tmp->next;
 	}
+	exit(0);
 	return ("");
 }

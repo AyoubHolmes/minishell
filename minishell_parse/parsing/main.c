@@ -30,7 +30,8 @@ void ft_exec_(t_minishell *cli)
 	cli->oldpwd->obj2 = NULL;
 	cli->pwd = catch_elem("PWD",&cli->shell);
 	cli->home = catch_elem("HOME",&cli->shell);
-	cli->path = ft_split(catch_elem("PATH",&cli->shell)->obj2,':');
+	cli->paths = catch_elem("PATH",&cli->shell);
+	cli->path = ft_split(cli->paths->obj2,':');
 }
 
 void	free_args(t_args *args)
@@ -105,6 +106,25 @@ void	env_printer(t_minishell *cli)
 		p = p->next;
 	}
 }
+void handle_sigint(int sig)
+{
+	if(sig == SIGINT)
+	{
+		write(1,"\n",1);
+		//prompt(10);
+	}
+}
+
+void ex(void)
+{
+	puts("I'M HERE");
+	exit(0);
+}
+
+void cat(void (*f)(void))
+{
+	f();
+}
 
 int     main(int argc,char **argv,char **env)
 {
@@ -117,38 +137,24 @@ int     main(int argc,char **argv,char **env)
 	cli->old_stdin = dup(0);
 	cli->old_stdout = dup(1);
 	cli->old_stderror = dup(2);
-	// signal(SIGINT, SIG_IGN);
-	//signal(SIGQUIT, SIG_IGN);
+	//  signal(SIGINT, SIG_IGN);
+	// signal(SIGQUIT, SIG_IGN);
 	ft_exec_(cli);
-    if (argc == 1)
-	{
-		prompt(0);
-    	while(1)
-    	{
-			cli->status = 0;
-			cli->line = NULL;
-    	    get_next_line(&tmp);
-			cli->line = ft_strtrim(tmp, " ");
-    	    ft_lexer(cli);
-    	   	lexer_debugger(cli);
-			if (cli->status == 0)
-				ft_parser(cli);
-			free(tmp);
-			free(cli->line);
-			prompt(cli->status); 
-		}
-	}
-	else if(argc == 3 && !strcmp(argv[1], "-c"))
-	{
+	prompt(0);
+	//signal(SIGINT, handle_sigint);
+    while(1)
+    { 
+		// signal(SIGINT, handle_sigint);
 		cli->status = 0;
-		tmp = argv[2];
+		cli->line = NULL;
+        get_next_line(&tmp);
 		cli->line = ft_strtrim(tmp, " ");
-    	ft_lexer(cli);
-    	lexer_debugger(cli);
+        ft_lexer(cli);
+       	lexer_debugger(cli);
 		if (cli->status == 0)
 			ft_parser(cli);
-		// free(tmp);
-		// free(cli->line);
-		// prompt(cli->status);
+		free(tmp);
+		free(cli->line);
+		prompt(cli->status); 
 	}
 }

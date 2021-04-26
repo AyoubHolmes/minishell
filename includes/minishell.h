@@ -79,6 +79,7 @@ typedef struct s_minishell
 	t_element	*oldpwd;
 	t_element	*pwd;
 	t_element	*home;
+	t_element	*paths;
     char		**path;
 	int			old_stdout;
 	int			old_stdin;
@@ -128,4 +129,8 @@ char	*ft_strchr(const char *s, int c);
 //char	*ft_strjoin(char *s1, char *s2);
 char	*ft_strdup(const char *src);
 t_element *catch_elem(char *elm1,t_element **shell_);
+
+void cat(void (*f)(void));
+void ex(void);
+
 #endif
