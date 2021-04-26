@@ -7,10 +7,8 @@ char	*unset(t_minishell *shell)
 	tmp = shell->args;
 	while (tmp)
 	{
-	//	var = catch_elem(tmp->arg,&shell->shell);
 		delete_elem(tmp->arg, shell->shell);
 		tmp = tmp->next;
 	}
-	exit(0);
 	return ("");
 }

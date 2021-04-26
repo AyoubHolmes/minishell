@@ -86,7 +86,8 @@ void    ft_parser(t_minishell *cli)
 			// simple_cmd_printer(cli->simple_cmd);
 			ft_pipe(cli);
 		if (cli->simple_cmd)
-		{	free_simple_cmd(&cli->simple_cmd);
+		{	
+			free_simple_cmd(&cli->simple_cmd);
 			cli->simple_cmd = NULL;
 		}
 		if (cli->line[i])
@@ -115,12 +116,6 @@ void handle_sigint(int sig)
 	}
 }
 
-void ex(void)
-{
-	puts("I'M HERE");
-	exit(0);
-}
-
 void cat(void (*f)(void))
 {
 	f();
@@ -131,6 +126,7 @@ int     main(int argc,char **argv,char **env)
 	t_minishell *cli;
 	char		*tmp;
 
+	
 	cli = (t_minishell *)malloc(sizeof(t_minishell));
 	cli->simple_cmd = NULL;
 	cli->enviroment = env;

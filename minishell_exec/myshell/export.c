@@ -20,7 +20,7 @@ void	edit_or_add(char *elm1, char *elm2, t_element **shell_)
 		}
 		list = list->next;
 	}
-	add_end(shell_, elm1, elm2, sizeof(char *),0);
+	add_end(shell_, elm1, ft_strdup(elm2), sizeof(char *),0);
 }
 
 char	**var_split(char *str)
@@ -56,6 +56,7 @@ void	export_to_liste(t_minishell *shell)
 			ft_putstr("': not a valid identifier\n", shell->err_fd);
 		}
 		str = var_split(tmp->arg);
+		//add_end(&shell_->shell,"a","b",sizeof(char *),0);
 		edit_or_add(str[0], str[1], &shell->shell);
 
 		tmp = tmp->next;
@@ -67,8 +68,10 @@ char	*export_(t_minishell *shell_)
 	t_element	*p;
 
 	p = NULL;
-	if (shell_->args != NULL)
+	if (shell_->args != NULL){
+		//add_end(&shell_->shell,"a","b",sizeof(char *),0);
 		export_to_liste(shell_);
+		}
 	else
 	{
 		filling(&p, shell_->shell);
@@ -93,6 +96,6 @@ char	*export_(t_minishell *shell_)
 	close(shell_->out_fd);
 	dup2(shell_->old_stdout, 1);
 	dup2(shell_->old_stdin, 0);
-	exit(0);
+	
 	return ("");
 }

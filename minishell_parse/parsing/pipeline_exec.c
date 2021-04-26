@@ -12,8 +12,8 @@ void	ft_fill_exec(t_minishell *cli,t_simple_cmd *tmp)
 void process_(int *fds,int *counter, t_minishell *cli,t_simple_cmd *tmp, int nb_pipe)
 {
 	pid_t pid;
-
-	pid = fork ();
+	pid = fork();
+errno = 0;
 	if (pid == 0)
 	{
 		if (tmp->next)
@@ -31,6 +31,7 @@ void process_(int *fds,int *counter, t_minishell *cli,t_simple_cmd *tmp, int nb_
 			close(fds[i]);
 			i++;
 		}
+		
 		ft_fill_exec(cli,tmp); // execute
 		fill_dispatcher(cli); // execute
 	}

@@ -111,6 +111,7 @@ int		get_fd_file(char *cmd, int *i, t_simple_cmd **s, t_element *env)
 	char redirect;
 
 	redirect = cmd[*i];
+	errno = 0;
 	(*i)++;
 	if (cmd[*i] == REDIRECTION3_TOKEN)
 		(*i)++;
