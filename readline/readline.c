@@ -13,7 +13,37 @@ typedef struct			s_readline
 {
 	char				c;
 	struct s_readline	*next;
-}						t_readline;
+}						t_readline;	
+
+typedef struct			s_history
+{
+	char				*s;
+	struct s_history	*next;
+	struct s_history	*prev;
+}						t_history;
+
+void	add_history(char *s, t_history **str)
+{
+	t_history *p;
+
+	if (*str == NULL)
+	{
+		*str = (t_history *)malloc(sizeof(t_history));
+		(*str)->s = s;
+		(*str)->next = NULL;
+		(*str)->prev = NULL;
+	}
+	else
+	{
+		p = *str;
+		while (p->next)
+			p = p->next;
+		p->next = (t_history *)malloc(sizeof(t_history));
+		p->next->s = s;
+		p->next->next = NULL;
+		p->next->prev = p;
+	}
+}
 
 void	add_char(char c, t_readline **str)
 {
@@ -34,7 +64,6 @@ void	add_char(char c, t_readline **str)
 		p->next->c = c;
 		p->next->next = NULL;
 	}
-	
 }
 
 int		size_of_readline(t_readline *str)
@@ -102,8 +131,7 @@ void    set_input_mode (void)
   tcgetattr (STDIN_FILENO, &saved_attributes);
   atexit (reset_input_mode);
   tcgetattr (STDIN_FILENO, &tattr);
-  tattr.c_lflag &= ~(ICANON);
-  tattr.c_lflag &= ~(ECHO);
+  tattr.c_lflag &= ~(ICANON | ECHO | ISIG);
   tcsetattr (STDIN_FILENO, TCSAFLUSH, &tattr);
 }
 
@@ -144,12 +172,15 @@ int main(int argc, char const *argv[])
 	char *finale;
 	int c;
 	t_readline *str;
+	t_history *h;
 
+	finale = "";
 	if (init_term() == 0)
 	{
 		ft_putstr("ayoub-shell$>");
 		str = (t_readline *)malloc(sizeof(t_readline));
 		str = NULL;
+		h = NULL;
 		set_input_mode ();
 		column_line_counts[0] = tgetnum("co");
 		column_line_counts[1] = tgetnum("li");
@@ -157,12 +188,33 @@ int main(int argc, char const *argv[])
 		{
 			c = 0;
 			read (STDIN_FILENO, &c, 4);
+			if (c == 0x3)
+			{
+				ft_putstr("test CTRL+C\n");
+				ft_putstr("ayoub-shell");
+				ft_putstr("\033[0;32m");
+				ft_putstr("$>");
+				ft_putstr("\033[0m");
+				exit(0);
+			}
+			if (c == 0x4)
+			{
+				ft_putstr("test CTRL+D\n");
+				ft_putstr("ayoub-shell");
+				ft_putstr("\033[0;32m");
+				ft_putstr("$>");
+				ft_putstr("\033[0m");
+				exit(0);
+			}
 			if (c == 10)
 			{
 				finale = generate_line(str);
+				add_history(finale, &h);
 				ft_putstr("\ntest here: ");
 				ft_putstr(finale);
 				ft_putstr("\n");
+				free(finale);
+				finale = NULL;
 				ft_putstr("ayoub-shell");
 				ft_putstr("\033[0;32m");
 				ft_putstr("$>");
@@ -170,14 +222,36 @@ int main(int argc, char const *argv[])
 			}
 			else if (is_up_or_down(c))
 			{
-				ft_putstr("\033[6n");
-    			read(0, s, 8);
-				ft_putstr(tgoto(tgetstr("cm", NULL), 13, atoi(&s[2])  - 1));
-				ft_putstr(tgetstr("cd", NULL));
-				if (((c >> 16)&0xFF) == 65)
-					write(1, "U", 1);
-				else if (((c >> 16)&0xFF) == 66)
-					write(1, "D", 1);
+				if (h != NULL)
+				{
+					ft_putstr("\033[6n");
+					read(0, s, 8);
+					ft_putstr(tgoto(tgetstr("cm", NULL), 13, atoi(&s[2])  - 1));
+					ft_putstr(tgetstr("cd", NULL));
+					if (((c >> 16)&0xFF) == 65)
+					{
+						write(1, "UP: ", 4);
+						
+						if (h->prev != NULL)
+						{
+							finale = generate_line(str);
+							h = h->prev;
+							ft_putstr(h->s);
+						}
+					}
+					else if (((c >> 16)&0xFF) == 66)
+					{
+						write(1, "DOWN: ", 6);
+						
+						if (h->next != NULL)
+						{
+							h = h->prev;
+							ft_putstr(h->s);
+						}
+						else
+							ft_putstr(finale);
+					}
+				}
 			}
 			else
 			{
