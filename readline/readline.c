@@ -1,127 +1,21 @@
-#include <unistd.h>
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <curses.h>
-#include <term.h>
-#include <termios.h>
-#include <termcap.h>
-#include <signal.h>
+#include "readline.h"
 
-
-typedef struct			s_readline
+int		is_digit(char c)
 {
-	char				c;
-	struct s_readline	*next;
-}						t_readline;	
-
-typedef struct			s_history
-{
-	char				*s;
-	struct s_history	*next;
-	struct s_history	*prev;
-}						t_history;
-
-void	add_history(char *s, t_history **str)
-{
-	t_history *p;
-
-	if (*str == NULL)
-	{
-		*str = (t_history *)malloc(sizeof(t_history));
-		(*str)->s = strdup(s);
-		(*str)->next = NULL;
-		(*str)->prev = NULL;
-	}
-	else
-	{
-		/* p = *str;
-		while (p->next)
-			p = p->next;
-		p->next = (t_history *)malloc(sizeof(t_history));
-		p->next->s = s;
-		p->next->next = NULL;
-		p->next->prev = p; */
-		p = (t_history *)malloc(sizeof(t_history));
-		p->s = strdup(s);
-		p->prev = *str;
-		p->next = NULL;
-		(*str)->next = p;
-		*str = p;
-	}
+	return (c >= '0' && c <= '9');
 }
 
-void	add_char(char c, t_readline **str)
+int		ft_atoi_readline(char **s)
 {
-	t_readline *p;
+	int		a;
 
-	if (*str == NULL)
+	a = 0;
+	while (is_digit(**s))
 	{
-		*str = (t_readline *)malloc(sizeof(t_readline));
-		(*str)->c = c;
-		(*str)->next = NULL;
+		a = (a * 10) + (**s - '0');
+		(*s)++;
 	}
-	else
-	{
-		p = *str;
-		while (p->next)
-			p = p->next;
-		p->next = (t_readline *)malloc(sizeof(t_readline));
-		p->next->c = c;
-		p->next->next = NULL;
-	}
-}
-
-int		size_of_readline(t_readline *str)
-{
-	t_readline	*p;
-	int			i;
-
-	p = str;
-	i = 0;
-	while (p)
-	{
-		p = p->next;
-		i++;
-	}
-	return (i);
-}
-
-char	*generate_line(t_readline *str)
-{
-	char *s;
-	int size;
-	int i;
-
-	i = 0;
-	size = size_of_readline(str);
-	s = (char*)malloc(sizeof(char) * size);
-	while (i < size)
-	{
-		s[i] = str->c;
-		i++;
-		str = str->next;
-	}
-	return (s);
-}
-
-void	print_readline(t_readline *str)
-{
-	t_readline  *p;
-
-	p = str;
-	while (p)
-	{
-		write(1, &p->c, 1);
-		p = p->next;
-	}
-}
-
-struct termios saved_attributes;
-
-void    reset_input_mode (void)
-{
-  tcsetattr (STDIN_FILENO, TCSANOW, &saved_attributes);
+	return (a);
 }
 
 void ft_putstr(char *s)
@@ -136,48 +30,6 @@ void ft_putstr(char *s)
 	}
 }
 
-void    set_input_mode (void)
-{
-  struct termios tattr;
-  char *name;
-
-  if (!isatty (STDIN_FILENO))
-	{
-	  fprintf (stderr, "Not a terminal.\n");
-	  exit (1);
-	}
-  tcgetattr (STDIN_FILENO, &saved_attributes);
-  atexit (reset_input_mode);
-  tcgetattr (STDIN_FILENO, &tattr);
-  tattr.c_lflag &= ~(ICANON | ECHO | ISIG);
-  tcsetattr (STDIN_FILENO, TCSAFLUSH, &tattr);
-}
-
-int init_term()
-{
-	int ret;
-	char *term_type;
-
-	term_type = getenv("TERM");
-	if (term_type == NULL)
-	{
-		printf("TERM NOT SET\n");
-		return (-1);
-	}
-	ret = tgetent(NULL, term_type);
-	if (ret == -1)
-	{
-		printf("NO ACCESS TO TERMCAPS DATABASE\n");
-		return(-1);
-	}
-	if (ret == 0)
-	{
-		printf("Terminal type %s not found\n", term_type);
-		return(-1);
-	}
-	return(0);
-}
-
 int is_up_or_down(int c)
 {
   return ((c&0xFF) == 27 && ((c >> 8)&0xFF) == 91 && ((c >> 24)&0xFF) == 0);
@@ -190,7 +42,6 @@ int main(int argc, char const *argv[])
 	char *finale;
 	int c;
 	t_readline *str;
-	t_readline *str2;
 	t_history *h;
 
 	finale = "";
@@ -212,12 +63,12 @@ int main(int argc, char const *argv[])
 				ft_putstr("\ntest CTRL+C\n");
 				exit(0);
 			}
-			if (c == 0x4)
+			else if (c == 0x4)
 			{
 				ft_putstr("\ntest CTRL+D\n");
 				exit(0);
 			}
-			if (c == 10)
+			else if (c == 10)
 			{
 				finale = generate_line(str);
 				add_history(finale, &h);
@@ -229,40 +80,46 @@ int main(int argc, char const *argv[])
 				ft_putstr("$>");
 				ft_putstr("\033[0m");
 			}
-			if (c == 127)
+			else if (c == 127 && str)
 			{
-				
+				ft_putstr("\033[6n");
+				read(0, s, 8);
+				char *test = &s[2];
+				int x = ft_atoi_readline(&test);
+				test++;
+				int y = ft_atoi_readline(&(test));
+				if (str && y > 14)
+				{
+					ft_putstr(tgetstr("le", NULL));
+					ft_putstr(tgetstr("cd", NULL));
+					delete_last_readline(&str);
+				}
 			}
 			else if (is_up_or_down(c))
 			{
-				if (h != NULL)
+				ft_putstr("\033[6n");
+				read(0, s, 8);
+				ft_putstr(tgoto(tgetstr("cm", NULL), 13, atoi(&s[2])  - 1));
+				ft_putstr(tgetstr("cd", NULL));
+				if (((c >> 16)&0xFF) == 65)
 				{
-					ft_putstr("\033[6n");
-					read(0, s, 8);
-					ft_putstr(tgoto(tgetstr("cm", NULL), 13, atoi(&s[2])  - 1));
-					ft_putstr(tgetstr("cd", NULL));
-					if (((c >> 16)&0xFF) == 65)
+					write(1, "UP: ", 4);
+					if (h!= NULL)
 					{
-						if (h!= NULL)
-						{
-							write(1, "UP: ", 4);
-							ft_putstr(h->s);
-							h = h->prev;
-						}
-						else
-							ft_putstr("here");
+						ft_putstr(h->s);
+						h = h->prev;
 					}
-					else if (((c >> 16)&0xFF) == 66)
+				}
+				else if (((c >> 16)&0xFF) == 66)
+				{
+					write(1, "DOWN: ", 6);
+					/*  if (h->next != NULL)
 					{
-						if (h->next != NULL)
-						{
-							write(1, "DOWN: ", 6);
-							h = h->next;
-							ft_putstr(h->s);
-						}
-						else
-							print_readline(str);
+						h = h->next;
+						ft_putstr(h->s);
 					}
+					else
+						print_readline(str);  */
 				}
 			}
 			else
