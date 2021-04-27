@@ -41,34 +41,44 @@ char	**fill_args(char **argv, t_args *elm, char *binary)
 	return (argv);
 }
 
+void	path_handler(t_minishell *shell, int *a, int *i)
+{
+	struct stat		buff;
+	char			*binary_path;
+	char			**argv;
+
+	*a = stat(shell->cmd, &buff);
+	if (*a != 0 && shell->paths->id == 0)
+	{
+		binary_path = ft_strjoin(ft_strjoin(shell->path[*i], "/"), shell->cmd);
+		*a = stat(binary_path, &buff);
+	}
+	else
+		binary_path = shell->cmd;
+	if (*a == 0)
+	{
+		argv = fill_args(argv, shell->args, binary_path);
+		execve(argv[0], argv, shell->enviroment);
+	}
+	(*i)++;
+}
+
 char	*ft_system(t_minishell *shell)
 {
-	char		*binary_path;
-	char		**argv;
-	int			i;
-	struct stat	buff;
-	int			a;
+	int	i;
+	int	a;
 
 	i = 0;
-	dup2(shell->out_fd, 1);
-	dup2(shell->in_fd, 0);
-	while (shell->path[i])
+	shell->path = ft_split(shell->paths->obj2,':');
+	if(shell->path == NULL)
 	{
-		a = stat(shell->cmd, &buff);
-		if (a != 0 && shell->paths->id == 0)
-		{
-			binary_path = ft_strjoin(ft_strjoin(shell->path[i], "/"), shell->cmd);
-			a = stat(binary_path, &buff);
-		}
-		else
-			binary_path = shell->cmd;
-		if (a == 0)
-		{
-			argv = fill_args(argv, shell->args, binary_path);
-			execve(argv[0], argv, shell->enviroment);
-		}
-		i++;
+		ft_putstr("ayoub-shell: ", shell->err_fd);
+		ft_putstr(shell->cmd, shell->err_fd);
+		ft_putstr(" No such file or directory\n", shell->err_fd);
+		exit(127);
 	}
+	while (shell->path[i])
+		path_handler(shell, &a, &i);
 	if (a < 0)
 	{
 		ft_putstr("ayoub-shell: ", shell->err_fd);
@@ -76,11 +86,5 @@ char	*ft_system(t_minishell *shell)
 		ft_putstr(" command not found\n", shell->err_fd);
 		exit(127);
 	}
-	close(shell->out_fd);
-	close(shell->in_fd);
-	close(shell->err_fd);
-	dup2(shell->old_stdout, 1);
-	dup2(shell->old_stdin, 0);
-	dup2(shell->old_stderror, 2);
 	return ("");
 }

@@ -31,7 +31,7 @@ void ft_exec_(t_minishell *cli)
 	cli->pwd = catch_elem("PWD",&cli->shell);
 	cli->home = catch_elem("HOME",&cli->shell);
 	cli->paths = catch_elem("PATH",&cli->shell);
-	cli->path = ft_split(cli->paths->obj2,':');
+	// cli->path = ft_split(cli->paths->obj2,':');
 }
 
 void	free_args(t_args *args)

@@ -9,9 +9,5 @@ char	*pwd(t_minishell *shell)
 		ft_putstr(position, shell->out_fd);
 	free(position);
 	write(1, "\n", shell->out_fd);
-	close(shell->out_fd);
-	close(shell->in_fd);
-	dup2(shell->old_stdout, 1);
-	dup2(shell->old_stdin, 0);
 	return ("");
 }

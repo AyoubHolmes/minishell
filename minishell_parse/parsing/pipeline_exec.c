@@ -67,13 +67,7 @@ void ft_pipe(t_minishell *cli)
 
 	tmp = cli->simple_cmd;
 	if(tmp->id == 7 && !tmp->next)
-	{
 		ft_putstr("exit\n",1);
-		if(tmp->args && tmp->args->next)
-			ft_putstr("bash: exit: too many arguments\n",tmp->err_fd);
-		else
-			exit(atoi(exit_(cli)));
-	}
 	cli->in_fd = dup(STDIN_FILENO);
 	cli->out_fd = dup(STDOUT_FILENO);
 	cli->nb_pipe = number_of_pipes(tmp) - 1;
@@ -106,8 +100,6 @@ void ft_pipe(t_minishell *cli)
 			break;
 		waitpid(pid_status[i],&cli->wait_status,0);
 		cli->status = WEXITSTATUS(cli->wait_status);
-		ft_putnbr_fd(cli->status,1);
-		ft_putstr_parse("\n");
 		i++;
 	}
 	dup2(STDOUT_FILENO, cli->out_fd);

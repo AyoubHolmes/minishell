@@ -88,11 +88,5 @@ char	*cd(t_minishell *shell)
 		chdir(s);
 		cd_helper(shell, folder, cwd);
 	}
-	close(shell->out_fd);
-	close(shell->in_fd);
-	close(shell->err_fd);
-	dup2(shell->old_stdout, 1);
-	dup2(shell->old_stdin, 0);
-	dup2(shell->old_stderror, 2);
 	return ("");
 }

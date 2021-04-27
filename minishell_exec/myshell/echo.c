@@ -53,9 +53,5 @@ char	*echo(t_minishell *shell)
 	check_echo_args(shell->args, &n, shell->out_fd);
 	if (n == 0)
 		ft_putstr("\n", shell->out_fd);
-	close(shell->out_fd);
-	close(shell->in_fd);
-	dup2(shell->old_stdout, 1);
-	dup2(shell->old_stdin, 0);
 	return ("");
 }
