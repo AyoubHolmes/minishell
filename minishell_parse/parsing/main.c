@@ -15,6 +15,7 @@ t_element *catch_elem(char *elm1,t_element **shell_)
 	}
 	return(NULL);
 }
+
 void ft_exec_(t_minishell *cli)
 {
 	char **var;
@@ -29,9 +30,11 @@ void ft_exec_(t_minishell *cli)
 		free(var);
 		var = NULL;
     }
-	cli->shell = add_end(&cli->shell,"OLDPWD",NULL,sizeof(char *));
 	cli->oldpwd = catch_elem("OLDPWD",&cli->shell);
-	cli->path = ft_split(catch_elem("PATH",&cli->shell)->obj2,':');
+	cli->oldpwd->obj2 = NULL;
+	cli->pwd = catch_elem("PWD",&cli->shell);
+	cli->home = catch_elem("HOME",&cli->shell);
+	cli->paths = catch_elem("PATH",&cli->shell);
 }
 
 void	free_args(t_args *args)

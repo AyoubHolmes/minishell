@@ -75,6 +75,9 @@ typedef struct s_minishell
     int 		choice;
 	t_args		*args;
     t_element	*shell;
+    t_element	*paths;
+    t_element	*pwd;
+    t_element	*home;
 	t_element	*oldpwd;
     char		**path;
 	int			old_stdout;
