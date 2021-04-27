@@ -8,8 +8,8 @@ int	compare_n(char *str)
 	len = 0;
 	len = ft_strlen(str);
 	i = 0;
-	if(strcmp(str, "") == 0)
-		return(1);
+	if (strcmp(str, "") == 0)
+		return (1);
 	if (str[i] == '-')
 	{
 		i++;
@@ -28,7 +28,6 @@ void	check_echo_args(t_args *elm, int *n, int out_fd)
 	int		a;
 
 	tmp = elm;
-	
 	while (tmp && compare_n(tmp->arg) == 0)
 	{
 		*n = 1;

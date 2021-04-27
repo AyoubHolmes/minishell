@@ -87,6 +87,8 @@ typedef struct s_minishell
 	int			in_fd;
 	int			out_fd;
 	int			err_fd;
+	int			nb_pipe;
+	int			wait_status;
 }				t_minishell;
 
 void	ft_putstr_parse(char *str);
@@ -119,8 +121,8 @@ char *unset(t_minishell *shell);
 char *env_(t_minishell *shell);
 char *exit_(t_minishell *shell);
 char *clear_(t_minishell *shell);
-t_element	*create_list(void *elt1,void *elt2, size_t data_size,int id);
-t_element	*add_end(t_element **liste, void *elt1,void *elt2, size_t data_size,int id);
+t_element	*create_list(void *elt1,void *elt2, int id);
+t_element	*add_end(t_element **liste, void *elt1,void *elt2, int id);
 void delete_elem(char *elm,t_element *shell_);
 void sort_l(t_element *list);
 void filling(t_element **p,t_element *list);

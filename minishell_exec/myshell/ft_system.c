@@ -50,9 +50,12 @@ char	*ft_system(t_minishell *shell)
 	int			a;
 
 	i = 0;
+	dup2(shell->out_fd, 1);
+	dup2(shell->in_fd, 0);
 	while (shell->path[i])
 	{
-		if ((a = stat(shell->cmd, &buff)) != 0 && shell->paths->id == 0)
+		a = stat(shell->cmd, &buff);
+		if (a != 0 && shell->paths->id == 0)
 		{
 			binary_path = ft_strjoin(ft_strjoin(shell->path[i], "/"), shell->cmd);
 			a = stat(binary_path, &buff);
@@ -61,25 +64,23 @@ char	*ft_system(t_minishell *shell)
 			binary_path = shell->cmd;
 		if (a == 0)
 		{
-			dup2(shell->out_fd, 1);
-			dup2(shell->in_fd, 0);
 			argv = fill_args(argv, shell->args, binary_path);
 			execve(argv[0], argv, shell->enviroment);
-			close(shell->out_fd);
-			close(shell->in_fd);
 		}
 		i++;
 	}
 	if (a < 0)
 	{
-		shell->status = 10;
 		ft_putstr("ayoub-shell: ", shell->err_fd);
 		ft_putstr(shell->cmd, shell->err_fd);
-		ft_putstr(" ", shell->err_fd);
-		ft_putstr(strerror(errno), shell->err_fd);
-		ft_putstr("\n", shell->err_fd);
+		ft_putstr(" command not found\n", shell->err_fd);
+		exit(127);
 	}
+	close(shell->out_fd);
+	close(shell->in_fd);
+	close(shell->err_fd);
 	dup2(shell->old_stdout, 1);
 	dup2(shell->old_stdin, 0);
+	dup2(shell->old_stderror, 2);
 	return ("");
 }

@@ -1,67 +1,104 @@
 #include "minishell.h"
 void	ft_fill_exec(t_minishell *cli,t_simple_cmd *tmp)
 {
-
 	cli->choice = tmp->id;
 	cli->cmd = tmp->cmd;
 	cli->args = tmp->args;
 	cli->in_fd = tmp->in_fd;
 	cli->out_fd = tmp->out_fd;
 	cli->err_fd = tmp->err_fd;
-	/* ft_putnbr_fd(tmp->in_fd,1);
-	ft_putstr_parse("\n");
-	ft_putnbr_fd(tmp->out_fd,1);
-	ft_putstr_parse("\n");
-	ft_putnbr_fd(tmp->err_fd,1);
-	ft_putstr_parse("\n");
-	ft_putstr_parse("----------------\n"); */
 }
-int process_(int in,int out, t_minishell *cli,t_simple_cmd *tmp)
+
+void process_(int *fds,int *counter, t_minishell *cli,t_simple_cmd *tmp, int nb_pipe)
 {
 	pid_t pid;
+
 	pid = fork ();
 	if (pid == 0)
 	{
-		if (in != 0)
+		if (tmp->next)
 		{
-			dup2(in, 0);
-			close(in);
+
+			dup2(fds[*counter + 1], 1);
 		}
-		if (out != 1)
+		if (*counter != 0 )
 		{
-			dup2 (out, 1);
-			close (out);
+				dup2(fds[*counter - 2], 0);
 		}
-		
-		ft_fill_exec(cli,tmp);
-		fill_dispatcher(cli);
-		exit(0);
+		int i = 0;
+		while(i < 2 * nb_pipe)
+		{
+			close(fds[i]);
+			i++;
+		}
+		ft_fill_exec(cli,tmp); // execute
+		fill_dispatcher(cli); // execute
 	}
-	wait(NULL);
-	return(pid);
+	return ;
 }
+
+int		number_of_pipes(t_simple_cmd *cmds)
+{
+	int i;
+	t_simple_cmd *tmp;
+
+	tmp = cmds;
+	i = 0;
+	while(tmp)
+	{
+		tmp = tmp->next;
+		i++;
+	}
+	return (i++);
+}
+
 void ft_pipe(t_minishell *cli)
 {
-	t_simple_cmd * tmp;
-	int in, fd [2];
+	t_simple_cmd *tmp;
+	int nb_pipe;
+	int *fds;
+	int i;
+	int counter;
 
-	in = 0;
 	tmp = cli->simple_cmd;
-	if(!tmp->next)
+	if(tmp->id == 7 && !tmp->next)
 	{
-		ft_fill_exec(cli,tmp);
-		fill_dispatcher(cli);
+		ft_putstr("exit\n",1);
+		if(tmp->args && tmp->args->next)
+			ft_putstr("bash: exit: too many arguments\n",tmp->err_fd);
+		else
+			exit(atoi(exit_(cli)));
 	}
-	else
+	cli->in_fd = dup(STDIN_FILENO);
+	cli->out_fd = dup(STDOUT_FILENO);
+	nb_pipe = number_of_pipes(tmp) - 1;
+	fds = malloc(nb_pipe * 2 * sizeof(int));
+	i = 0;
+	while(i < nb_pipe)
 	{
-		while(tmp->next)
-		{
-			pipe(fd);
-			process_(in, fd[1], cli, tmp);
-			close (fd[1]);
-			in = fd[0];
-			tmp = tmp->next;
-		}
-		process_(in, fd[1], cli, tmp);
+        pipe(fds + i * 2);
+		i++;
 	}
+	counter = 0;
+	while(tmp)
+	{
+		process_(fds,&counter, cli, tmp,nb_pipe);
+		counter += 2;
+		tmp = tmp->next;
+	}
+	i = 0;
+	while(i < 2 * nb_pipe)
+	{
+		close(fds[i]);
+		i++;
+	}
+	i = 0;
+	while(i < nb_pipe + 1)
+	{
+		wait(0);
+		i++;
+	}
+	dup2(STDOUT_FILENO, cli->out_fd);
+	dup2(STDIN_FILENO, cli->in_fd);
+	dup2(STDERR_FILENO, cli->err_fd);
 }

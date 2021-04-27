@@ -2,7 +2,8 @@
 
 char	*exit_(t_minishell *shell)
 {
-	char *nb;
+	char	*nb;
+
 	if(shell->simple_cmd->args)
 		nb = shell->simple_cmd->args->arg;
 	else

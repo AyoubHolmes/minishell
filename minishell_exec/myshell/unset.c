@@ -2,8 +2,9 @@
 
 char	*unset(t_minishell *shell)
 {
-	t_args	*tmp;
-	t_element *var;
+	t_args		*tmp;
+	t_element	*var;
+
 	tmp = shell->args;
 	while (tmp)
 	{
