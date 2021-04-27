@@ -1,0 +1,115 @@
+Process:         minishell [69819]
+Path:            /Volumes/VOLUME/*/minishell
+Load Address:    0x10cf7e000
+Identifier:      minishell
+Version:         ???
+Code Type:       X86-64
+Parent Process:  zsh [6092]
+
+Date/Time:       2021-04-27 16:05:33.728 +0000
+Launch Time:     2021-04-27 16:05:05.142 +0000
+OS Version:      Mac OS X 10.14.6 (18G8022)
+Report Version:  7
+Analysis Tool:   /usr/bin/leaks
+
+Physical footprint:         264K
+Physical footprint (peak):  264K
+----
+
+leaks Report Version: 3.0
+Process 69819: 349 nodes malloced for 19 KB
+Process 69819: 93 leaks for 2000 total leaked bytes.
+
+Leak: 0x7fef47c00640  size=32  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c02c00  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c02c30  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c02c40  size=32  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c02ca0  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c02cb0  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c02cc0  size=32  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c02d20  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c02d30  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c02d40  size=32  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c02dd0  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c02de0  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c02df0  size=32  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c02e90  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c02ea0  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c02eb0  size=32  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c02f10  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c02f20  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c02f30  size=32  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03060  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03070  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03080  size=32  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c030f0  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03100  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03110  size=32  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03170  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03180  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03190  size=32  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c031f0  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03200  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03210  size=32  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03280  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03290  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c032a0  size=32  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03300  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03310  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03320  size=32  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03390  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c033a0  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c033b0  size=32  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03420  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03430  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03440  size=32  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c034a0  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c034b0  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c034c0  size=32  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03530  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03540  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03550  size=32  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03580  size=48  zone: DefaultMallocZone_0x10cf89000    length: 38  "/Users/shikma/Desktop/stupid_minishell"
+Leak: 0x7fef47c035d0  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c035e0  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c035f0  size=32  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03650  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03660  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03670  size=32  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c036f0  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03700  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03710  size=32  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03770  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03780  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03790  size=32  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03800  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03810  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03820  size=32  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03880  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03890  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c038a0  size=32  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03910  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03920  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03930  size=32  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03990  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c039a0  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c039b0  size=32  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03a10  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03a20  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03a30  size=32  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03ae0  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03af0  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03b00  size=32  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03bb0  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03bc0  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03bd0  size=32  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03cb0  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03cc0  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03cd0  size=32  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03d90  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03da0  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03db0  size=32  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03e10  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03e20  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03ec0  size=16  zone: DefaultMallocZone_0x10cf89000
+Leak: 0x7fef47c03ed0  size=16  zone: DefaultMallocZone_0x10cf89000
