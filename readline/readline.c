@@ -29,19 +29,25 @@ void	add_history(char *s, t_history **str)
 	if (*str == NULL)
 	{
 		*str = (t_history *)malloc(sizeof(t_history));
-		(*str)->s = s;
+		(*str)->s = strdup(s);
 		(*str)->next = NULL;
 		(*str)->prev = NULL;
 	}
 	else
 	{
-		p = *str;
+		/* p = *str;
 		while (p->next)
 			p = p->next;
 		p->next = (t_history *)malloc(sizeof(t_history));
 		p->next->s = s;
 		p->next->next = NULL;
-		p->next->prev = p;
+		p->next->prev = p; */
+		p = (t_history *)malloc(sizeof(t_history));
+		p->s = strdup(s);
+		p->prev = *str;
+		p->next = NULL;
+		(*str)->next = p;
+		*str = p;
 	}
 }
 
@@ -97,6 +103,18 @@ char	*generate_line(t_readline *str)
 		str = str->next;
 	}
 	return (s);
+}
+
+void	print_readline(t_readline *str)
+{
+	t_readline  *p;
+
+	p = str;
+	while (p)
+	{
+		write(1, &p->c, 1);
+		p = p->next;
+	}
 }
 
 struct termios saved_attributes;
@@ -172,6 +190,7 @@ int main(int argc, char const *argv[])
 	char *finale;
 	int c;
 	t_readline *str;
+	t_readline *str2;
 	t_history *h;
 
 	finale = "";
@@ -190,20 +209,12 @@ int main(int argc, char const *argv[])
 			read (STDIN_FILENO, &c, 4);
 			if (c == 0x3)
 			{
-				ft_putstr("test CTRL+C\n");
-				ft_putstr("ayoub-shell");
-				ft_putstr("\033[0;32m");
-				ft_putstr("$>");
-				ft_putstr("\033[0m");
+				ft_putstr("\ntest CTRL+C\n");
 				exit(0);
 			}
 			if (c == 0x4)
 			{
-				ft_putstr("test CTRL+D\n");
-				ft_putstr("ayoub-shell");
-				ft_putstr("\033[0;32m");
-				ft_putstr("$>");
-				ft_putstr("\033[0m");
+				ft_putstr("\ntest CTRL+D\n");
 				exit(0);
 			}
 			if (c == 10)
@@ -213,12 +224,14 @@ int main(int argc, char const *argv[])
 				ft_putstr("\ntest here: ");
 				ft_putstr(finale);
 				ft_putstr("\n");
-				free(finale);
-				finale = NULL;
 				ft_putstr("ayoub-shell");
 				ft_putstr("\033[0;32m");
 				ft_putstr("$>");
 				ft_putstr("\033[0m");
+			}
+			if (c == 127)
+			{
+				
 			}
 			else if (is_up_or_down(c))
 			{
@@ -230,26 +243,25 @@ int main(int argc, char const *argv[])
 					ft_putstr(tgetstr("cd", NULL));
 					if (((c >> 16)&0xFF) == 65)
 					{
-						write(1, "UP: ", 4);
-						
-						if (h->prev != NULL)
+						if (h!= NULL)
 						{
-							finale = generate_line(str);
-							h = h->prev;
+							write(1, "UP: ", 4);
 							ft_putstr(h->s);
+							h = h->prev;
 						}
+						else
+							ft_putstr("here");
 					}
 					else if (((c >> 16)&0xFF) == 66)
 					{
-						write(1, "DOWN: ", 6);
-						
 						if (h->next != NULL)
 						{
-							h = h->prev;
+							write(1, "DOWN: ", 6);
+							h = h->next;
 							ft_putstr(h->s);
 						}
 						else
-							ft_putstr(finale);
+							print_readline(str);
 					}
 				}
 			}
