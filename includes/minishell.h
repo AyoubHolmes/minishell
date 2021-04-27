@@ -75,6 +75,9 @@ typedef struct s_minishell
     int 		choice;
 	t_args		*args;
     t_element	*shell;
+    t_element	*paths;
+    t_element	*pwd;
+    t_element	*home;
 	t_element	*oldpwd;
     char		**path;
 	int			old_stdout;
@@ -97,6 +100,7 @@ char	*ft_substr(char const *src, unsigned int start, size_t n);
 int		ft_strlen(const char *s);
 char	*ft_strtrim(char const *s1, char const *set);
 int     is_a_redirection(char *line);
+int		ft_isalnum(int c);
 
 //exec
 char **ft_split(char const *s, char c);
