@@ -103,7 +103,7 @@ int main(int argc, char const *argv[])
 				ft_putstr(tgetstr("cd", NULL));
 				if (((c >> 16)&0xFF) == 65)
 				{
-					write(1, "UP: ", 4);
+					// write(1, "UP: ", 4);
 					if (h!= NULL)
 					{
 						ft_putstr(h->s);
@@ -112,14 +112,14 @@ int main(int argc, char const *argv[])
 				}
 				else if (((c >> 16)&0xFF) == 66)
 				{
-					write(1, "DOWN: ", 6);
-					/*  if (h->next != NULL)
+					// write(1, "DOWN: ", 6);
+					 if (h != NULL)
 					{
 						h = h->next;
 						ft_putstr(h->s);
 					}
 					else
-						print_readline(str);  */
+						print_readline(str); 
 				}
 			}
 			else

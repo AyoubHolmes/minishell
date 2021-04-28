@@ -37,18 +37,20 @@ void ft_exec_(t_minishell *cli)
 	cli->paths = catch_elem("PATH",&cli->shell);
 }
 
-void	free_args(t_args *args)
+void	free_args(t_args **args)
 {
 	t_args	*p;
 	t_args	*q;
 
-	p = args;
+	p = *args;
 	while (p != NULL)
 	{
 		q = p;
 		p = p->next;
 		free(q->arg);
 		q->arg = NULL;
+		free(q);
+		q = NULL;
 	}
 }
 
@@ -62,7 +64,7 @@ void	free_simple_cmd(t_simple_cmd **simple_cmd)
 	{
 		q = p;
 		p = p->next;
-		free_args(q->args);
+		free_args(&q->args);
 		free(q->cmd);
 		q->cmd = NULL;
 		free(q);
