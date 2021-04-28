@@ -3,6 +3,7 @@
 void	add_history(char *s, t_history **str)
 {
 	t_history *p;
+	t_history *q;
 
 	if (*str == NULL)
 	{
@@ -20,6 +21,24 @@ void	add_history(char *s, t_history **str)
 		(*str)->next = p;
 		*str = p;
 	}
+	p = *str;
+	while (p)
+	{
+		ft_putstr("\n");
+		ft_putstr(p->s);
+		ft_putstr("       ");
+		q = p;
+		p = p->prev;
+	}
+	ft_putstr("\n");
+	while (q)
+	{
+		ft_putstr("\n");
+		ft_putstr(q->s);
+		ft_putstr("       ");
+		q = q->next;
+	}
+	ft_putstr("\n");
 }
 
 

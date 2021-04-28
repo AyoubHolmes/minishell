@@ -31,6 +31,7 @@ void ft_exec_(t_minishell *cli)
 		var = NULL;
     }
 	cli->oldpwd = catch_elem("OLDPWD",&cli->shell);
+	free(cli->oldpwd->obj2);
 	cli->oldpwd->obj2 = NULL;
 	cli->pwd = catch_elem("PWD",&cli->shell);
 	cli->home = catch_elem("HOME",&cli->shell);
@@ -72,14 +73,6 @@ void	free_simple_cmd(t_simple_cmd **simple_cmd)
 	}
 }
 
-void	ft_fill_exec(t_minishell *cli)
-{
-
-	cli->choice = cli->simple_cmd->id;
-	cli->cmd = cli->simple_cmd->cmd;
-	cli->args = cli->simple_cmd->args;
-}
-
 void    ft_parser(t_minishell *cli)
 {
 	int i;
@@ -94,6 +87,7 @@ void    ft_parser(t_minishell *cli)
 	{
 		create_simple_cmd(cli, &i, &start, &cli->simple_cmd);
 		if (!cli->status)
+			// ft_pipe(cli);
 			simple_cmd_printer(cli->simple_cmd);
 		free_simple_cmd(&cli->simple_cmd);
 		cli->simple_cmd = NULL;

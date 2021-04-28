@@ -21,8 +21,6 @@ int				dispatcher_id(char *cmd)
 		return (6);
 	if (ft_strncmp(cmd, "exit", 6) == 0)
 		return (7);
-	if (!ft_strncmp(cmd, "clear", 5))
-		return (8);
 	return (0);
 }
 
@@ -101,7 +99,7 @@ char			*arg_correction(char *s, t_element *env)
 				env_var = catch_elem(tmp[0], &env);
 				free(tmp[0]);
 				if (env_var && env_var->obj2)
-					dollar = env_var->obj2;
+					dollar = ft_strdup(env_var->obj2);
 			}
 			else
 			{
@@ -113,6 +111,7 @@ char			*arg_correction(char *s, t_element *env)
 			s = ft_strjoin(tmp[0], ft_substr(&s[i], 0, ft_strlen(s) - i));
 			i = (i - j) + ft_strlen(dollar) - 1;
 			free (tmp[1]);
+			tmp[1] = NULL;
 			i--;
 		}
 		i++;
@@ -128,6 +127,7 @@ int		get_fd_file(char *cmd, int *i, t_simple_cmd **s, t_element *env)
 	char redirect;
 
 	redirect = cmd[*i];
+	errno = 0;
 	(*i)++;
 	if (cmd[*i] == REDIRECTION3_TOKEN)
 		(*i)++;
@@ -265,6 +265,7 @@ void	create_simple_cmd(t_minishell *cli, int *i, int *start, t_simple_cmd **simp
 		*start = *i + 1;
 		stat = add_simple_cmd_node(simple_cmd, cmd, cli->shell);
 		free(cmd);
+		cmd = NULL;
 		if (cli->line[*i] != SEMICOLONE_TOKEN && cli->line[*i] && !stat)
 			(*i)++;
 	}

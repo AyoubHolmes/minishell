@@ -43,9 +43,15 @@ void	    delete_last_readline(t_readline **str);
 char	    *generate_line(t_readline *str);
 void	    print_readline(t_readline *str);
 t_readline  *create_readline(char *s);
+t_readline *reset_readline(t_readline *str);
 
 // ---------------------------------------------
 
+// ---------------- DEBUGGING ------------------
 
+void ft_putstr(char *s);
+void    ft_prompt();
+
+// ---------------------------------------------
 
 #endif // !READLINE_H

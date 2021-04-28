@@ -42,18 +42,19 @@ int main(int argc, char const *argv[])
 	char *finale;
 	int c;
 	t_readline *str;
+	t_readline *str2;
 	t_history *h;
 
-	finale = "";
 	if (init_term() == 0)
 	{
-		ft_putstr("ayoub-shell$>");
-		str = (t_readline *)malloc(sizeof(t_readline));
 		str = NULL;
+		str2 = NULL;
+		finale = "";
 		h = NULL;
 		set_input_mode ();
 		column_line_counts[0] = tgetnum("co");
 		column_line_counts[1] = tgetnum("li");
+		ft_prompt();
 		while (1)
 		{
 			c = 0;
@@ -75,10 +76,8 @@ int main(int argc, char const *argv[])
 				ft_putstr("\ntest here: ");
 				ft_putstr(finale);
 				ft_putstr("\n");
-				ft_putstr("ayoub-shell");
-				ft_putstr("\033[0;32m");
-				ft_putstr("$>");
-				ft_putstr("\033[0m");
+				str = reset_readline(str);
+				ft_prompt();
 			}
 			else if (c == 127 && str)
 			{
@@ -103,19 +102,23 @@ int main(int argc, char const *argv[])
 				ft_putstr(tgetstr("cd", NULL));
 				if (((c >> 16)&0xFF) == 65)
 				{
-					// write(1, "UP: ", 4);
-					if (h!= NULL)
+					if (h)
 					{
+						write(1, "UP: ", 4);
+						if (!h->next)
+							h = h->prev;
 						ft_putstr(h->s);
-						h = h->prev;
+						if (h->prev)
+							h = h->prev;
 					}
 				}
 				else if (((c >> 16)&0xFF) == 66)
 				{
-					// write(1, "DOWN: ", 6);
-					 if (h != NULL)
+					 if (h)
 					{
-						h = h->next;
+					write(1, "DOWN: ", 6);
+						if (h->next)
+							h = h->next;
 						ft_putstr(h->s);
 					}
 					else

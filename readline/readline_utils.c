@@ -101,3 +101,19 @@ t_readline	*create_readline(char *s)
 	}
 	return str;
 }
+
+t_readline *reset_readline(t_readline *str)
+{
+	t_readline *p;
+	t_readline *q;
+
+	p = str;
+	while (p)
+	{
+		q = p;
+		p = p->next;
+		free(q);
+		q = NULL;
+	}
+	return (NULL);
+}
