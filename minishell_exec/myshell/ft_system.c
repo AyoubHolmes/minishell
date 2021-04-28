@@ -58,8 +58,12 @@ void	path_handler(t_minishell *shell, int *a, int *i)
 	if (*a == 0)
 	{
 		argv = fill_args(argv, shell->args, binary_path);
+	//	free(binary_path);
+	//	binary_path = NULL;
 		execve(argv[0], argv, shell->enviroment);
 	}
+	//free(binary_path);
+	//binary_path = NULL;
 	(*i)++;
 }
 

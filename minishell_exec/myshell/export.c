@@ -13,13 +13,17 @@ void	edit_or_add(char *elm1, char *elm2, t_element **shell_)
 		{
 			list->next->id = 0;
 			if (elm2 == NULL)
+			{
+				//ft_free_var(elm1);	
 				return ;
-			list->next->obj2 = ft_strdup(elm2);
+			}
+			ft_free_var(list->next->obj2);
+			list->next->obj2 = elm2;
 			return ;
 		}
 		list = list->next;
 	}
-	add_end(shell_, elm1, ft_strdup(elm2), 0);
+	add_end(shell_, elm1, elm2, 0);
 }
 
 char	**var_split(char *str)
@@ -32,9 +36,8 @@ char	**var_split(char *str)
 	while (str[i] && str[i] != '=')
 		i++;
 	res[0] = ft_substr(str, 0, i);
-	res[1] = ft_substr(str, i + 1, ft_strlen(str));
 	if (str[i])
-		res[1] = str + i + 1;
+		res[1] = ft_substr(str, i + 1, ft_strlen(str));
 	else
 		res[1] = NULL;
 	return (res);
@@ -80,6 +83,7 @@ void	printer_export(t_element *list, t_minishell *shell_)
 char	*export_(t_minishell *shell_)
 {
 	t_element	*p;
+	t_element	*q;
 
 	p = NULL;
 	if (shell_->args != NULL)
@@ -88,11 +92,13 @@ char	*export_(t_minishell *shell_)
 	{
 		filling(&p, shell_->shell);
 		sort_l(p);
+		q= p;
 		while (p != NULL)
 		{
 			printer_export(p, shell_);
 			p = p->next;
 		}
+		free_element(q);
 	}
 	close(shell_->out_fd);
 	dup2(shell_->old_stdout, 1);

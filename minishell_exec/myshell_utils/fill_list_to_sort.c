@@ -8,9 +8,9 @@ void	filling(t_element **ptr, t_element *list)
 	while (shell != NULL)
 	{
 		if (*ptr == NULL)
-			*ptr = create_list(shell->obj1, shell->obj2, shell->id);
+			*ptr = create_list(ft_strdup(shell->obj1), ft_strdup(shell->obj2), shell->id);
 		else
-			*ptr = add_end(ptr, shell->obj1, shell->obj2, shell->id);
+			*ptr = add_end(ptr, ft_strdup(shell->obj1), ft_strdup(shell->obj2), shell->id);
 		shell = shell->next;
 	}
 }

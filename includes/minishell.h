@@ -76,10 +76,10 @@ typedef struct s_minishell
     int 		choice;
 	t_args		*args;
     t_element	*shell;
+    t_element	*paths;
+    t_element	*pwd;
+    t_element	*home;
 	t_element	*oldpwd;
-	t_element	*pwd;
-	t_element	*home;
-	t_element	*paths;
     char		**path;
 	int			old_stdout;
 	int			old_stdin;
@@ -106,6 +106,7 @@ char	*ft_substr(char const *src, unsigned int start, size_t n);
 //int		ft_strlen(const char *s);
 char	*ft_strtrim(char const *s1, char const *set);
 int     is_a_redirection(char *line);
+int		ft_isalnum(int c);
 
 //exec
 char **ft_split(char const *s, char c);
@@ -128,11 +129,10 @@ void sort_l(t_element *list);
 void filling(t_element **p,t_element *list);
 void ft_pipe(t_minishell *cli);
 char	*ft_strchr(const char *s, int c);
-//char	*ft_strjoin(char *s1, char *s2);
+char	*ft_strjoin(char *s1, char *s2);
 char	*ft_strdup(const char *src);
 t_element *catch_elem(char *elm1,t_element **shell_);
-
-void cat(void (*f)(void));
-void ex(void);
+void	free_element(t_element *list);
+void	ft_free_var(void *var);
 
 #endif

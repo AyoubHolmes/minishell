@@ -9,8 +9,8 @@ t_element	*create_list(void *elt1, void *elt2, int id)
 		return (NULL);
 	else
 	{
-		stnode->obj1 = malloc(sizeof(char *));
-		stnode->obj2 = malloc(sizeof(char *));
+		//stnode->obj1 = malloc(sizeof(char *));
+		//stnode->obj2 = malloc(sizeof(char *));
 		stnode->obj1 = elt1;
 		stnode->obj2 = elt2;
 		stnode->id = id;
@@ -30,8 +30,6 @@ t_element	*add_end(t_element **liste, void *elt1, void *elt2, int id)
 		return (NULL);
 	else
 	{
-		new->obj1 = malloc(sizeof(char *));
-		new->obj2 = malloc(sizeof(char *));
 		new->obj1 = elt1;
 		new->obj2 = elt2;
 		new->id = id;

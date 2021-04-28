@@ -102,6 +102,11 @@ void ft_pipe(t_minishell *cli)
 		cli->status = WEXITSTATUS(cli->wait_status);
 		i++;
 	}
+	free(fds);
+	free(pid_status);
+	fds = NULL;
+	pid_status = NULL;
+
 	dup2(STDOUT_FILENO, cli->out_fd);
 	dup2(STDIN_FILENO, cli->in_fd);
 	dup2(STDERR_FILENO, cli->err_fd);

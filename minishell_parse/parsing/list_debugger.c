@@ -27,6 +27,8 @@ void simple_cmd_printer(t_simple_cmd *s)
 		dup2(p->out_fd, 1);
 		dup2(p->err_fd, 2); */
 		ft_putstr("----------------\n", p->out_fd);
+		ft_putnbr_fd(p->out_fd, 1);
+		ft_putstr_parse("\n");
 		ft_putstr("cmd {", p->out_fd);
 		ft_putstr(p->cmd, p->out_fd);
 		ft_putstr("}\n", p->out_fd);

@@ -33,7 +33,6 @@ char	*ft_cases(t_minishell *shell, char *oldpwd)
 {
 	DIR	*folder;
 
-	folder = opendir(oldpwd);
 	if (!shell->args || strcmp(shell->args->arg, "~") == 0
 		|| strcmp(shell->args->arg, "~/") == 0)
 		return (shell->home->obj2);
@@ -45,11 +44,14 @@ char	*ft_cases(t_minishell *shell, char *oldpwd)
 	}
 	else if (strcmp(shell->args->arg, "-") == 0 && oldpwd != NULL)
 	{
+		folder = opendir(oldpwd);
 		if (folder != NULL || strcmp(oldpwd, "") == 0)
 		{
 			ft_putstr(oldpwd, shell->out_fd);
 			ft_putstr("\n", shell->out_fd);
 		}
+		free(folder);
+		folder = NULL;
 		return (oldpwd);
 	}
 	return (shell->args->arg);
@@ -88,5 +90,7 @@ char	*cd(t_minishell *shell)
 		chdir(s);
 		cd_helper(shell, folder, cwd);
 	}
+	free(cwd);
+	cwd = NULL;
 	return ("");
 }
