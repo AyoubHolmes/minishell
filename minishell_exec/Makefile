@@ -10,6 +10,7 @@ SRC  =	myshell/dispatcher.c\
 		myshell/export.c\
 		myshell/unset.c\
 		myshell/exit.c\
+		myshell/my_free.c\
 		\
 		myshell_utils/list_env.c\
 		myshell_utils/ft_split.c\
