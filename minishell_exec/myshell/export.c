@@ -14,7 +14,7 @@ void	edit_or_add(char *elm1, char *elm2, t_element **shell_)
 			list->next->id = 0;
 			if (elm2 == NULL)
 			{
-				//ft_free_var(elm1);	
+				ft_free_var(elm1);	
 				return ;
 			}
 			ft_free_var(list->next->obj2);
