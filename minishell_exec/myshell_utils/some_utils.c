@@ -6,7 +6,7 @@
 /*   By: shikma <shikma@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/24 18:12:16 by shikma            #+#    #+#             */
-/*   Updated: 2021/04/28 12:13:22 by shikma           ###   ########.fr       */
+/*   Updated: 2021/04/28 16:03:36 by shikma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	while (*str2)
 		s3[len++] = *(str2++);
 	free(s1);
-	// free(s2);
+	free(s2);
 	s3[len] = '\0';
 	return (s3);
 }

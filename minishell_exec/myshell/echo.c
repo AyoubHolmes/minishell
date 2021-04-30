@@ -8,7 +8,7 @@ int	compare_n(char *str)
 	len = 0;
 	len = ft_strlen(str);
 	i = 0;
-	if (strcmp(str, "") == 0)
+	if (ft_strcmp(str, "") == 0)
 		return (1);
 	if (str[i] == '-')
 	{

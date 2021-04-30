@@ -8,9 +8,11 @@ void	filling(t_element **ptr, t_element *list)
 	while (shell != NULL)
 	{
 		if (*ptr == NULL)
-			*ptr = create_list(ft_strdup(shell->obj1), ft_strdup(shell->obj2), shell->id);
+			*ptr = create_list(ft_strdup(shell->obj1),
+					ft_strdup(shell->obj2), shell->id);
 		else
-			*ptr = add_end(ptr, ft_strdup(shell->obj1), ft_strdup(shell->obj2), shell->id);
+			*ptr = add_end(ptr, ft_strdup(shell->obj1),
+					ft_strdup(shell->obj2), shell->id);
 		shell = shell->next;
 	}
 }
@@ -43,7 +45,7 @@ void	sort_l(t_element *list)
 		ptr2 = ptr->next;
 		while (ptr2)
 		{
-			if (strcmp(ptr->obj1, ptr2->obj1) > 0)
+			if (ft_strcmp(ptr->obj1, ptr2->obj1) > 0)
 				ft_swap(ptr, ptr2);
 			ptr2 = ptr2->next;
 		}

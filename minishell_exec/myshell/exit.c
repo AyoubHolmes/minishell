@@ -1,11 +1,11 @@
 #include "minishell.h"
 
-int		is_number(char *str)
+int	is_number(char *str)
 {
 	int	i;
 
 	i = 0;
-	while(str[i])
+	while (str[i])
 	{
 		if (ft_isdigit(str[i]) == 0)
 			return (0);
@@ -14,28 +14,31 @@ int		is_number(char *str)
 	return (1);
 }
 
+void	string_error_printer(t_minishell *shell)
+{
+	ft_putstr("bash: exit: ", shell->err_fd);
+	ft_putstr(shell->args->arg, shell->err_fd);
+	ft_putstr(": numeric argument required\n", shell->err_fd);
+	shell->status = 1;
+}
+
 char	*exit_(t_minishell *shell)
 {
 	char	*nb;
 
-	if(shell->args && shell->args->next)
+	if (shell->args && shell->args->next)
 	{
-		if(is_number(shell->args->arg) == 1)
+		if (is_number(shell->args->arg) == 1)
 		{
-			ft_putstr("bash: exit: too many arguments\n",shell->err_fd);
+			ft_putstr("bash: exit: too many arguments\n", shell->err_fd);
 			shell->status = 1;
-			return("");
+			return ("");
 		}
 	}
 	if (shell->args)
 	{
-		if(is_number(shell->args->arg) == 0)
-		{
-			ft_putstr("bash: exit: ",shell->err_fd);
-			ft_putstr(shell->args->arg,shell->err_fd);
-			ft_putstr(": numeric argument required\n",shell->err_fd);
-			shell->status = 1;
-		}
+		if (is_number(shell->args->arg) == 0)
+			string_error_printer(shell);
 		else
 			shell->status = ft_atoi(shell->args->arg);
 	}
