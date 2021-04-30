@@ -9,8 +9,6 @@ t_element	*create_list(void *elt1, void *elt2, int id)
 		return (NULL);
 	else
 	{
-		//stnode->obj1 = malloc(sizeof(char *));
-		//stnode->obj2 = malloc(sizeof(char *));
 		stnode->obj1 = elt1;
 		stnode->obj2 = elt2;
 		stnode->id = id;
@@ -59,7 +57,7 @@ void	delete_elem(char *elm, t_element *shell_)
 		return ;
 	while (list->next)
 	{
-		if (strcmp(list->next->obj1, elm) == 0)
+		if (ft_strcmp(list->next->obj1, elm) == 0)
 		{
 			list->next->id = 1;
 			free(list->next->obj2);

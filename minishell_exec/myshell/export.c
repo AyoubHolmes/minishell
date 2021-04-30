@@ -9,15 +9,13 @@ void	edit_or_add(char *elm1, char *elm2, t_element **shell_)
 		return ;
 	while (list->next)
 	{
-		if (strcmp(list->next->obj1, elm1) == 0)
+		if (ft_strcmp(list->next->obj1, elm1) == 0)
 		{
+			ft_free_var (elm1);
 			list->next->id = 0;
 			if (elm2 == NULL)
-			{
-				ft_free_var(elm1);	
 				return ;
-			}
-			ft_free_var(list->next->obj2);
+			ft_free_var (list->next->obj2);
 			list->next->obj2 = elm2;
 			return ;
 		}
@@ -60,6 +58,8 @@ void	export_to_liste(t_minishell *shell)
 		}
 		str = var_split(tmp->arg);
 		edit_or_add(str[0], str[1], &shell->shell);
+		free(str);
+		str = NULL;
 		tmp = tmp->next;
 	}
 }
@@ -92,7 +92,7 @@ char	*export_(t_minishell *shell_)
 	{
 		filling(&p, shell_->shell);
 		sort_l(p);
-		q= p;
+		q = p;
 		while (p != NULL)
 		{
 			printer_export(p, shell_);

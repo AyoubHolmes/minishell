@@ -6,7 +6,7 @@
 /*   By: shikma <shikma@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/02 22:13:54 by aboulbaz          #+#    #+#             */
-/*   Updated: 2021/04/27 16:22:16 by shikma           ###   ########.fr       */
+/*   Updated: 2021/04/28 14:35:49 by shikma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,5 +66,6 @@ int					ft_tolower(int c);
 int					ft_toupper(int c);
 t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),\
 								void (*del)(void *));
+int					ft_strcmp(const char *s1, const char *s2);
 
 #endif
