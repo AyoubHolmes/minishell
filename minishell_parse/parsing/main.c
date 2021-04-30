@@ -1,4 +1,5 @@
-#include "minishell.h"
+#include "../../includes/minishell.h"
+#include "readline.h"
 
 t_element *catch_elem(char *elm1,t_element **shell_)
 {
@@ -99,8 +100,10 @@ void    ft_parser(t_minishell *cli)
 int     main(int argc,char **argv,char **env)
 {
 	t_minishell cli;
+	t_history *history;
 	char		*tmp;
 
+	history = NULL;
 	cli.simple_cmd = NULL;
 	cli.enviroment = env;
 	cli.old_stdin = dup(0);
@@ -112,16 +115,22 @@ int     main(int argc,char **argv,char **env)
     {
 		cli.status = 0;
 		cli.line = NULL;
-        get_next_line(&tmp);
-		cli.line = ft_strtrim(tmp, " ");
-        ft_lexer(&cli);
-       	lexer_debugger(&cli);
-		if (cli.status == 0)
-			ft_parser(&cli);
-		free(tmp);
-		tmp = NULL;
-		free(cli.line);
-		cli.line = NULL;
+        // get_next_line(&tmp);
+		tmp = ft_readline(&history, &cli.status);
+		if (tmp)
+		{
+			cli.line = ft_strtrim(tmp, " ");
+			ft_lexer(&cli);
+			lexer_debugger(&cli);
+			if (cli.status == 0)
+				ft_parser(&cli);
+			free(tmp);
+			tmp = NULL;
+			free(cli.line);
+			cli.line = NULL;
+		}
+		else if (cli.status == 0)
+			ft_putstr("\n", 1);
 		prompt(cli.status);
 	}
 	return (0);

@@ -1,5 +1,10 @@
 #include "readline.h"
 
+void	ft_putchar(char s)
+{
+	write(1, &s, 1);
+}
+
 int		is_digit(char c)
 {
 	return (c >= '0' && c <= '9');
@@ -18,18 +23,6 @@ int		ft_atoi_readline(char **s)
 	return (a);
 }
 
-void ft_putstr(char *s)
-{
-	if (s)
-	{
-		while (*s)
-		{
-			write(1, s, 1);
-			s++;
-		}
-	}
-}
-
 int is_up_or_down(int c)
 {
   return ((c&0xFF) == 27 && ((c >> 8)&0xFF) == 91 && ((c >> 24)&0xFF) == 0);
@@ -42,18 +35,18 @@ void	termios_config(struct termios *old_attr)
 	int				ret;
 	term_type = getenv("TERM");
 	if (term_type == NULL)
-		ft_putstr("\r\033[0KTERM must be set (see 'env').\n");
+		ft_putstr("\r\033[0KTERM must be set (see 'env').\n", 1);
 	ret = tgetent(NULL, term_type);
 	if (ret < 0)
-		ft_putstr("\r\033[0KCould not access to the termcap database..\n");
+		ft_putstr("\r\033[0KCould not access to the termcap database..\n", 1);
 	if (ret == 0)
-		ft_putstr("\r\033[0KIs not defined in termcap database.\n");
+		ft_putstr("\r\033[0KIs not defined in termcap database.\n", 1);
 	if (tcgetattr(STDIN_FILENO, old_attr) < 0)
-		ft_putstr("Error tcgetattr\n");
+		ft_putstr("Error tcgetattr\n", 1);
 	new_attr = *old_attr;
 	new_attr.c_lflag &= ~(ECHO | ICANON | ISIG);
 	if (tcsetattr(STDIN_FILENO, TCSANOW, &new_attr) < 0)
-		ft_putstr("\r\033[0KError tcsetattr.\n");
+		ft_putstr("\r\033[0KError tcsetattr.\n", 1);
 }
 
 char 	*ft_readline(t_history **h, int *status)
@@ -76,7 +69,7 @@ char 	*ft_readline(t_history **h, int *status)
 		read (STDIN_FILENO, &c, 4);
 		if (c == 127 && dup)
 		{
-			ft_putstr("\033[6n");
+			ft_putstr("\033[6n", 1);
 			read(0, s, 8);
 			char *test = &s[2];
 			int x = ft_atoi_readline(&test);
@@ -85,8 +78,8 @@ char 	*ft_readline(t_history **h, int *status)
 			if (y > 14)
 			{
 				delete_last_readline(&dup);
-				ft_putstr(tgetstr("le", NULL));
-				ft_putstr(tgetstr("cd", NULL));
+				ft_putstr(tgetstr("le", NULL), 1);
+				ft_putstr(tgetstr("cd", NULL), 1);
 			}
 			else if (y == 14 && dup)
 			{
@@ -96,18 +89,21 @@ char 	*ft_readline(t_history **h, int *status)
 		}
 		else if (c == 0x3)
 		{
-			ft_putstr("\n");
+			ft_putstr("\n", 1);
 			*status = -1;
 			return (NULL);
 		}
 		else if (c == 0x4)
-		{
-			ft_putstr("\n");
-			exit(0);
+		{	
+			if (!dup)
+			{
+				ft_putstr("\n", 1);
+				exit(0);
+			}
 		}
 		else if (c == 10)
 		{
-			// last = get_last_history(h);
+			ft_putstr("\n", 1);
 			last->str = dup;
 			*h = last;
 			if ((*h)->str)
@@ -120,10 +116,10 @@ char 	*ft_readline(t_history **h, int *status)
 		}
 		else if (is_up_or_down(c))
 		{
-			ft_putstr("\033[6n");
+			ft_putstr("\033[6n", 1);
 			read(0, s, 30);
-			ft_putstr(tgoto(tgetstr("cm", NULL), 13, atoi(&s[2])  - 1));
-			ft_putstr(tgetstr("cd", NULL));
+			ft_putstr(tgoto(tgetstr("cm", NULL), 13, atoi(&s[2])  - 1), 1);
+			ft_putstr(tgetstr("cd", NULL), 1);
 			if (((c >> 16)&0xFF) == 65) // UP
 			{
 				if (*h)
