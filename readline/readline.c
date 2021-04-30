@@ -1,5 +1,10 @@
 #include "readline.h"
 
+void	ft_putchar(char s)
+{
+	write(1, &s, 1);
+}
+
 int		is_digit(char c)
 {
 	return (c >= '0' && c <= '9');
@@ -35,102 +40,135 @@ int is_up_or_down(int c)
   return ((c&0xFF) == 27 && ((c >> 8)&0xFF) == 91 && ((c >> 24)&0xFF) == 0);
 }
 
-int main(int argc, char const *argv[])
+void	termios_config(struct termios *old_attr)
 {
-	int column_line_counts[2];
-	char s[8];
+	struct termios	new_attr;
+	char			*term_type;
+	int				ret;
+	term_type = getenv("TERM");
+	if (term_type == NULL)
+		ft_putstr("\r\033[0KTERM must be set (see 'env').\n");
+	ret = tgetent(NULL, term_type);
+	if (ret < 0)
+		ft_putstr("\r\033[0KCould not access to the termcap database..\n");
+	if (ret == 0)
+		ft_putstr("\r\033[0KIs not defined in termcap database.\n");
+	if (tcgetattr(STDIN_FILENO, old_attr) < 0)
+		ft_putstr("Error tcgetattr\n");
+	new_attr = *old_attr;
+	new_attr.c_lflag &= ~(ECHO | ICANON | ISIG);
+	if (tcsetattr(STDIN_FILENO, TCSANOW, &new_attr) < 0)
+		ft_putstr("\r\033[0KError tcsetattr.\n");
+}
+
+char 	*ft_readline(t_history **h)
+{
+	char s[30];
 	char *finale;
 	int c;
-	t_readline *str;
-	t_readline *str2;
-	t_history *h;
+	struct termios s_termios;
+	t_history	*last;
+	t_history	*dup;
 
-	if (init_term() == 0)
+	add_history(h);
+	(*h)->str = NULL;
+	termios_config(&s_termios);
+	while (1)
 	{
-		str = NULL;
-		str2 = NULL;
-		finale = "";
-		h = NULL;
-		set_input_mode ();
-		column_line_counts[0] = tgetnum("co");
-		column_line_counts[1] = tgetnum("li");
-		ft_prompt();
-		while (1)
+		c = 0;
+		read (STDIN_FILENO, &c, 4);
+		if (c == 127 && (*h)->str)
 		{
-			c = 0;
-			read (STDIN_FILENO, &c, 4);
-			if (c == 0x3)
+			ft_putstr("\033[6n");
+			read(0, s, 8);
+			char *test = &s[2];
+			int x = ft_atoi_readline(&test);
+			test++;
+			int y = ft_atoi_readline(&(test));
+			if (y > 14)
 			{
-				ft_putstr("\ntest CTRL+C\n");
-				exit(0);
-			}
-			else if (c == 0x4)
-			{
-				ft_putstr("\ntest CTRL+D\n");
-				exit(0);
-			}
-			else if (c == 10)
-			{
-				finale = generate_line(str);
-				add_history(finale, &h);
-				ft_putstr("\ntest here: ");
-				ft_putstr(finale);
-				ft_putstr("\n");
-				str = reset_readline(str);
-				ft_prompt();
-			}
-			else if (c == 127 && str)
-			{
-				ft_putstr("\033[6n");
-				read(0, s, 8);
-				char *test = &s[2];
-				int x = ft_atoi_readline(&test);
-				test++;
-				int y = ft_atoi_readline(&(test));
-				if (str && y > 14)
-				{
-					ft_putstr(tgetstr("le", NULL));
-					ft_putstr(tgetstr("cd", NULL));
-					delete_last_readline(&str);
-				}
-			}
-			else if (is_up_or_down(c))
-			{
-				ft_putstr("\033[6n");
-				read(0, s, 8);
-				ft_putstr(tgoto(tgetstr("cm", NULL), 13, atoi(&s[2])  - 1));
+				delete_last_readline(&(*h)->str);
+				ft_putstr(tgetstr("le", NULL));
 				ft_putstr(tgetstr("cd", NULL));
-				if (((c >> 16)&0xFF) == 65)
-				{
-					if (h)
-					{
-						write(1, "UP: ", 4);
-						if (!h->next)
-							h = h->prev;
-						ft_putstr(h->s);
-						if (h->prev)
-							h = h->prev;
-					}
-				}
-				else if (((c >> 16)&0xFF) == 66)
-				{
-					 if (h)
-					{
-					write(1, "DOWN: ", 6);
-						if (h->next)
-							h = h->next;
-						ft_putstr(h->s);
-					}
-					else
-						print_readline(str); 
-				}
 			}
-			else
+			else if (y == 14 && (*h)->str)
 			{
-				write(1, &c, 4);
-				add_char(c, &str);
+				free((*h)->str);
+				(*h)->str = NULL;
 			}
 		}
+		else if (c == 0x3)
+		{
+			ft_putstr("\ntest CTRL+C\n");
+			return (NULL);
+		}
+		else if (c == 0x4)
+		{
+			ft_putstr("\ntest CTRL+D\n");
+			exit(0);
+		}
+		else if (c == 10)
+		{
+			last = get_last_history(h);
+			last->str = (*h)->str;
+			*h = get_last_history(h);;
+			if ((*h)->str)
+			{
+				finale = generate_line(last->str);
+				return (finale);
+			}
+			else
+				return (NULL);
+		}
+		else if (is_up_or_down(c))
+		{
+			ft_putstr("\033[6n");
+			read(0, s, 30);
+			ft_putstr(tgoto(tgetstr("cm", NULL), 13, atoi(&s[2])  - 1));
+			ft_putstr(tgetstr("cd", NULL));
+			if (((c >> 16)&0xFF) == 65) // UP
+			{
+				if (*h)
+				{
+					if ((*h)->prev)
+						*h = (*h)->prev;
+					print_readline((*h)->str); 
+				}
+			}
+			else if (((c >> 16)&0xFF) == 66) // DOWN
+			{
+				if (h)
+				{
+					if ((*h)->next)
+							*h = (*h)->next;
+						print_readline((*h)->str); 
+				}	
+			}
+		}
+		else
+		{
+			write(1, &c, 4);
+			add_char(c, &(*h)->str);
+		}
 	}
-	return 0;
+	return (NULL);
+}
+
+
+int     main(int argc,char **argv,char **env)
+{
+	t_history *history;
+	char		*tmp;
+
+	history = NULL;
+    while(1)
+    {
+		ft_prompt();
+		tmp = ft_readline(&history);
+		ft_putstr("\nCommand: ");
+		ft_putstr(tmp);
+		ft_putstr("\n");
+		ft_history_printer(history);
+	}
+	return (0);
 }

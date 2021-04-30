@@ -1,46 +1,61 @@
 #include "readline.h"
 
-void	add_history(char *s, t_history **str)
+void	add_history(t_history **history)
 {
 	t_history *p;
-	t_history *q;
 
-	if (*str == NULL)
+	if (*history == NULL)
 	{
-		*str = (t_history *)malloc(sizeof(t_history));
-		(*str)->s = strdup(s);
-		(*str)->next = NULL;
-		(*str)->prev = NULL;
+		*history = (t_history *)malloc(sizeof(t_history));
+		(*history)->str = NULL;
+		(*history)->next = NULL;
+		(*history)->prev = NULL;
 	}
-	else
+	else if ((*history)->str)
 	{
 		p = (t_history *)malloc(sizeof(t_history));
-		p->s = strdup(s);
-		p->prev = *str;
+		p->str = NULL;
+		p->prev = *history;
 		p->next = NULL;
-		(*str)->next = p;
-		*str = p;
+		(*history)->next = p;
+		*history = p;
 	}
-	p = *str;
-	while (p)
-	{
-		ft_putstr("\n");
-		ft_putstr(p->s);
-		ft_putstr("       ");
-		q = p;
-		p = p->prev;
-	}
-	ft_putstr("\n");
-	while (q)
-	{
-		ft_putstr("\n");
-		ft_putstr(q->s);
-		ft_putstr("       ");
-		q = q->next;
-	}
-	ft_putstr("\n");
 }
 
+t_history	*duplicate_history(t_history **history)
+{
+	t_history *dup;
+	t_history *p;
+
+	p = *history;
+	dup = (t_history *)malloc(sizeof(t_history));
+	dup->str = duplicate_readline(&(*history)->str);
+	return dup;
+}
+
+t_history		*get_last_history(t_history **str)
+{
+	t_history *p;
+
+	p = *str;
+	while (p->next)
+		p = p->next;
+	return (p);
+}
+
+void	ft_history_printer(t_history *history)
+{
+	t_history *p;
+
+	p = history;
+	ft_putstr("HISTORY PRINTER\n");
+	while (p && p->str)
+	{
+		print_readline(p->str);
+		ft_putstr("\n");
+		p = p->prev;
+	}
+}
 
 void    reset_input_mode (void)
 {
@@ -58,9 +73,8 @@ void    set_input_mode (void)
 	  exit (1);
 	}
   tcgetattr (STDIN_FILENO, &saved_attributes);
-  atexit (reset_input_mode);
   tcgetattr (STDIN_FILENO, &tattr);
-  tattr.c_lflag &= ~(ICANON | ECHO | ISIG);
+  tattr.c_lflag &= ~(ECHO | ICANON | ISIG);
   tcsetattr (STDIN_FILENO, TCSAFLUSH, &tattr);
 }
 
