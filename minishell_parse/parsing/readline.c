@@ -51,7 +51,7 @@ void	termios_config(struct termios *old_attr)
 
 char 	*ft_readline(t_history **h, int *status)
 {
-	char s[30];
+	char s[20];
 	char *finale;
 	int c;
 	struct termios s_termios;
