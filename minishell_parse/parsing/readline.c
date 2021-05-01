@@ -97,6 +97,7 @@ char 	*ft_readline(t_history **h, int *status)
 		{	
 			if (!dup)
 			{
+				*h = last;
 				ft_putstr("\n", 1);
 				exit(0);
 			}
