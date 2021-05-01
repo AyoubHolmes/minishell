@@ -32,12 +32,13 @@
 #include <dirent.h>
 #include <errno.h>
 #include <limits.h>
-//#include "libf.h"
+#include "libft.h"
 
 typedef struct	s_element
 {
 	void				*obj1;
 	void				*obj2;
+	int					id;
 	struct s_element	*next;
 }
 				t_element;
@@ -75,11 +76,19 @@ typedef struct s_minishell
     int 		choice;
 	t_args		*args;
     t_element	*shell;
+    t_element	*paths;
+    t_element	*pwd;
+    t_element	*home;
 	t_element	*oldpwd;
     char		**path;
 	int			old_stdout;
 	int			old_stdin;
 	int			old_stderror;
+	int			in_fd;
+	int			out_fd;
+	int			err_fd;
+	int			nb_pipe;
+	int			wait_status;
 }				t_minishell;
 
 void	ft_putstr_parse(char *str);
@@ -94,15 +103,15 @@ int		add_simple_cmd_node(t_simple_cmd **simple_cmd, char *cmd, t_element *env);
 void	simple_cmd_printer(t_simple_cmd *s);
 void	ft_putnbr_fd(int n, int fd);
 char	*ft_substr(char const *src, unsigned int start, size_t n);
-int		ft_strlen(const char *s);
+//int		ft_strlen(const char *s);
 char	*ft_strtrim(char const *s1, char const *set);
 int     is_a_redirection(char *line);
+int		ft_isalnum(int c);
 
 //exec
 char **ft_split(char const *s, char c);
 void fill_list(char **var,t_minishell *shell);
 void fill_dispatcher(t_minishell *shell);
-t_element *catch_elem(char *elm1,t_element **shell_);
 char *ft_system(t_minishell *shell);
 void ft_putstr(char *str,int fd);
 char *echo(t_minishell *shell);
@@ -113,13 +122,17 @@ char *unset(t_minishell *shell);
 char *env_(t_minishell *shell);
 char *exit_(t_minishell *shell);
 char *clear_(t_minishell *shell);
-t_element	*create_list(void *elt1,void *elt2, size_t data_size);
-t_element	*add_end(t_element **liste, void *elt1,void *elt2, size_t data_size);
+t_element	*create_list(void *elt1,void *elt2, int id);
+t_element	*add_end(t_element **liste, void *elt1,void *elt2, int id);
 void delete_elem(char *elm,t_element *shell_);
 void sort_l(t_element *list);
 void filling(t_element **p,t_element *list);
-
+void ft_pipe(t_minishell *cli);
 char	*ft_strchr(const char *s, int c);
 char	*ft_strjoin(char *s1, char *s2);
 char	*ft_strdup(const char *src);
+t_element *catch_elem(char *elm1,t_element **shell_);
+void	free_element(t_element *list);
+void	ft_free_var(void *var);
+
 #endif
