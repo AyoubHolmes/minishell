@@ -134,5 +134,5 @@ char	*ft_strdup(const char *src);
 t_element *catch_elem(char *elm1,t_element **shell_);
 void	free_element(t_element *list);
 void	ft_free_var(void *var);
-int		check_identifier(char *str, t_minishell *shell);
+int	check_identifier(char *str, t_minishell *shell, int id);
 #endif

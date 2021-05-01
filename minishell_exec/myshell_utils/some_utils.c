@@ -6,7 +6,7 @@
 /*   By: shikma <shikma@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/24 18:12:16 by shikma            #+#    #+#             */
-/*   Updated: 2021/04/30 14:49:07 by shikma           ###   ########.fr       */
+/*   Updated: 2021/05/01 08:56:16 by shikma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,21 +78,25 @@ char	*ft_strchr(const char *s, int c)
 		return (0);
 }
 
-int		valid_or_not(char c)
+int		valid_or_not(char c, int id)
 {
+	if(id == 1 && c == '=')
+		return(0);
 	if (ft_isalnum(c) == 1 || c == '_')
 		return (0);
 	return (1);
 }
 
-int	check_identifier(char *str, t_minishell *shell)
+int	check_identifier(char *str, t_minishell *shell, int id)
 {
 	int	i;
 
 	i = 0;
-	while ((str[i] != '=' && str[i]) || ft_strcmp(str, "\0") == 0)
+	while (str[i] || ft_strcmp(str, "\0") == 0)
 	{
-		if(ft_strcmp(str, "\0") == 0 || ft_isdigit(str[0]) == 1 || valid_or_not(str[i]) == 1)
+		ft_putnbr_fd(valid_or_not(str[i],id),1);
+		ft_putstr_parse("\n");
+		if(ft_strcmp(str, "\0") == 0 || str[0] == '=' || ft_isdigit(str[0]) == 1 || valid_or_not(str[i],id) == 1)
 		{
 			ft_putstr("ayoub-shell:", shell->err_fd);
 			ft_putstr(shell->cmd, shell->err_fd);

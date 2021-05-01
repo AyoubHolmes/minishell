@@ -49,7 +49,7 @@ void	export_to_liste(t_minishell *shell)
 	tmp = shell->args;
 	while (tmp)
 	{
-		if(check_identifier(tmp->arg,shell) == 1)
+		if(check_identifier(tmp->arg,shell, 1) == 1)
 		{
 			str = var_split(tmp->arg);
 			edit_or_add(str[0], str[1], &shell->shell);
