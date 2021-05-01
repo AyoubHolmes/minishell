@@ -202,7 +202,7 @@ t_simple_cmd	*create_simple_cmd_node(char *cmd, t_element *env, int *stat)
 			{
 				size++;
 				i++;
-				while (cmd[i] && (cmd[i] != SINGLE_QUOTE_TOKEN || cmd[i] != DOUBLE_QUOTE_TOKEN))
+				while (cmd[i] && (cmd[i] != SINGLE_QUOTE_TOKEN && cmd[i] != DOUBLE_QUOTE_TOKEN))
 				{
 					size++;
 					i++;

@@ -49,17 +49,13 @@ void	export_to_liste(t_minishell *shell)
 	tmp = shell->args;
 	while (tmp)
 	{
-		if (tmp->arg[0] == '=')
+		if(check_identifier(tmp->arg,shell) == 1)
 		{
-			ft_putstr("ayoub-shell: export: `", shell->err_fd);
-			ft_putstr(tmp->arg, shell->err_fd);
-			ft_putstr("': not a valid identifier\n", shell->err_fd);
-			shell->status = 1;
+			str = var_split(tmp->arg);
+			edit_or_add(str[0], str[1], &shell->shell);
+			free(str);
+			str = NULL;
 		}
-		str = var_split(tmp->arg);
-		edit_or_add(str[0], str[1], &shell->shell);
-		free(str);
-		str = NULL;
 		tmp = tmp->next;
 	}
 }
