@@ -1,42 +1,43 @@
 #include "../../includes/minishell.h"
 #include "readline.h"
 
-t_element *catch_elem(char *elm1,t_element **shell_)
+t_element	*catch_elem(char *elm1, t_element **shell_)
 {
-	t_element *list;
+	t_element	*list;
 
 	list = *shell_;
-	if(list == NULL)
-		return(NULL);
-	while(list->next)
+	if (list == NULL)
+		return (NULL);
+	while (list->next)
 	{
-		if(strcmp(list->next->obj1,elm1) == 0)
-				return (list->next);
+		if (ft_strcmp(list->next->obj1, elm1) == 0)
+			return (list->next);
 		list = list->next;
 	}
-	return(NULL);
+	return (NULL);
 }
 
-void ft_exec_(t_minishell *cli)
+void	ft_exec_(t_minishell *cli)
 {
-	char **var;
-	int i = 0;
+	char	**var;
+	int		i;
 
+	i = 0;
 	cli->shell = NULL;
-    while(cli->enviroment[i])
-    {
-    	var = ft_split(cli->enviroment[i],'=');
-        i++;
-    	fill_list(var,cli);
+	while (cli->enviroment[i])
+	{
+		var = ft_split(cli->enviroment[i], '=');
+		i++;
+		fill_list(var, cli);
 		free(var);
 		var = NULL;
-    }
-	cli->oldpwd = catch_elem("OLDPWD",&cli->shell);
+	}
+	cli->oldpwd = catch_elem("OLDPWD", &cli->shell);
 	free(cli->oldpwd->obj2);
 	cli->oldpwd->obj2 = NULL;
-	cli->pwd = catch_elem("PWD",&cli->shell);
-	cli->home = catch_elem("HOME",&cli->shell);
-	cli->paths = catch_elem("PATH",&cli->shell);
+	cli->pwd = catch_elem("PWD", &cli->shell);
+	cli->home = catch_elem("HOME", &cli->shell);
+	cli->paths = catch_elem("PATH", &cli->shell);
 }
 
 void	free_args(t_args **args)
@@ -58,8 +59,8 @@ void	free_args(t_args **args)
 
 void	free_simple_cmd(t_simple_cmd **simple_cmd)
 {
-	t_simple_cmd *p;
-	t_simple_cmd *q;
+	t_simple_cmd	*p;
+	t_simple_cmd	*q;
 
 	p = *simple_cmd;
 	while (p != NULL)
@@ -74,12 +75,12 @@ void	free_simple_cmd(t_simple_cmd **simple_cmd)
 	}
 }
 
-void    ft_parser(t_minishell *cli)
+void	ft_parser(t_minishell *cli)
 {
-	int i;
-	int size;
-	int start;
-	char *cmd;
+	int		i;
+	int		size;
+	int		start;
+	char	*cmd;
 
 	i = 0;
 	start = 0;
@@ -88,8 +89,8 @@ void    ft_parser(t_minishell *cli)
 	{
 		create_simple_cmd(cli, &i, &start, &cli->simple_cmd);
 		if (!cli->status)
-			// ft_pipe(cli);
-			simple_cmd_printer(cli->simple_cmd);
+			ft_pipe(cli);
+			// simple_cmd_printer(cli->simple_cmd);
 		free_simple_cmd(&cli->simple_cmd);
 		cli->simple_cmd = NULL;
 		if (cli->line[i])
@@ -97,10 +98,14 @@ void    ft_parser(t_minishell *cli)
 	}
 }
 
-int     main(int argc,char **argv,char **env)
+int	main(int argc, char **argv, char **env)
 {
+<<<<<<< HEAD
 	t_minishell cli;
 	t_history *history;
+=======
+	t_minishell	cli;
+>>>>>>> 0292747d277050d126012f84f08f260a1ea31fdb
 	char		*tmp;
 
 	history = NULL;
@@ -110,11 +115,12 @@ int     main(int argc,char **argv,char **env)
 	cli.old_stdout = dup(1);
 	cli.old_stderror = dup(2);
 	ft_exec_(&cli);
-    prompt(0);
-    while(1)
-    {
+	prompt(0);
+	while (1)
+	{
 		cli.status = 0;
 		cli.line = NULL;
+<<<<<<< HEAD
         // get_next_line(&tmp);
 		tmp = ft_readline(&history, &cli.status);
 		if (tmp)
@@ -131,6 +137,18 @@ int     main(int argc,char **argv,char **env)
 		}
 		else if (cli.status == 0)
 			ft_putstr("\n", 1);
+=======
+		get_next_line(&tmp);
+		cli.line = ft_strtrim(tmp, " ");
+		ft_lexer(&cli);
+		lexer_debugger(&cli);
+		if (cli.status == 0)
+			ft_parser(&cli);
+		free(tmp);
+		tmp = NULL;
+		free(cli.line);
+		cli.line = NULL;
+>>>>>>> 0292747d277050d126012f84f08f260a1ea31fdb
 		prompt(cli.status);
 	}
 	return (0);
