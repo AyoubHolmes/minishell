@@ -31,7 +31,7 @@ void	edit_elem(char *elm1, char *elm2, t_element **shell_)
 
 char	*ft_cases(t_minishell *shell, char *oldpwd)
 {
-	int dir;
+	int	dir;
 
 	if (!shell->args || ft_strcmp(shell->args->arg, "~") == 0
 		|| ft_strcmp(shell->args->arg, "~/") == 0)
@@ -69,7 +69,6 @@ void	cd_helper(t_minishell *shell, int dir, char	*cwd)
 	{
 		shell->oldpwd->obj2 = shell->pwd->obj2;
 		getcwd(cwd, PATH_MAX);
-		// ft_free_var(shell->pwd->obj2);
 		shell->pwd->obj2 = cwd;
 	}
 }
@@ -85,7 +84,7 @@ char	*cd(t_minishell *shell)
 	s = ft_cases(shell, shell->oldpwd->obj2);
 	if (s != NULL)
 	{
-		if(shell->args)
+		if (shell->args)
 			shell->args->arg = s;
 		dir = chdir(s);
 		cd_helper(shell, dir, cwd);

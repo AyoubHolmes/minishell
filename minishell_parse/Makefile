@@ -9,6 +9,9 @@ SRC = 	./parsing/main.c \
 		./parsing/list_funcs.c\
 		./parsing/list_debugger.c\
 		./parsing/pipeline_exec.c\
+		./parsing/readline.c\
+		./parsing/readline_utils.c\
+		./parsing/history_utils.c\
 
 OBJECT = $(SRC:.c=.o)
 LIBFT = ./parsing/libft
@@ -22,7 +25,7 @@ $(NAME): $(OBJECT)
 
 
 %.o: %.c
-	@gcc -I $(HEADERS) -o $@ -c $<
+	@gcc -ltermcap -I $(HEADERS) -o $@ -c $<  > /dev/null
 
 all: $(NAME) 
 	

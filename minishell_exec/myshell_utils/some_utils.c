@@ -6,35 +6,11 @@
 /*   By: shikma <shikma@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/24 18:12:16 by shikma            #+#    #+#             */
-/*   Updated: 2021/05/01 08:56:16 by shikma           ###   ########.fr       */
+/*   Updated: 2021/05/01 11:59:46 by shikma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// char	*ft_substr(char *s, unsigned int start, size_t len)
-// {
-// 	char		*string2;
-// 	size_t		j;
-
-// 	j = 0;
-// 	if (!s)
-// 		return (ft_strdup(""));
-// 	if (ft_strlen(s) < start)
-// 		return (ft_strdup(""));
-// 	string2 = (char*)malloc((len + 1) * sizeof(char));
-// 	if (string2 == NULL)
-// 		return (NULL);
-// 	j = 0;
-// 	while (s[start + j] && j < len)
-// 	{
-// 		string2[j] = (char)s[start + j];
-// 		j++;
-// 	}
-// 	string2[j] = '\0';
-// 	free(s);
-// 	return (string2);
-// }
 
 char	*ft_strjoin(char *s1, char *s2)
 {
@@ -78,35 +54,42 @@ char	*ft_strchr(const char *s, int c)
 		return (0);
 }
 
-int		valid_or_not(char c, int id)
+int	valid_or_not(char c, int id)
 {
-	if(id == 1 && c == '=')
-		return(0);
+	if (id == 1 && c == '=')
+		return (0);
 	if (ft_isalnum(c) == 1 || c == '_')
 		return (0);
 	return (1);
 }
 
-int	check_identifier(char *str, t_minishell *shell, int id)
+int	check_identifier(char *str, t_minishell *shell, int id, char *arg)
 {
 	int	i;
-
+	char **tmp;
 	i = 0;
+	if(id == 1)
+	{
+		tmp = ft_split(str,'=');
+		if(tmp[0])
+			str = tmp[0];
+		else
+			str = "\0";
+	}
 	while (str[i] || ft_strcmp(str, "\0") == 0)
 	{
-		ft_putnbr_fd(valid_or_not(str[i],id),1);
-		ft_putstr_parse("\n");
-		if(ft_strcmp(str, "\0") == 0 || str[0] == '=' || ft_isdigit(str[0]) == 1 || valid_or_not(str[i],id) == 1)
+		if (ft_strcmp(str, "\0") == 0 || str[0] == '='
+			|| ft_isdigit(str[0]) == 1 || valid_or_not(str[i], id) == 1)
 		{
 			ft_putstr("ayoub-shell:", shell->err_fd);
 			ft_putstr(shell->cmd, shell->err_fd);
 			ft_putstr(": `", shell->err_fd);
-			ft_putstr(str, shell->err_fd);
+			ft_putstr(arg, shell->err_fd);
 			ft_putstr("': not a valid identifier\n", shell->err_fd);
 			shell->status = 1;
 			return (0);
 		}
 		i++;
 	}
-	return(1);
+	return (1);
 }

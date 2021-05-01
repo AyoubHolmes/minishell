@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 void	ft_fill_exec(t_minishell *cli, t_simple_cmd *tmp)
 {

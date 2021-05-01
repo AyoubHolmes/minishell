@@ -1,8 +1,8 @@
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 void	args_printer(t_args *args, int fd)
 {
-	t_args *p;
+	t_args	*p;
 
 	p = args;
 	while (p != NULL)
@@ -10,22 +10,21 @@ void	args_printer(t_args *args, int fd)
 		ft_putstr("arg {", fd);
 		if (p->arg[0] != REDIRECTION1_TOKEN)
 			ft_putstr(p->arg, fd);
+		if (p->arg[0] == '\0')
+			ft_putstr("test", fd);
 		ft_putstr("}\n", fd);
 		p = p->next;
 	}
 }
 
-void simple_cmd_printer(t_simple_cmd *s)
+void	simple_cmd_printer(t_simple_cmd *s)
 {
-	t_simple_cmd *p;
+	t_simple_cmd	*p;
 
 	p = s;
 	while (p != NULL)
 	{
 		ft_putstr("-------- PIPELINE ----------\n", 1);
-		/* dup2(p->in_fd, 0);
-		dup2(p->out_fd, 1);
-		dup2(p->err_fd, 2); */
 		ft_putstr("----------------\n", p->out_fd);
 		ft_putnbr_fd(p->out_fd, 1);
 		ft_putstr_parse("\n");

@@ -114,7 +114,7 @@ void fill_list(char **var,t_minishell *shell);
 void fill_dispatcher(t_minishell *shell);
 char *ft_system(t_minishell *shell);
 void ft_putstr(char *str,int fd);
-char *echo(t_minishell *shell);
+char *echo_(t_minishell *shell);
 char *pwd(t_minishell *shell);
 char *cd(t_minishell *shell);
 char *export_(t_minishell *shell);
@@ -134,5 +134,5 @@ char	*ft_strdup(const char *src);
 t_element *catch_elem(char *elm1,t_element **shell_);
 void	free_element(t_element *list);
 void	ft_free_var(void *var);
-int	check_identifier(char *str, t_minishell *shell, int id);
+int	check_identifier(char *str, t_minishell *shell, int id, char *arg);
 #endif

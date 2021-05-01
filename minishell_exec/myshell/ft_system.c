@@ -50,7 +50,8 @@ void	path_handler(t_minishell *shell, int *a, int *i)
 	*a = stat(shell->cmd, &buff);
 	if (*a != 0 && shell->paths->id == 0)
 	{
-		binary_path = ft_strjoin(ft_strjoin(shell->path[*i],ft_strdup("/")), ft_strdup(shell->cmd));
+		binary_path = ft_strjoin(ft_strjoin(shell->path[*i],
+					ft_strdup("/")), ft_strdup(shell->cmd));
 		*a = stat(binary_path, &buff);
 	}
 	else
