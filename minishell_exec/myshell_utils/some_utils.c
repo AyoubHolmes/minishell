@@ -6,11 +6,11 @@
 /*   By: aboulbaz <aboulbaz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/24 18:12:16 by shikma            #+#    #+#             */
-/*   Updated: 2021/05/01 08:33:16 by aboulbaz         ###   ########.fr       */
+/*   Updated: 2021/05/01 14:24:22 by aboulbaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 // char	*ft_substr(char *s, unsigned int start, size_t len)
 // {
@@ -36,6 +36,15 @@
 // 	return (string2);
 // }
 
+void	ft_free(void *s)
+{
+	if (s)
+	{
+		free(s);
+		s = NULL;
+	}
+}
+
 char	*ft_strjoin(char *s1, char *s2)
 {
 	char				*s3;
@@ -57,8 +66,6 @@ char	*ft_strjoin(char *s1, char *s2)
 		s3[len++] = *(str1++);
 	while (*str2)
 		s3[len++] = *(str2++);
-	free(s1);
-	free(s2);
 	s3[len] = '\0';
 	return (s3);
 }

@@ -62,7 +62,7 @@ int				insert_cmd(t_simple_cmd **s, char *cmd)
 	return (0);
 }
 
-char			*arg_correction(char *s, t_element *env)
+char			*arg_correction(char *s, t_element *env, int err_id)
 {
 	int i;
 	int j;
@@ -88,7 +88,7 @@ char			*arg_correction(char *s, t_element *env)
 		{
 			i++;
 			j = 0;
-			if (!(s[i] >= '0' && s[i] <= '9'))
+			if (ft_isalnum(s[i]))
 			{
 				while(s[i] && s[i] != DOLLAR_TOKEN && s[i] != BACKSLASH_TOKEN && s[i] != SINGLE_QUOTE_TOKEN && s[i] != DOUBLE_QUOTE_TOKEN && s[i] != ' ')
 				{
@@ -97,26 +97,81 @@ char			*arg_correction(char *s, t_element *env)
 				}
 				tmp[0] = ft_substr(&s[i - j], 0, j);
 				env_var = catch_elem(tmp[0], &env);
-				// free(tmp[0]);
 				if (env_var && env_var->obj2)
 					dollar = ft_strdup(env_var->obj2);
 			}
 			else
 			{
+				if(s[i] == '?')
+					dollar = ft_itoa(err_id);
+				else
+					dollar = ft_strdup("");
 				i++;
 				j++;
 			}
+			// free(tmp[0]);
 			tmp[0] = ft_strjoin(ft_substr(s, 0, i - j - 1), dollar);
 			tmp[1] = s;
 			s = ft_strjoin(tmp[0], ft_substr(&s[i], 0, ft_strlen(s) - i));
 			i = (i - j) + ft_strlen(dollar) - 1;
-			free (tmp[1]);
-			tmp[1] = NULL;
 			i--;
 		}
 		i++;
 	}
 	return (s);
+}
+
+char	*add_char_at_beginning(char c, char *s)
+{
+	int i;
+	char *t;
+
+	t = malloc(ft_strlen(s) + 2);
+	t[0] = DOLLAR_TOKEN;
+	i = 0;
+	while (s[i])
+	{
+		t[i + 1] = s[i];
+		i++;
+	}
+	t[i + 1] = '\0';
+	return (t);
+}
+
+char	*extract_filename(char *s, t_element *env, int err_id)
+{
+	char *filename;
+	char *tmp;
+	t_element *env_var;
+	int i;
+	int j;
+
+	if (s[0] == DOLLAR_TOKEN)
+	{
+		i = 1;
+		j = 0;
+		while(s[i] && s[i] != DOLLAR_TOKEN && s[i] != BACKSLASH_TOKEN &&
+			s[i] != SINGLE_QUOTE_TOKEN && s[i] != DOUBLE_QUOTE_TOKEN && s[i] != ' ')
+		{
+			j++;
+			i++;
+		}
+		if (s[i] == BACKSLASH_TOKEN || s[i] == SINGLE_QUOTE_TOKEN || s[i] == DOUBLE_QUOTE_TOKEN)
+			i = -1;
+		else
+		{
+			tmp = ft_substr(&s[i - j], 0, j);
+			env_var = catch_elem(tmp, &env);
+			
+			if (env_var && env_var->obj2)
+				filename = ft_strdup(env_var->obj2);
+			else
+				filename = add_char_at_beginning(DOLLAR_TOKEN, tmp);
+		}	
+	}
+	else if (i == -1 || 1)
+		filename = arg_correction(s, env, err_id);
+	return (filename);
 }
 
 int		get_fd_file(char *cmd, int *i, t_simple_cmd **s, t_element *env)
@@ -139,28 +194,36 @@ int		get_fd_file(char *cmd, int *i, t_simple_cmd **s, t_element *env)
 		(*i)++;
 		size++;
 	}
-	filename = arg_correction(ft_substr(&cmd[(*i) - size], 0, size), env);
-	if (redirect == REDIRECTION1_TOKEN)
+	// filename = arg_correction(ft_substr(&cmd[(*i) - size], 0, size), env, (*s)->err_id);
+	filename = extract_filename(ft_substr(&cmd[(*i) - size], 0, size), env, (*s)->err_id);
+	if (redirect == REDIRECTION1_TOKEN && filename[0] != DOLLAR_TOKEN)
 		(*s)->out_fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0666);
-	else if (redirect == REDIRECTION2_TOKEN)
+	else if (redirect == REDIRECTION2_TOKEN && filename[0] != DOLLAR_TOKEN)
 		(*s)->in_fd = open(filename, O_RDONLY, 0666);
-	else if (redirect == REDIRECTION3_TOKEN)
+	else if (redirect == REDIRECTION3_TOKEN && filename[0] != DOLLAR_TOKEN)
 		(*s)->out_fd = open(filename, O_CREAT | O_WRONLY | O_APPEND, 0666);
-	// free(filename);
-	filename = NULL;
-	if (errno != 0)
+	if (errno != 0 || filename[0] == DOLLAR_TOKEN)
 	{
 		if (!(*s)->cmd)
 			ft_putstr("minishell", 2);
 		else	
 			ft_putstr((*s)->cmd, 2);
 		ft_putstr(": ", 2);
-		ft_putstr(filename, 2);
+		if (filename[0] == DOLLAR_TOKEN)
+			ft_putstr_fd("$", 2);
+		else
+			write(2, &filename[0], 1);
+		ft_putstr(&filename[1], 2);
 		ft_putstr(": ", 2);
-		ft_putstr(strerror(errno), 2);
+		if (errno != 0)
+			ft_putstr(strerror(errno), 2);
+		else
+			ft_putstr_fd("ambiguous redirect", 2);
 		ft_putstr("\n", 2);
-		return (9);
+		return (1);
 	}
+	free(filename);
+	filename = NULL;
 	return (0);
 }
 
@@ -179,7 +242,7 @@ t_simple_cmd			*simple_cmd_node_init()
 	return (s);
 }
 
-t_simple_cmd	*create_simple_cmd_node(char *cmd, t_element *env, int *stat)
+t_simple_cmd	*create_simple_cmd_node(char *cmd, t_element *env, int *stat, int err_id)
 {
 	t_simple_cmd *s;
 	int i;
@@ -216,7 +279,7 @@ t_simple_cmd	*create_simple_cmd_node(char *cmd, t_element *env, int *stat)
 			*stat = get_fd_file(cmd, &i, &s, env);
 		else if (size != 0)
 		{
-			c = arg_correction(ft_substr(cmd, start, size), env);
+			c = arg_correction(ft_substr(cmd, start, size), env, err_id);
 			*stat = insert_cmd(&s, c);
 			start = i + 1;
 		}
@@ -226,20 +289,20 @@ t_simple_cmd	*create_simple_cmd_node(char *cmd, t_element *env, int *stat)
 	return (s);
 }
 
-int		add_simple_cmd_node(t_simple_cmd **simple_cmd, char *cmd, t_element *env)
+int		add_simple_cmd_node(t_simple_cmd **simple_cmd, char *cmd, t_minishell *cli)
 {
 	t_simple_cmd *p;
 	int stat;
 
 	stat = 0;
 	if (*simple_cmd == NULL)
-		*simple_cmd = create_simple_cmd_node(cmd, env, &stat);
+		*simple_cmd = create_simple_cmd_node(cmd, cli->shell, &stat, cli->error_id);
 	else
 	{
 		p = *simple_cmd;
 		while(p->next)
 			p = p->next;
-		p->next = create_simple_cmd_node(cmd, env, &stat);
+		p->next = create_simple_cmd_node(cmd, cli->shell, &stat, cli->error_id);
 	}
 	return (stat);
 }
@@ -263,7 +326,7 @@ void	create_simple_cmd(t_minishell *cli, int *i, int *start, t_simple_cmd **simp
 		}
 		cmd = ft_substr(cli->line, *start, size);
 		*start = *i + 1;
-		stat = add_simple_cmd_node(simple_cmd, cmd, cli->shell);
+		stat = add_simple_cmd_node(simple_cmd, cmd, cli);
 		free(cmd);
 		cmd = NULL;
 		if (cli->line[*i] != SEMICOLONE_TOKEN && cli->line[*i] && !stat)

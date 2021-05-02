@@ -90,20 +90,27 @@ char 	*ft_readline(t_history **h, int *status)
 		else if (c == 0x3)
 		{
 			ft_putstr("\n", 1);
-			*status = -1;
+			*status = 1;
 			return (NULL);
+		}
+		else if (c == 0xC)
+		{
+			ft_putstr("\n", 1);
+			*status = 0;
+			return (ft_strdup("clear"));
 		}
 		else if (c == 0x4)
 		{	
 			if (!dup)
 			{
 				*h = last;
-				ft_putstr("\n", 1);
-				exit(0);
+				ft_putstr("exit\n", 1);
+				exit(*status);
 			}
 		}
 		else if (c == 10)
 		{
+			
 			ft_putstr("\n", 1);
 			last->str = dup;
 			*h = last;
@@ -148,7 +155,7 @@ char 	*ft_readline(t_history **h, int *status)
 				}	
 			}
 		}
-		else
+		else if (c >= 32 && c <= 127)
 		{
 			write(1, &c, 4);
 			add_char(c, &dup);

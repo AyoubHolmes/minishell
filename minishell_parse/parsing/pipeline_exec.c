@@ -1,11 +1,5 @@
-<<<<<<< HEAD
 #include "../../includes/minishell.h"
 void	ft_fill_exec(t_minishell *cli,t_simple_cmd *tmp)
-=======
-#include "minishell.h"
-
-void	ft_fill_exec(t_minishell *cli, t_simple_cmd *tmp)
->>>>>>> 0292747d277050d126012f84f08f260a1ea31fdb
 {
 	cli->choice = tmp->id;
 	cli->cmd = tmp->cmd;

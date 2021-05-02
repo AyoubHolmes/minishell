@@ -15,7 +15,9 @@
 
 typedef struct			s_readline
 {
+
 	int				c;
+	struct s_readline	*begin;
 	struct s_readline	*next;
 	struct s_readline	*prev;
 }						t_readline;	

@@ -89,8 +89,10 @@ void	ft_parser(t_minishell *cli)
 	{
 		create_simple_cmd(cli, &i, &start, &cli->simple_cmd);
 		if (!cli->status)
-			ft_pipe(cli);
-			// simple_cmd_printer(cli->simple_cmd);
+			// ft_pipe(cli);
+			simple_cmd_printer(cli->simple_cmd);
+		else
+			cli->error_id = cli->status;
 		free_simple_cmd(&cli->simple_cmd);
 		cli->simple_cmd = NULL;
 		if (cli->line[i])
@@ -100,12 +102,8 @@ void	ft_parser(t_minishell *cli)
 
 int	main(int argc, char **argv, char **env)
 {
-<<<<<<< HEAD
 	t_minishell cli;
 	t_history *history;
-=======
-	t_minishell	cli;
->>>>>>> 0292747d277050d126012f84f08f260a1ea31fdb
 	char		*tmp;
 
 	history = NULL;
@@ -115,13 +113,11 @@ int	main(int argc, char **argv, char **env)
 	cli.old_stdout = dup(1);
 	cli.old_stderror = dup(2);
 	ft_exec_(&cli);
+	cli.error_id = 0;
 	prompt(0);
 	while (1)
 	{
-		cli.status = 0;
 		cli.line = NULL;
-<<<<<<< HEAD
-        // get_next_line(&tmp);
 		tmp = ft_readline(&history, &cli.status);
 		if (tmp)
 		{
@@ -135,20 +131,6 @@ int	main(int argc, char **argv, char **env)
 			free(cli.line);
 			cli.line = NULL;
 		}
-		else if (cli.status == 0)
-			ft_putstr("\n", 1);
-=======
-		get_next_line(&tmp);
-		cli.line = ft_strtrim(tmp, " ");
-		ft_lexer(&cli);
-		lexer_debugger(&cli);
-		if (cli.status == 0)
-			ft_parser(&cli);
-		free(tmp);
-		tmp = NULL;
-		free(cli.line);
-		cli.line = NULL;
->>>>>>> 0292747d277050d126012f84f08f260a1ea31fdb
 		prompt(cli.status);
 	}
 	return (0);

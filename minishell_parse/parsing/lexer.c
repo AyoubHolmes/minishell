@@ -107,7 +107,8 @@ void    ft_tokenizer(char *c, char *line, int *escape)
 	else if (*line == '<' && is_not_a_string(*c) && *escape == 0)
 		ft_lexer_token_helper(c, line, REDIRECTION2_SETTER, REDIRECTION2_TOKEN);
 	else if (*line == '$' && *escape == 0 && (is_not_a_string(*c) ||\
-		(*c & DOUBLE_QUOTE_SETTER) != 0) && is_alphanum(*(line + 1)))
+		(*c & DOUBLE_QUOTE_SETTER) != 0) && (is_alphanum(*(line + 1)) || *(line + 1) == '?'\
+		|| *(line + 1) == '_'))
 		ft_lexer_token_helper(c, line, DOLLAR_SETTER, DOLLAR_TOKEN);
 	else if (*line == '\\' && *escape == 0 && (is_not_a_string(*c) ||\
 		((*c & DOUBLE_QUOTE_SETTER) != 0 && (*(line + 1) == '`' || *(line + 1) == '$' || *(line + 1) == '"' || *(line + 1) == '\\'))))
@@ -174,7 +175,7 @@ void    ft_lexer(t_minishell *cli)
 		i++;
 	}
 	if (!is_not_a_string(cli->c))
-		cli->status = 5;
+		cli->status = 2;
 }
 
 void	redirection_error_messages(t_minishell *cli)
@@ -271,5 +272,6 @@ void    lexer_debugger(t_minishell *cli)
 		}
 		else
 			ft_putstr("multi-line commands are not allowed.\n", 2);
+		cli->error_id = 258;
 	}
 }

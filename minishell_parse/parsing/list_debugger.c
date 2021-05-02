@@ -10,8 +10,6 @@ void	args_printer(t_args *args, int fd)
 		ft_putstr("arg {", fd);
 		if (p->arg[0] != REDIRECTION1_TOKEN)
 			ft_putstr(p->arg, fd);
-		if (p->arg[0] == '\0')
-			ft_putstr("test", fd);
 		ft_putstr("}\n", fd);
 		p = p->next;
 	}
@@ -25,9 +23,6 @@ void simple_cmd_printer(t_simple_cmd *s)
 	while (p != NULL)
 	{
 		ft_putstr("-------- PIPELINE ----------\n", 1);
-		ft_putstr("----------------\n", p->out_fd);
-		ft_putnbr_fd(p->out_fd, 1);
-		ft_putstr_parse("\n");
 		ft_putstr("cmd {", p->out_fd);
 		ft_putstr(p->cmd, p->out_fd);
 		ft_putstr("}\n", p->out_fd);
