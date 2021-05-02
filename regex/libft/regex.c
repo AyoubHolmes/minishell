@@ -1,5 +1,8 @@
 #include<stdio.h>
 #include "libft.h"
+#include <dirent.h>
+#include <unistd.h>
+#include <limits.h>
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
@@ -75,9 +78,15 @@ int ft_checker(char **tmp,char *example, int start, int end)
 			return(1);
 		i++;
 	}
-	if(end == 0 && tmp)
+		
+	if(end != 0 && tmp)
+	{
+		puts("======");
+		ft_putnbr_fd(end,1);
+		puts("======");
 		if(ft_strncmp(example,tmp[i-1],ft_strlen(tmp[i-1])) != 0)
 			return(1);
+	}
 	return(0);
 }
 
@@ -100,14 +109,21 @@ int main()
 	int nb_star =0;
 	int start = 0;
 	int end = 0;
-	char *regex = ft_strdup("*ft*d*.c*");
+	char *regex = ft_strdup("*.c");
 	if(regex[0] == '*')
 		start = 1;
 	if(regex[ft_strlen(regex)-1] == '*')
 		end = 1;
-	nb_star = nb_of_a_star(regex);
-	char *example = ft_strdup("llft_isdigit.cll");
+	char *example = ft_strdup("ft_atoi.c");
 	char **tmp = ft_split(regex, '*');
 	int res = ft_checker(tmp, example, start,end);
 	ft_putnbr_fd(res,1);
 }
+/* int main()
+{
+	char *cwd = malloc(PATH_MAX);
+	getcwd(cwd, PATH_MAX);
+	DIR *directory = opendir(cwd);
+	readdir(directory);
+
+} */

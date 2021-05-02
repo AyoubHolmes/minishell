@@ -1,0 +1,88 @@
+file not found: .
+file not found: ..
+file not found: a.out
+file not found: f1
+file found: ft_atoi.c
+file not found: ft_atoi.o
+file found: ft_bzero.c
+file not found: ft_bzero.o
+file found: ft_calloc.c
+file not found: ft_calloc.o
+file found: ft_isalnum.c
+file not found: ft_isalnum.o
+file found: ft_isalpha.c
+file not found: ft_isalpha.o
+file found: ft_isascii.c
+file not found: ft_isascii.o
+file found: ft_isdigit.c
+file not found: ft_isdigit.o
+file found: ft_isprint.c
+file not found: ft_isprint.o
+file found: ft_isspace.c
+file not found: ft_isspace.o
+file found: ft_itoa.c
+file not found: ft_itoa.o
+file found: ft_lstadd_back_bonus.c
+file found: ft_lstadd_front_bonus.c
+file found: ft_lstclear_bonus.c
+file found: ft_lstdelone_bonus.c
+file found: ft_lstiter_bonus.c
+file found: ft_lstlast_bonus.c
+file found: ft_lstmap_bonus.c
+file found: ft_lstnew_bonus.c
+file found: ft_lstsize_bonus.c
+file found: ft_memccpy.c
+file not found: ft_memccpy.o
+file found: ft_memchr.c
+file not found: ft_memchr.o
+file found: ft_memcmp.c
+file not found: ft_memcmp.o
+file found: ft_memcpy.c
+file not found: ft_memcpy.o
+file found: ft_memmove.c
+file not found: ft_memmove.o
+file found: ft_memset.c
+file not found: ft_memset.o
+file found: ft_putchar_fd.c
+file not found: ft_putchar_fd.o
+file found: ft_putendl_fd.c
+file not found: ft_putendl_fd.o
+file found: ft_putnbr_fd.c
+file not found: ft_putnbr_fd.o
+file found: ft_putstr_fd.c
+file not found: ft_putstr_fd.o
+file found: ft_split.c
+file not found: ft_split.o
+file found: ft_strchr.c
+file not found: ft_strchr.o
+file found: ft_strdup.c
+file not found: ft_strdup.o
+file found: ft_strjoin.c
+file not found: ft_strjoin.o
+file found: ft_strlcat.c
+file not found: ft_strlcat.o
+file found: ft_strlcpy.c
+file not found: ft_strlcpy.o
+file found: ft_strlen.c
+file not found: ft_strlen.o
+file found: ft_strmapi.c
+file not found: ft_strmapi.o
+file found: ft_strncmp.c
+file not found: ft_strncmp.o
+file found: ft_strnstr.c
+file not found: ft_strnstr.o
+file found: ft_strrchr.c
+file not found: ft_strrchr.o
+file found: ft_strtrim.c
+file not found: ft_strtrim.o
+file found: ft_substr.c
+file not found: ft_substr.o
+file found: ft_tolower.c
+file not found: ft_tolower.o
+file found: ft_toupper.c
+file not found: ft_toupper.o
+file not found: libft.a
+file not found: libft.h
+file not found: Makefile
+file not found: regex.c
+file not found: regex_test.c

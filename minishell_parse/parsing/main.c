@@ -98,6 +98,13 @@ void	ft_parser(t_minishell *cli)
 	}
 }
 
+
+
+void sig_handler(int sig)
+{
+	ft_putstr_fd("Quit:\n",1);
+}
+
 int	main(int argc, char **argv, char **env)
 {
 	t_minishell	cli;
@@ -110,6 +117,7 @@ int	main(int argc, char **argv, char **env)
 	cli.old_stdin = dup(0);
 	cli.old_stdout = dup(1);
 	cli.old_stderror = dup(2);
+	signal(SIGQUIT,sig_handler);
 	ft_exec_(&cli);
 	prompt(0);
 	while (1)
@@ -124,8 +132,7 @@ int	main(int argc, char **argv, char **env)
 			lexer_debugger(&cli);
 			if (cli.status == 0)
 				ft_parser(&cli);
-			free(tmp);
-			tmp = NULL;
+			free(tmp);	tmp = NULL;
 			free(cli.line);
 			cli.line = NULL;
 		}

@@ -89,6 +89,6 @@ char	*cd(t_minishell *shell)
 		dir = chdir(s);
 		cd_helper(shell, dir, cwd);
 	}
-	ft_free_var(cwd);
+	// ft_free_var(cwd);
 	return ("");
 }

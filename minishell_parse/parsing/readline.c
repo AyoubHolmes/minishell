@@ -92,7 +92,7 @@ char	*ft_readline(t_history **h, int *status)
 		else if (c == 0x3)
 		{
 			ft_putstr("\n", 1);
-			*status = -1;
+			*status = 1;
 			return (NULL);
 		}
 		else if (c == 0x4)
