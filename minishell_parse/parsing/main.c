@@ -40,7 +40,7 @@ void	ft_exec_(t_minishell *cli)
 	cli->paths = catch_elem("PATH", &cli->shell);
 }
 
-void	free_args(t_args **args)
+/* void	free_args(t_args **args)
 {
 	t_args	*p;
 	t_args	*q;
@@ -73,7 +73,7 @@ void	free_simple_cmd(t_simple_cmd **simple_cmd)
 		free(q);
 		q = NULL;
 	}
-}
+} */
 
 void	ft_parser(t_minishell *cli)
 {
@@ -89,7 +89,6 @@ void	ft_parser(t_minishell *cli)
 	{
 		create_simple_cmd(cli, &i, &start, &cli->simple_cmd);
 		if (!cli->status)
-			// ft_pipe(cli);
 			simple_cmd_printer(cli->simple_cmd);
 		else
 			cli->error_id = cli->status;
@@ -100,20 +99,25 @@ void	ft_parser(t_minishell *cli)
 	}
 }
 
+void	init_(t_history **h, t_minishell *cli, char **env)
+{
+	*h = NULL;
+	cli->simple_cmd = NULL;
+	cli->enviroment = env;
+	cli->old_stdin = dup(0);
+	cli->old_stdout = dup(1);
+	cli->old_stderror = dup(2);
+	ft_exec_(cli);
+	cli->error_id = 0;
+}
+
 int	main(int argc, char **argv, char **env)
 {
-	t_minishell cli;
-	t_history *history;
+	t_minishell	cli;
+	t_history	*history;
 	char		*tmp;
 
-	history = NULL;
-	cli.simple_cmd = NULL;
-	cli.enviroment = env;
-	cli.old_stdin = dup(0);
-	cli.old_stdout = dup(1);
-	cli.old_stderror = dup(2);
-	ft_exec_(&cli);
-	cli.error_id = 0;
+	init_(&history, &cli, env);
 	prompt(0);
 	while (1)
 	{

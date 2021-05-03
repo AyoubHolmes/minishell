@@ -8,7 +8,7 @@ void	args_printer(t_args *args, int fd)
 	while (p != NULL)
 	{
 		ft_putstr("arg {", fd);
-		if (p->arg[0] != REDIRECTION1_TOKEN)
+		if (p->arg[0] != RED1_TOKEN)
 			ft_putstr(p->arg, fd);
 		ft_putstr("}\n", fd);
 		p = p->next;

@@ -2,7 +2,7 @@
 
 void	add_history(t_history **history)
 {
-	t_history *p;
+	t_history	*p;
 
 	if (*history == NULL)
 	{
@@ -24,18 +24,18 @@ void	add_history(t_history **history)
 
 t_history	*duplicate_history(t_history **history)
 {
-	t_history *dup;
-	t_history *p;
+	t_history	*dup;
+	t_history	*p;
 
 	p = *history;
 	dup = (t_history *)malloc(sizeof(t_history));
 	dup->str = duplicate_readline(&(*history)->str);
-	return dup;
+	return (dup);
 }
 
-t_history		*get_last_history(t_history **str)
+t_history	*get_last_history(t_history **str)
 {
-	t_history *p;
+	t_history	*p;
 
 	p = *str;
 	while (p->next)

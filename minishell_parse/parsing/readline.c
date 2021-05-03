@@ -105,6 +105,7 @@ char 	*ft_readline(t_history **h, int *status)
 			{
 				*h = last;
 				ft_putstr("exit\n", 1);
+				tcsetattr(STDIN_FILENO, TCSANOW, &s_termios);
 				exit(*status);
 			}
 		}
@@ -117,6 +118,7 @@ char 	*ft_readline(t_history **h, int *status)
 			if ((*h)->str)
 			{
 				finale = generate_line(last->str);
+				tcsetattr(STDIN_FILENO, TCSANOW, &s_termios);
 				return (finale);
 			}
 			else

@@ -2,7 +2,8 @@ NAME = minishell_parse.a
 AR = ar rcs
 LMLX_FLAG= -L ./minilibx_opengl_20191021 libmlx.a -L ./minilibx_mms_20200219 libmlx.dylib -framework OpenGL -framework AppKit
 
-SRC = 	./parsing/main.c \
+SRC = 	./parsing/ft_free.c\
+		./parsing/main.c\
 		./parsing/prompt.c \
 		./parsing/get_next_line.c\
 		./parsing/lexer.c\
@@ -12,6 +13,7 @@ SRC = 	./parsing/main.c \
 		./parsing/readline.c\
 		./parsing/readline_utils.c\
 		./parsing/history_utils.c\
+		./parsing/err.c\
 
 OBJECT = $(SRC:.c=.o)
 LIBFT = ./parsing/libft

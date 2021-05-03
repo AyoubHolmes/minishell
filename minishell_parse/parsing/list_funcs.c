@@ -2,7 +2,7 @@
 
 int     is_a_redirection_token(char *line)
 {
-	return (*line == REDIRECTION1_TOKEN || *line == REDIRECTION2_TOKEN || *line == REDIRECTION3_TOKEN);
+	return (*line == RED1_TOKEN || *line == RED2_TOKEN || *line == RED3_TOKEN);
 }
 
 int				dispatcher_id(char *cmd)
@@ -184,7 +184,7 @@ int		get_fd_file(char *cmd, int *i, t_simple_cmd **s, t_element *env)
 	redirect = cmd[*i];
 	errno = 0;
 	(*i)++;
-	if (cmd[*i] == REDIRECTION3_TOKEN)
+	if (cmd[*i] == RED3_TOKEN)
 		(*i)++;
 	while (cmd[*i] && cmd[*i] == ' ')
 		(*i)++;
@@ -196,11 +196,11 @@ int		get_fd_file(char *cmd, int *i, t_simple_cmd **s, t_element *env)
 	}
 	// filename = arg_correction(ft_substr(&cmd[(*i) - size], 0, size), env, (*s)->err_id);
 	filename = extract_filename(ft_substr(&cmd[(*i) - size], 0, size), env, (*s)->err_id);
-	if (redirect == REDIRECTION1_TOKEN && filename[0] != DOLLAR_TOKEN)
+	if (redirect == RED1_TOKEN && filename[0] != DOLLAR_TOKEN)
 		(*s)->out_fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0666);
-	else if (redirect == REDIRECTION2_TOKEN && filename[0] != DOLLAR_TOKEN)
+	else if (redirect == RED2_TOKEN && filename[0] != DOLLAR_TOKEN)
 		(*s)->in_fd = open(filename, O_RDONLY, 0666);
-	else if (redirect == REDIRECTION3_TOKEN && filename[0] != DOLLAR_TOKEN)
+	else if (redirect == RED3_TOKEN && filename[0] != DOLLAR_TOKEN)
 		(*s)->out_fd = open(filename, O_CREAT | O_WRONLY | O_APPEND, 0666);
 	if (errno != 0 || filename[0] == DOLLAR_TOKEN)
 	{

@@ -1,8 +1,10 @@
 #include "../../includes/minishell.h"
 
-void ft_putstr_parse(char *s)
+void	ft_putstr_parse(char *s)
 {
-	int i = 0;
+	int	i;
+
+	i = 0;
 	while (s[i])
 	{
 		write(1, &s[i], 1);
@@ -10,7 +12,7 @@ void ft_putstr_parse(char *s)
 	}
 }
 
-void prompt(int status)
+void	prompt(int status)
 {
 	ft_putstr_parse("ayoub-shell");
 	if (status == 0)

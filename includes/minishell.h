@@ -5,18 +5,18 @@
 # define SEMICOLONE_SETTER 2
 # define SINGLE_QUOTE_SETTER 4
 # define DOUBLE_QUOTE_SETTER 8
-# define REDIRECTION1_SETTER 16
-# define REDIRECTION2_SETTER 32
-# define REDIRECTION3_SETTER 64
+# define RED1_SETTER 16
+# define RED2_SETTER 32
+# define RED3_SETTER 64
 # define DOLLAR_SETTER 128
 
 # define PIPE_TOKEN -10
 # define SEMICOLONE_TOKEN -20
 # define SINGLE_QUOTE_TOKEN -30
 # define DOUBLE_QUOTE_TOKEN -40
-# define REDIRECTION1_TOKEN -50
-# define REDIRECTION2_TOKEN -60
-# define REDIRECTION3_TOKEN -70
+# define RED1_TOKEN -50
+# define RED2_TOKEN -60
+# define RED3_TOKEN -70
 # define DOLLAR_TOKEN -80
 # define BACKSLASH_TOKEN -90
 
@@ -109,6 +109,8 @@ char	*ft_substr(char const *src, unsigned int start, size_t n);
 char	*ft_strtrim(char const *s1, char const *set);
 int     is_a_redirection(char *line);
 int		ft_isalnum(int c);
+void	free_simple_cmd(t_simple_cmd **simple_cmd);
+void	free_args(t_args **args);
 
 //exec
 char **ft_split(char const *s, char c);
