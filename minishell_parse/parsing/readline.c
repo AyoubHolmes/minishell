@@ -1,13 +1,32 @@
 #include "readline.h"
 
-void	ft_putchar(char s)
+void	print_readline(t_readline *str)
 {
-	write(1, &s, 1);
+	t_readline	*p;
+
+	p = str;
+	if (!p)
+		write(1, "", 1);
+	while (p)
+	{
+		write(1, &p->c, 1);
+		p = p->next;
+	}
 }
 
-int		is_digit(char c)
+void 	reset_readline(t_readline *str)
 {
-	return (c >= '0' && c <= '9');
+	t_readline	*p;
+	t_readline	*q;
+
+	p = str;
+	while (p)
+	{
+		q = p;
+		p = p->next;
+		free(q);
+		q = NULL;
+	}
 }
 
 int		ft_atoi_readline(char **s)
@@ -15,7 +34,7 @@ int		ft_atoi_readline(char **s)
 	int		a;
 
 	a = 0;
-	while (is_digit(**s))
+	while (ft_isdigit(**s))
 	{
 		a = (a * 10) + (**s - '0');
 		(*s)++;
@@ -91,12 +110,14 @@ char 	*ft_readline(t_history **h, int *status)
 		{
 			ft_putstr("\n", 1);
 			*status = 1;
+			tcsetattr(STDIN_FILENO, TCSANOW, &s_termios);
 			return (NULL);
 		}
 		else if (c == 0xC)
 		{
 			ft_putstr("\n", 1);
 			*status = 0;
+			tcsetattr(STDIN_FILENO, TCSANOW, &s_termios);
 			return (ft_strdup("clear"));
 		}
 		else if (c == 0x4)
@@ -115,14 +136,13 @@ char 	*ft_readline(t_history **h, int *status)
 			ft_putstr("\n", 1);
 			last->str = dup;
 			*h = last;
+			tcsetattr(STDIN_FILENO, TCSANOW, &s_termios);
 			if ((*h)->str)
 			{
 				finale = generate_line(last->str);
-				tcsetattr(STDIN_FILENO, TCSANOW, &s_termios);
 				return (finale);
 			}
-			else
-				return (NULL);
+			return (NULL);
 		}
 		else if (is_up_or_down(c))
 		{

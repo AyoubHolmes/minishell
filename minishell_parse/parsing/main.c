@@ -40,41 +40,6 @@ void	ft_exec_(t_minishell *cli)
 	cli->paths = catch_elem("PATH", &cli->shell);
 }
 
-/* void	free_args(t_args **args)
-{
-	t_args	*p;
-	t_args	*q;
-
-	p = *args;
-	while (p != NULL)
-	{
-		q = p;
-		p = p->next;
-		free(q->arg);
-		q->arg = NULL;
-		free(q);
-		q = NULL;
-	}
-}
-
-void	free_simple_cmd(t_simple_cmd **simple_cmd)
-{
-	t_simple_cmd	*p;
-	t_simple_cmd	*q;
-
-	p = *simple_cmd;
-	while (p != NULL)
-	{
-		q = p;
-		p = p->next;
-		free_args(&q->args);
-		free(q->cmd);
-		q->cmd = NULL;
-		free(q);
-		q = NULL;
-	}
-} */
-
 void	ft_parser(t_minishell *cli)
 {
 	int		i;
@@ -91,7 +56,7 @@ void	ft_parser(t_minishell *cli)
 		if (!cli->status)
 			simple_cmd_printer(cli->simple_cmd);
 		else
-			cli->error_id = cli->status;
+			cli->er_id = cli->status;
 		free_simple_cmd(&cli->simple_cmd);
 		cli->simple_cmd = NULL;
 		if (cli->line[i])
@@ -108,7 +73,7 @@ void	init_(t_history **h, t_minishell *cli, char **env)
 	cli->old_stdout = dup(1);
 	cli->old_stderror = dup(2);
 	ft_exec_(cli);
-	cli->error_id = 0;
+	cli->er_id = 0;
 }
 
 int	main(int argc, char **argv, char **env)
@@ -130,9 +95,8 @@ int	main(int argc, char **argv, char **env)
 			lexer_debugger(&cli);
 			if (cli.status == 0)
 				ft_parser(&cli);
-			free(tmp);
-			tmp = NULL;
-			free(cli.line);
+			ft_free(tmp);
+			ft_free(cli.line);
 			cli.line = NULL;
 		}
 		prompt(cli.status);

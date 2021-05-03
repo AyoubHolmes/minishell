@@ -106,6 +106,6 @@ void	lexer_debugger(t_minishell *cli)
 		}
 		else
 			ft_putstr("multi-line commands are not allowed.\n", 2);
-		cli->error_id = 258;
+		cli->er_id = 258;
 	}
 }

@@ -7,19 +7,19 @@ int     is_a_redirection_token(char *line)
 
 int				dispatcher_id(char *cmd)
 {
-	if (ft_strncmp(cmd, "pwd", 3) == 0)
+	if (ft_strcmp(cmd, "pwd") == 0)
 		return (2);
-	if (ft_strncmp(cmd, "echo", 4) == 0)
+	if (ft_strcmp(cmd, "echo") == 0)
 		return (1);
-	if (ft_strncmp(cmd, "cd", 2) == 0)
+	if (ft_strcmp(cmd, "cd") == 0)
 		return (3);
-	if (ft_strncmp(cmd, "export", 6) == 0)
+	if (ft_strcmp(cmd, "export") == 0)
 		return (4);
-	if (ft_strncmp(cmd, "unset", 5) == 0)
+	if (ft_strcmp(cmd, "unset") == 0)
 		return (5);
-	if (ft_strncmp(cmd, "env", 3) == 0)
+	if (ft_strcmp(cmd, "env") == 0)
 		return (6);
-	if (ft_strncmp(cmd, "exit", 6) == 0)
+	if (ft_strcmp(cmd, "exit") == 0)
 		return (7);
 	return (0);
 }
@@ -74,7 +74,7 @@ char			*arg_correction(char *s, t_element *env, int err_id)
 	dollar = "";
 	while (s[i])
 	{
-		if (s[i] == BACKSLASH_TOKEN || s[i] == SINGLE_QUOTE_TOKEN || s[i] == DOUBLE_QUOTE_TOKEN)
+		if (s[i] == BS_TOKEN || s[i] == SQ_TOKEN || s[i] == DQ_TOKEN)
 		{
 			j = i;
 			while (s[j])
@@ -90,7 +90,7 @@ char			*arg_correction(char *s, t_element *env, int err_id)
 			j = 0;
 			if (ft_isalnum(s[i]))
 			{
-				while(s[i] && s[i] != DOLLAR_TOKEN && s[i] != BACKSLASH_TOKEN && s[i] != SINGLE_QUOTE_TOKEN && s[i] != DOUBLE_QUOTE_TOKEN && s[i] != ' ')
+				while(s[i] && s[i] != DOLLAR_TOKEN && s[i] != BS_TOKEN && s[i] != SQ_TOKEN && s[i] != DQ_TOKEN && s[i] != ' ')
 				{
 					j++;
 					i++;
@@ -109,7 +109,6 @@ char			*arg_correction(char *s, t_element *env, int err_id)
 				i++;
 				j++;
 			}
-			// free(tmp[0]);
 			tmp[0] = ft_strjoin(ft_substr(s, 0, i - j - 1), dollar);
 			tmp[1] = s;
 			s = ft_strjoin(tmp[0], ft_substr(&s[i], 0, ft_strlen(s) - i));
@@ -127,7 +126,7 @@ char	*add_char_at_beginning(char c, char *s)
 	char *t;
 
 	t = malloc(ft_strlen(s) + 2);
-	t[0] = DOLLAR_TOKEN;
+	t[0] = c;
 	i = 0;
 	while (s[i])
 	{
@@ -138,7 +137,7 @@ char	*add_char_at_beginning(char c, char *s)
 	return (t);
 }
 
-char	*extract_filename(char *s, t_element *env, int err_id)
+char	*etr_fn(char *s, t_element *env, int err_id)
 {
 	char *filename;
 	char *tmp;
@@ -150,13 +149,13 @@ char	*extract_filename(char *s, t_element *env, int err_id)
 	{
 		i = 1;
 		j = 0;
-		while(s[i] && s[i] != DOLLAR_TOKEN && s[i] != BACKSLASH_TOKEN &&
-			s[i] != SINGLE_QUOTE_TOKEN && s[i] != DOUBLE_QUOTE_TOKEN && s[i] != ' ')
+		while(s[i] && s[i] != DOLLAR_TOKEN && s[i] != BS_TOKEN &&
+			s[i] != SQ_TOKEN && s[i] != DQ_TOKEN && s[i] != ' ')
 		{
 			j++;
 			i++;
 		}
-		if (s[i] == BACKSLASH_TOKEN || s[i] == SINGLE_QUOTE_TOKEN || s[i] == DOUBLE_QUOTE_TOKEN)
+		if (s[i] == BS_TOKEN || s[i] == SQ_TOKEN || s[i] == DQ_TOKEN)
 			i = -1;
 		else
 		{
@@ -194,8 +193,7 @@ int		get_fd_file(char *cmd, int *i, t_simple_cmd **s, t_element *env)
 		(*i)++;
 		size++;
 	}
-	// filename = arg_correction(ft_substr(&cmd[(*i) - size], 0, size), env, (*s)->err_id);
-	filename = extract_filename(ft_substr(&cmd[(*i) - size], 0, size), env, (*s)->err_id);
+	filename = etr_fn(ft_substr(&cmd[(*i) - size], 0, size), env, (*s)->err_id);
 	if (redirect == RED1_TOKEN && filename[0] != DOLLAR_TOKEN)
 		(*s)->out_fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0666);
 	else if (redirect == RED2_TOKEN && filename[0] != DOLLAR_TOKEN)
@@ -262,11 +260,11 @@ t_simple_cmd	*create_simple_cmd_node(char *cmd, t_element *env, int *stat, int e
 		start = i;
 		while (cmd[i] && cmd[i] != ' ' && !is_a_redirection_token(&cmd[i]))
 		{
-			if (cmd[i] == SINGLE_QUOTE_TOKEN || cmd[i] == DOUBLE_QUOTE_TOKEN)
+			if (cmd[i] == SQ_TOKEN || cmd[i] == DQ_TOKEN)
 			{
 				size++;
 				i++;
-				while (cmd[i] && (cmd[i] != SINGLE_QUOTE_TOKEN && cmd[i] != DOUBLE_QUOTE_TOKEN))
+				while (cmd[i] && (cmd[i] != SQ_TOKEN && cmd[i] != DQ_TOKEN))
 				{
 					size++;
 					i++;
@@ -296,13 +294,13 @@ int		add_simple_cmd_node(t_simple_cmd **simple_cmd, char *cmd, t_minishell *cli)
 
 	stat = 0;
 	if (*simple_cmd == NULL)
-		*simple_cmd = create_simple_cmd_node(cmd, cli->shell, &stat, cli->error_id);
+		*simple_cmd = create_simple_cmd_node(cmd, cli->shell, &stat, cli->er_id);
 	else
 	{
 		p = *simple_cmd;
 		while(p->next)
 			p = p->next;
-		p->next = create_simple_cmd_node(cmd, cli->shell, &stat, cli->error_id);
+		p->next = create_simple_cmd_node(cmd, cli->shell, &stat, cli->er_id);
 	}
 	return (stat);
 }

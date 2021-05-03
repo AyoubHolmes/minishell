@@ -1,14 +1,5 @@
 #include "../../includes/minishell.h"
 
-void	ft_free(void *elm)
-{
-	if (elm)
-	{
-		free(elm);
-		elm = NULL;
-	}
-}
-
 void	free_args(t_args **args)
 {
 	t_args	*p;
@@ -19,9 +10,9 @@ void	free_args(t_args **args)
 	{
 		q = p;
 		p = p->next;
-		ft_free(q->arg);
+		free(q->arg);
 		q->arg = NULL;
-		ft_free(q);
+		free(q);
 		q = NULL;
 	}
 }
