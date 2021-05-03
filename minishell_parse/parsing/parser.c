@@ -24,211 +24,60 @@ int				dispatcher_id(char *cmd)
 	return (0);
 }
 
+int	insert_arg(t_simple_cmd **s, char *cmd)
+{
+	t_args *p;
+
+	if ((*s)->args == NULL)
+	{
+		(*s)->args = (t_args*)malloc(sizeof(t_args));
+		if (!(*s)->args)
+			return (6);
+		(*s)->args->arg = cmd;
+		(*s)->args->next = NULL;
+	}
+	else
+	{
+		p = (*s)->args;
+		while(p->next)
+			p = p->next;
+		p->next = (t_args*)malloc(sizeof(t_args));
+		if (!p->next)
+			return (6);
+		p->next->arg = cmd;
+		p->next->next = NULL;
+	}
+	return (0);
+}
+
+void	insert_first_cmd(t_simple_cmd **s, char *cmd)
+{
+	if (cmd)
+		(*s)->cmd = cmd;
+	else
+	{
+		(*s)->cmd = NULL;
+	}
+	(*s)->id = dispatcher_id(cmd);
+}
+
 int				insert_cmd(t_simple_cmd **s, char *cmd)
 {
 	t_args *p;
 
 	if ((*s)->id == -1)
-	{
-		if (cmd)
-			(*s)->cmd = cmd;
-		else
-		{
-			(*s)->cmd = NULL;
-		}
-		(*s)->id = dispatcher_id(cmd);
-	}
+		insert_first_cmd(s, cmd);
 	else
-	{
-		if ((*s)->args == NULL)
-		{
-			
-			if (!((*s)->args = (t_args*)malloc(sizeof(t_args))))
-				return (6);
-			(*s)->args->arg = cmd;
-			(*s)->args->next = NULL;
-		}
-		else
-		{
-			p = (*s)->args;
-			while(p->next)
-				p = p->next;
-			if (!(p->next = (t_args*)malloc(sizeof(t_args))))
-				return (6);
-			p->next->arg = cmd;
-			p->next->next = NULL;
-		}
-	}
+		return (insert_arg(s, cmd));
 	return (0);
 }
 
-char			*arg_correction(char *s, t_element *env, int err_id)
-{
-	int i;
-	int j;
-	t_element *env_var;
-	char *tmp[2];
-	char *dollar;
-
-	i = 0;
-	dollar = "";
-	while (s[i])
-	{
-		if (s[i] == BS_TOKEN || s[i] == SQ_TOKEN || s[i] == DQ_TOKEN)
-		{
-			j = i;
-			while (s[j])
-			{
-				s[j] = s[j + 1];
-				j++;
-			}
-			i--;
-		}
-		if (s[i] == DOLLAR_TOKEN)
-		{
-			i++;
-			j = 0;
-			if (ft_isalnum(s[i]))
-			{
-				while(s[i] && s[i] != DOLLAR_TOKEN && s[i] != BS_TOKEN && s[i] != SQ_TOKEN && s[i] != DQ_TOKEN && s[i] != ' ')
-				{
-					j++;
-					i++;
-				}
-				tmp[0] = ft_substr(&s[i - j], 0, j);
-				env_var = catch_elem(tmp[0], &env);
-				if (env_var && env_var->obj2)
-					dollar = ft_strdup(env_var->obj2);
-			}
-			else
-			{
-				if(s[i] == '?')
-					dollar = ft_itoa(err_id);
-				else
-					dollar = ft_strdup("");
-				i++;
-				j++;
-			}
-			tmp[0] = ft_strjoin(ft_substr(s, 0, i - j - 1), dollar);
-			tmp[1] = s;
-			s = ft_strjoin(tmp[0], ft_substr(&s[i], 0, ft_strlen(s) - i));
-			i = (i - j) + ft_strlen(dollar) - 1;
-			i--;
-		}
-		i++;
-	}
-	return (s);
-}
-
-char	*add_char_at_beginning(char c, char *s)
-{
-	int i;
-	char *t;
-
-	t = malloc(ft_strlen(s) + 2);
-	t[0] = c;
-	i = 0;
-	while (s[i])
-	{
-		t[i + 1] = s[i];
-		i++;
-	}
-	t[i + 1] = '\0';
-	return (t);
-}
-
-char	*etr_fn(char *s, t_element *env, int err_id)
-{
-	char *filename;
-	char *tmp;
-	t_element *env_var;
-	int i;
-	int j;
-
-	if (s[0] == DOLLAR_TOKEN)
-	{
-		i = 1;
-		j = 0;
-		while(s[i] && s[i] != DOLLAR_TOKEN && s[i] != BS_TOKEN &&
-			s[i] != SQ_TOKEN && s[i] != DQ_TOKEN && s[i] != ' ')
-		{
-			j++;
-			i++;
-		}
-		if (s[i] == BS_TOKEN || s[i] == SQ_TOKEN || s[i] == DQ_TOKEN)
-			i = -1;
-		else
-		{
-			tmp = ft_substr(&s[i - j], 0, j);
-			env_var = catch_elem(tmp, &env);
-			
-			if (env_var && env_var->obj2)
-				filename = ft_strdup(env_var->obj2);
-			else
-				filename = add_char_at_beginning(DOLLAR_TOKEN, tmp);
-		}	
-	}
-	else if (i == -1 || 1)
-		filename = arg_correction(s, env, err_id);
-	return (filename);
-}
-
-int		get_fd_file(char *cmd, int *i, t_simple_cmd **s, t_element *env)
-{
-	int start;
-	int size;
-	char *filename;
-	char redirect;
-
-	redirect = cmd[*i];
-	errno = 0;
-	(*i)++;
-	if (cmd[*i] == RED3_TOKEN)
-		(*i)++;
-	while (cmd[*i] && cmd[*i] == ' ')
-		(*i)++;
-	size = 0;
-	while (cmd[*i] && cmd[*i] != ' ' && !is_a_redirection_token(&cmd[*i]))
-	{
-		(*i)++;
-		size++;
-	}
-	filename = etr_fn(ft_substr(&cmd[(*i) - size], 0, size), env, (*s)->err_id);
-	if (redirect == RED1_TOKEN && filename[0] != DOLLAR_TOKEN)
-		(*s)->out_fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0666);
-	else if (redirect == RED2_TOKEN && filename[0] != DOLLAR_TOKEN)
-		(*s)->in_fd = open(filename, O_RDONLY, 0666);
-	else if (redirect == RED3_TOKEN && filename[0] != DOLLAR_TOKEN)
-		(*s)->out_fd = open(filename, O_CREAT | O_WRONLY | O_APPEND, 0666);
-	if (errno != 0 || filename[0] == DOLLAR_TOKEN)
-	{
-		if (!(*s)->cmd)
-			ft_putstr("minishell", 2);
-		else	
-			ft_putstr((*s)->cmd, 2);
-		ft_putstr(": ", 2);
-		if (filename[0] == DOLLAR_TOKEN)
-			ft_putstr_fd("$", 2);
-		else
-			write(2, &filename[0], 1);
-		ft_putstr(&filename[1], 2);
-		ft_putstr(": ", 2);
-		if (errno != 0)
-			ft_putstr(strerror(errno), 2);
-		else
-			ft_putstr_fd("ambiguous redirect", 2);
-		ft_putstr("\n", 2);
-		return (1);
-	}
-	free(filename);
-	filename = NULL;
-	return (0);
-}
-
-t_simple_cmd			*simple_cmd_node_init()
+t_simple_cmd			*simple_cmd_node_init(int *i, int *start)
 {
 	t_simple_cmd *s;
 
+	*i = 0;
+	*start = 0;
 	s = (t_simple_cmd *)malloc(sizeof(t_simple_cmd));
 	s->id = -1;
 	s->cmd = NULL;
@@ -240,6 +89,28 @@ t_simple_cmd			*simple_cmd_node_init()
 	return (s);
 }
 
+void	node_traversal(char *cmd, int *i, int *start, int *size)
+{
+	while (cmd[*i] && cmd[*i] == ' ')
+			(*i)++;
+	*start = *i;
+	while (cmd[*i] && cmd[*i] != ' ' && !is_a_redirection_token(&cmd[*i]))
+	{
+		if (cmd[*i] == SQ_TOKEN || cmd[*i] == DQ_TOKEN)
+		{
+			(*size)++;
+			(*i)++;
+			while (cmd[*i] && (cmd[*i] != SQ_TOKEN && cmd[*i] != DQ_TOKEN))
+			{
+				(*size)++;
+				(*i)++;
+			}
+		}
+		(*size)++;
+		(*i)++;
+	}
+}
+
 t_simple_cmd	*create_simple_cmd_node(char *cmd, t_element *env, int *stat, int err_id)
 {
 	t_simple_cmd *s;
@@ -247,32 +118,12 @@ t_simple_cmd	*create_simple_cmd_node(char *cmd, t_element *env, int *stat, int e
 	int size;
 	int start;
 	char *c;
-	
 
-	i = 0;
-	start = 0;
-	s = simple_cmd_node_init();
+	s = simple_cmd_node_init(&i, &start);
 	while (cmd[i])
 	{
 		size = 0;
-		while (cmd[i] && cmd[i] == ' ')
-			i++;
-		start = i;
-		while (cmd[i] && cmd[i] != ' ' && !is_a_redirection_token(&cmd[i]))
-		{
-			if (cmd[i] == SQ_TOKEN || cmd[i] == DQ_TOKEN)
-			{
-				size++;
-				i++;
-				while (cmd[i] && (cmd[i] != SQ_TOKEN && cmd[i] != DQ_TOKEN))
-				{
-					size++;
-					i++;
-				}
-			}
-			size++;
-			i++;
-		}
+		node_traversal(cmd, &i, &start, &size);
 		if(is_a_redirection_token(&cmd[i]))
 			*stat = get_fd_file(cmd, &i, &s, env);
 		else if (size != 0)

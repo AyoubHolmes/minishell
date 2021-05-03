@@ -144,37 +144,38 @@ char 	*ft_readline(t_history **h, int *status)
 			}
 			return (NULL);
 		}
-		else if (is_up_or_down(c))
+		else if (c == UP_KEY)
 		{
 			ft_putstr("\033[6n", 1);
 			read(0, s, 30);
 			ft_putstr(tgoto(tgetstr("cm", NULL), 13, atoi(&s[2])  - 1), 1);
 			ft_putstr(tgetstr("cd", NULL), 1);
-			if (((c >> 16)&0xFF) == 65) // UP
+			if (*h)
 			{
-				if (*h)
+				if ((*h)->prev)
 				{
-					if ((*h)->prev)
-					{
-						(*h)->str = dup;
-						*h = (*h)->prev;
-						dup = duplicate_readline(&(*h)->str);
-					}
-					print_readline(dup); 
+					(*h)->str = dup;
+					*h = (*h)->prev;
+					dup = duplicate_readline(&(*h)->str);
 				}
+				print_readline(dup); 
 			}
-			else if (((c >> 16)&0xFF) == 66) // DOWN
+		}
+		else if (c == DOWN_KEY)
+		{
+			ft_putstr("\033[6n", 1);
+			read(0, s, 30);
+			ft_putstr(tgoto(tgetstr("cm", NULL), 13, atoi(&s[2])  - 1), 1);
+			ft_putstr(tgetstr("cd", NULL), 1);
+			if (h)
 			{
-				if (h)
+				if ((*h)->next)
 				{
-					if ((*h)->next)
-					{
-						(*h)->str = dup;
-						*h = (*h)->next;
-						dup = duplicate_readline(&(*h)->str);
-					}
-					print_readline(dup); 
-				}	
+					(*h)->str = dup;
+					*h = (*h)->next;
+					dup = duplicate_readline(&(*h)->str);
+				}
+				print_readline(dup); 
 			}
 		}
 		else if (c >= 32 && c <= 127)
