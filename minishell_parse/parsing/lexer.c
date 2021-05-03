@@ -11,8 +11,6 @@ int	ft_str(char c1, char *s)
 	return (0);
 }
 
-// ---------------------------- DEFINING THE TOKENS ------------------------
-
 int     is_a_quotation(char *line)
 {
 	return (*line == '\'' || *line == '"');
@@ -44,10 +42,6 @@ int     is_alphanum(char c)
 		(c >= 'A' && c <= 'Z'));
 }
 
-// --------------------------------------------------------------
-
-
-
 void    ft_lexer_token_helper(char *c, char *line, int setter, int token)
 {
 	if (token == SINGLE_QUOTE_TOKEN || token == DOUBLE_QUOTE_TOKEN)
@@ -60,12 +54,9 @@ void    ft_lexer_token_helper(char *c, char *line, int setter, int token)
 		*c |= setter;
 	*line = token;
 	if (*line == REDIRECTION3_TOKEN && *(line + 1) == '>' && *(line - 1) != REDIRECTION3_TOKEN )
-	{
-		//line += 1;
 		*(line + 1) = REDIRECTION3_TOKEN;
-	}
 }
-// ------------------------ Checking functions ----------------------
+
 int     is_not_a_string(char c)
 {
 	return((c & SINGLE_QUOTE_SETTER) == 0 && (c & DOUBLE_QUOTE_SETTER) == 0);
@@ -87,7 +78,7 @@ int     is_first_quotation(char c, char *line)
 	return (is_not_a_string(c) && is_a_quotation(line));
 }
 
-// -----------------------TOKENIZER ------------------------------------
+
 
 void    ft_tokenizer(char *c, char *line, int *escape)
 {
@@ -100,7 +91,8 @@ void    ft_tokenizer(char *c, char *line, int *escape)
 	else if (*line == '"' && *escape == 0 && (*c & SINGLE_QUOTE_SETTER) == 0)
 		ft_lexer_token_helper(c, line, DOUBLE_QUOTE_SETTER, DOUBLE_QUOTE_TOKEN);
 	else if (((*line == '>' && *(line + 1) == '>' && is_not_a_string(*c))\
-		|| (*c & REDIRECTION3_SETTER && *line == '>' && is_not_a_string(*c)) != 0) && *escape == 0)
+		|| (*c & REDIRECTION3_SETTER && *line == '>' && is_not_a_string(*c)) != 0)
+		&& *escape == 0)
 		ft_lexer_token_helper(c, line, REDIRECTION3_SETTER, REDIRECTION3_TOKEN);
 	else if (*line == '>' && is_not_a_string(*c) && *escape == 0)
 		ft_lexer_token_helper(c, line, REDIRECTION1_SETTER, REDIRECTION1_TOKEN);
@@ -110,11 +102,14 @@ void    ft_tokenizer(char *c, char *line, int *escape)
 		(*c & DOUBLE_QUOTE_SETTER) != 0) && is_alphanum(*(line + 1)))
 		ft_lexer_token_helper(c, line, DOLLAR_SETTER, DOLLAR_TOKEN);
 	else if (*line == '\\' && *escape == 0 && (is_not_a_string(*c) ||\
-		((*c & DOUBLE_QUOTE_SETTER) != 0 && (*(line + 1) == '`' || *(line + 1) == '$' || *(line + 1) == '"' || *(line + 1) == '\\'))))
+		((*c & DOUBLE_QUOTE_SETTER) != 0 && (*(line + 1) == '`' || *(line + 1) == '$'
+		|| *(line + 1) == '"' || *(line + 1) == '\\'))))
 	{
 		*line = BACKSLASH_TOKEN;
 		*escape = 1;
 	}
+	else if (*line == '*' && *escape == 0 && is_not_a_string(*c))
+		*line = STAR_TOKEN;
 	else if (*escape == 1)
 		*escape = 0;
 }
@@ -147,7 +142,6 @@ void    ft_lexer_checker(char *c, char *line, t_minishell *cli)
 	if (cli->status == 0)
 		ft_tokenizer(c, line, &cli->is_an_escape_character);
 }
-
 
 void    ft_lexer(t_minishell *cli)
 {
@@ -240,18 +234,6 @@ void    lexer_debugger(t_minishell *cli)
 {
 	char c;
 
-	/* ft_putstr_parse("Line After Lexer: ");
-	ft_putstr_parse(cli->line);
-	ft_putstr_parse("\n");
-	if (cli->status != 0)
-	{
-		ft_putstr_parse("Line Helper: ");
-		ft_putstr_parse(cli->helper);
-		ft_putstr_parse("\n");
-		ft_putstr_parse("Error ID: ");
-		ft_putnbr_fd(cli->status, 1);
-		ft_putstr_parse("\n");
-	} */
 	if (cli->status != 0)
 	{
 		ft_putstr("cool-shell: ", 2);

@@ -97,9 +97,14 @@ void    ft_parser(t_minishell *cli)
 	}
 }
 
+void func(int c)
+{
+    ft_putstr("\n", 1);
+	cli.status = 1;
+}
+
 int     main(int argc,char **argv,char **env)
 {
-	t_minishell cli;
 	t_history *history;
 	char		*tmp;
 
@@ -115,8 +120,8 @@ int     main(int argc,char **argv,char **env)
     {
 		cli.status = 0;
 		cli.line = NULL;
-        // get_next_line(&tmp);
 		tmp = ft_readline(&history, &cli.status);
+		// signal(SIGINT, func);
 		if (tmp)
 		{
 			cli.line = ft_strtrim(tmp, " ");
@@ -128,9 +133,9 @@ int     main(int argc,char **argv,char **env)
 			tmp = NULL;
 			free(cli.line);
 			cli.line = NULL;
-		}
+		}/* 
 		else if (cli.status == 0)
-			ft_putstr("\n", 1);
+			ft_putstr("\n", 1); */
 		prompt(cli.status);
 	}
 	return (0);

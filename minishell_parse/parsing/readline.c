@@ -41,8 +41,10 @@ void	termios_config(struct termios *old_attr)
 		ft_putstr("\r\033[0KCould not access to the termcap database..\n", 1);
 	if (ret == 0)
 		ft_putstr("\r\033[0KIs not defined in termcap database.\n", 1);
+
 	if (tcgetattr(STDIN_FILENO, old_attr) < 0)
 		ft_putstr("Error tcgetattr\n", 1);
+	
 	new_attr = *old_attr;
 	new_attr.c_lflag &= ~(ECHO | ICANON | ISIG);
 	if (tcsetattr(STDIN_FILENO, TCSANOW, &new_attr) < 0)
@@ -90,7 +92,8 @@ char 	*ft_readline(t_history **h, int *status)
 		else if (c == 0x3)
 		{
 			ft_putstr("\n", 1);
-			*status = -1;
+			*status = 1;
+			tcsetattr(STDIN_FILENO, TCSANOW, &s_termios);
 			return (NULL);
 		}
 		else if (c == 0x4)
@@ -99,7 +102,8 @@ char 	*ft_readline(t_history **h, int *status)
 			{
 				*h = last;
 				ft_putstr("\n", 1);
-				exit(0);
+				tcsetattr(STDIN_FILENO, TCSANOW, &s_termios);
+				exit(*status);
 			}
 		}
 		else if (c == 10)
@@ -110,12 +114,47 @@ char 	*ft_readline(t_history **h, int *status)
 			if ((*h)->str)
 			{
 				finale = generate_line(last->str);
+				tcsetattr(STDIN_FILENO, TCSANOW, &s_termios);
 				return (finale);
 			}
 			else
 				return (NULL);
 		}
-		else if (is_up_or_down(c))
+		else if (c == UP_KEY)
+		{
+			ft_putstr("\033[6n", 1);
+			read(0, s, 30);
+			ft_putstr(tgoto(tgetstr("cm", NULL), 13, atoi(&s[2])  - 1), 1);
+			ft_putstr(tgetstr("cd", NULL), 1);
+			if (*h)
+			{
+				if ((*h)->prev)
+				{
+					(*h)->str = dup;
+					*h = (*h)->prev;
+					dup = duplicate_readline(&(*h)->str);
+				}
+				print_readline(dup); 
+			}
+		}
+		else if (c == DOWN_KEY)
+		{
+			ft_putstr("\033[6n", 1);
+			read(0, s, 30);
+			ft_putstr(tgoto(tgetstr("cm", NULL), 13, atoi(&s[2])  - 1), 1);
+			ft_putstr(tgetstr("cd", NULL), 1);
+			if (h)
+			{
+				if ((*h)->next)
+				{
+					(*h)->str = dup;
+					*h = (*h)->next;
+					dup = duplicate_readline(&(*h)->str);
+				}
+				print_readline(dup); 
+			}
+		}
+		/* else if (is_up_or_down(c))
 		{
 			ft_putstr("\033[6n", 1);
 			read(0, s, 30);
@@ -147,7 +186,7 @@ char 	*ft_readline(t_history **h, int *status)
 					print_readline(dup); 
 				}	
 			}
-		}
+		} */
 		else
 		{
 			write(1, &c, 4);

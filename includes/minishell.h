@@ -10,6 +10,9 @@
 # define REDIRECTION3_SETTER 64
 # define DOLLAR_SETTER 128
 
+#define UP_KEY 4283163
+#define DOWN_KEY 4348699
+
 # define PIPE_TOKEN -10
 # define SEMICOLONE_TOKEN -20
 # define SINGLE_QUOTE_TOKEN -30
@@ -19,6 +22,7 @@
 # define REDIRECTION3_TOKEN -70
 # define DOLLAR_TOKEN -80
 # define BACKSLASH_TOKEN -90
+# define STAR_TOKEN -100
 
 
 # include <stdio.h>
@@ -90,6 +94,8 @@ typedef struct s_minishell
 	int			nb_pipe;
 	int			wait_status;
 }				t_minishell;
+
+t_minishell		cli;
 
 void	ft_putstr_parse(char *str);
 void	prompt(int status);
