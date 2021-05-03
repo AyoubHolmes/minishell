@@ -48,10 +48,10 @@ int ft_checker(char **tmp,char *example, int start, int end)
 
 	if(end == 0 && tmp[i-1])
 	{
-		// puts(tmp[i-1]);
+		puts(tmp[i-1]);
 		
-		// puts(example + j-ft_strlen(tmp[i-1]));
-		if(ft_strncmp(example + j -ft_strlen(tmp[i-1]),tmp[i-1],ft_strlen(tmp[i-1])) != 0)
+		puts(example + j-ft_strlen(tmp[i-1]));
+		if(ft_strcmp(example + j -ft_strlen(tmp[i-1]),tmp[i-1]) != 0)
 			return(1);
 	}
 	return(0);
@@ -84,7 +84,7 @@ int main(int argc,char **argv)
 	 while( directory && (entry=readdir(directory))  )
     {
         file = entry->d_name;
-		if(regex_handler("ft*.c",file) == 0)
+		if(regex_handler("*.c",file) == 0)
 			printf("%s\n",file);
     }
 	// closedir(directory);

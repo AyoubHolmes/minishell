@@ -55,7 +55,12 @@ void	path_handler(t_minishell *shell, int *a, int *i)
 		*a = stat(binary_path, &buff);
 	}
 	else
-		binary_path = shell->cmd;
+	{
+		if (ft_strncmp(shell->cmd, "./", 2) == 0)
+			binary_path = shell->cmd;
+		else
+			*a = -1;
+	}
 	if (*a == 0)
 	{
 		argv = fill_args(argv, shell->args, binary_path);
@@ -84,7 +89,7 @@ char	*ft_system(t_minishell *shell)
 	{
 		ft_putstr("ayoub-shell: ", shell->err_fd);
 		ft_putstr(shell->cmd, shell->err_fd);
-		ft_putstr(" command not found\n", shell->err_fd);
+		ft_putstr(": command not found\n", shell->err_fd);
 		exit(127);
 	}
 	return ("");

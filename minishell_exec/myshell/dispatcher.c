@@ -2,11 +2,12 @@
 
 void	add_args(t_args *args_, char *cmd)
 {
-	t_args *p;
+	t_args	*p;
 
 	if (args_ == NULL)
 	{
-		if (!(args_ = (t_args *)malloc(sizeof(t_args))))
+		args_ = (t_args *)malloc(sizeof(t_args));
+		if (!(args_))
 			return ;
 		args_->arg = cmd;
 		args_->next = NULL;
@@ -16,7 +17,8 @@ void	add_args(t_args *args_, char *cmd)
 		p = args_;
 		while (p->next)
 			p = p->next;
-		if (!(p->next = (t_args *)malloc(sizeof(t_args))))
+		p->next = (t_args *)malloc(sizeof(t_args));
+		if (!(p->next))
 			return ;
 		p->next->arg = cmd;
 		p->next->next = NULL;
@@ -27,6 +29,7 @@ void	fill_dispatcher(t_minishell *shell)
 {
 	char	*(*command[8])(t_minishell *);
 
+	check_cli_cmd(&shell->cmd);
 	check_cli_args(&shell->args);
 	command[0] = ft_system;
 	command[2] = pwd;

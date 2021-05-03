@@ -18,7 +18,9 @@ SRC  =	myshell/dispatcher.c\
 		myshell_utils/fill_list_to_sort.c\
 		\
 		myshell_utils/some_utils.c\
-		myshell_utils/regex_test.c\
+		myshell_utils/regex.c\
+		myshell_utils/regex_handler.c\
+		myshell_utils/sort_file.c\
 		#get_next_line/get_next_line_bonus.c\
 
 

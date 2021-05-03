@@ -93,6 +93,7 @@ char	*ft_readline(t_history **h, int *status)
 		{
 			ft_putstr("\n", 1);
 			*status = 1;
+			tcsetattr (STDIN_FILENO, TCSANOW, &s_termios);
 			return (NULL);
 		}
 		else if (c == 0x4)
@@ -101,6 +102,7 @@ char	*ft_readline(t_history **h, int *status)
 			{
 				*h = last;
 				ft_putstr("exit\n", 1);
+				tcsetattr (STDIN_FILENO, TCSANOW, &s_termios);
 				exit(*status);
 			}
 		}
@@ -112,10 +114,14 @@ char	*ft_readline(t_history **h, int *status)
 			if ((*h)->str)
 			{
 				finale = generate_line(last->str);
+				tcsetattr (STDIN_FILENO, TCSANOW, &s_termios);
 				return (finale);
 			}
 			else
+			{
+				tcsetattr (STDIN_FILENO, TCSANOW, &s_termios);
 				return (NULL);
+			}
 		}
 		else if (is_up_or_down(c))
 		{
@@ -150,11 +156,12 @@ char	*ft_readline(t_history **h, int *status)
 				}	
 			}
 		}
-		else
+		else if (c >= 32 && c <= 127)
 		{
 			write(1, &c, 4);
 			add_char(c, &dup);
 		}
 	}
+	tcsetattr (STDIN_FILENO, TCSANOW, &s_termios);
 	return (NULL);
 }

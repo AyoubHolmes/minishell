@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   some_utils.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: shikma <shikma@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/24 18:12:16 by shikma            #+#    #+#             */
-/*   Updated: 2021/05/01 11:59:46 by shikma           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 
 char	*ft_strjoin(char *s1, char *s2)
@@ -63,15 +51,26 @@ int	valid_or_not(char c, int id)
 	return (1);
 }
 
+void	checker_error_printer(t_minishell *shell, char *arg)
+{
+	ft_putstr("ayoub-shell:", shell->err_fd);
+	ft_putstr(shell->cmd, shell->err_fd);
+	ft_putstr(": `", shell->err_fd);
+	ft_putstr(arg, shell->err_fd);
+	ft_putstr("': not a valid identifier\n", shell->err_fd);
+	shell->status = 1;
+}
+
 int	check_identifier(char *str, t_minishell *shell, int id, char *arg)
 {
-	int	i;
-	char **tmp;
+	int		i;
+	char	**tmp;
+
 	i = 0;
-	if(id == 1)
+	if (id == 1)
 	{
-		tmp = ft_split(str,'=');
-		if(tmp[0])
+		tmp = ft_split(str, '=');
+		if (tmp[0])
 			str = tmp[0];
 		else
 			str = "\0";
@@ -81,12 +80,7 @@ int	check_identifier(char *str, t_minishell *shell, int id, char *arg)
 		if (ft_strcmp(str, "\0") == 0 || str[0] == '='
 			|| ft_isdigit(str[0]) == 1 || valid_or_not(str[i], id) == 1)
 		{
-			ft_putstr("ayoub-shell:", shell->err_fd);
-			ft_putstr(shell->cmd, shell->err_fd);
-			ft_putstr(": `", shell->err_fd);
-			ft_putstr(arg, shell->err_fd);
-			ft_putstr("': not a valid identifier\n", shell->err_fd);
-			shell->status = 1;
+			checker_error_printer(shell, arg);
 			return (0);
 		}
 		i++;

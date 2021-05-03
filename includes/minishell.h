@@ -91,6 +91,18 @@ typedef struct s_minishell
 	int			wait_status;
 }				t_minishell;
 
+typedef struct		s_regex
+{
+	struct dirent	*entry;
+	char			*file;
+	t_args			*tmp;
+	int				id;
+	DIR				*directory;
+	char			*path;
+	char			*match;
+	char *cmp_tmp;
+}					t_regex;
+
 void	ft_putstr_parse(char *str);
 void	prompt(int status);
 int		get_next_line(char **line);
@@ -138,4 +150,12 @@ int	check_identifier(char *str, t_minishell *shell, int id, char *arg);
 void check_cli_args(t_args **args);
 void	add_args(t_args *args_, char *cmd);
 void	delete_arg(t_args **args, char *arg);
+char *ft_trim_end(char const *s1,char const *end);
+int	ft_find(char *str, char *look_for);
+void	reg_handler(t_regex *reg, t_args **args);
+int	regex_handler(char *regex, char *file);
+int	check_star(char *str);
+char	*check_path(char *arg, char **match);
+void	check_cli_cmd(char **cmd);
+t_element	*fill_list_files(DIR *direc);
 #endif

@@ -25,7 +25,7 @@ $(NAME): $(OBJECT)
 
 
 %.o: %.c
-	@gcc -ltermcap -I $(HEADERS) -o $@ -c $<  > /dev/null
+	@gcc -ltermcap -I $(HEADERS) -o $@ -c $<  2> /dev/null
 
 all: $(NAME) 
 	

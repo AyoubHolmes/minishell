@@ -70,15 +70,15 @@ void	delete_elem(char *elm, t_element *shell_)
 
 void	delete_arg(t_args **args, char *arg)
 {
-	t_args *p;
-	t_args *q;
+	t_args	*p;
+	t_args	*q;
 
 	p = *args;
 	if (p && ft_strcmp(p->arg, arg) == 0)
 	{
 		(*args) = (*args)->next;
-		// free(p);
-		// p = NULL;
+		free(p);
+		p = NULL;
 	}
 	else
 	{
@@ -88,13 +88,11 @@ void	delete_arg(t_args **args, char *arg)
 			{
 				q = p->next;
 				p->next = p->next->next;
-				break;
-				// free(q);
-				// q = NULL;
+				break ;
+				free(q);
+				q = NULL;
 			}
 			p = p->next;
 		}
 	}
-	
-	
 }
