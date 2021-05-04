@@ -2,8 +2,8 @@
 
 char	*add_char_at_beginning(char c, char *s)
 {
-	int i;
-	char *t;
+	int		i;
+	char	*t;
 
 	t = malloc(ft_strlen(s) + 2);
 	t[0] = c;
@@ -38,7 +38,7 @@ int	error_fd(char *filename, t_simple_cmd **s)
 	{
 		if (!(*s)->cmd)
 			ft_putstr("minishell", 2);
-		else	
+		else
 			ft_putstr((*s)->cmd, 2);
 		ft_putstr(": ", 2);
 		if (filename[0] == DOLLAR_TOKEN)
@@ -58,18 +58,18 @@ int	error_fd(char *filename, t_simple_cmd **s)
 	return (0);
 }
 
-int		get_fd_file(char *cmd, int *i, t_simple_cmd **s, t_element *env)
+int	get_fd_file(char *cmd, int *i, t_simple_cmd **s, t_element *env)
 {
-	int start;
-	int size;
-	char *filename;
-	char redirect;
+	int		start;
+	int		size;
+	char	*filename;
+	char	redirect;
 
 	redirect = cmd[*i];
 	errno = 0;
 	traversal_fd(i, cmd, &size);
 	filename = extract_filename(ft_substr(&cmd[(*i) - size], 0, size),
-				env, (*s)->err_id);
+			env, (*s)->err_id);
 	if (redirect == RED1_TOKEN && filename[0] != DOLLAR_TOKEN)
 		(*s)->out_fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0666);
 	else if (redirect == RED2_TOKEN && filename[0] != DOLLAR_TOKEN)

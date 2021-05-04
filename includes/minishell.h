@@ -12,14 +12,17 @@
 
 # define PIPE_TOKEN -10
 # define SEMICOLONE_TOKEN -20
-# define SINGLE_QUOTE_TOKEN -30
-# define DOUBLE_QUOTE_TOKEN -40
+# define SQ_TOKEN -30
+# define DQ_TOKEN -40
 # define RED1_TOKEN -50
 # define RED2_TOKEN -60
 # define RED3_TOKEN -70
 # define DOLLAR_TOKEN -80
-# define BACKSLASH_TOKEN -90
+# define BS_TOKEN -90
+# define STAR_TOKEN -100
 
+#define UP_KEY 4283163
+#define DOWN_KEY 4348699
 
 # include <stdio.h>
 # include <sys/types.h>
@@ -90,7 +93,7 @@ typedef struct s_minishell
 	int			err_fd;
 	int			nb_pipe;
 	int			wait_status;
-	int			error_id;
+	int			er_id;
 }				t_minishell;
 
 void	ft_putstr_parse(char *str);
@@ -105,12 +108,25 @@ int		add_simple_cmd_node(t_simple_cmd **simple_cmd, char *cmd, t_minishell *cli)
 void	simple_cmd_printer(t_simple_cmd *s);
 void	ft_putnbr_fd(int n, int fd);
 char	*ft_substr(char const *src, unsigned int start, size_t n);
-//int		ft_strlen(const char *s);
 char	*ft_strtrim(char const *s1, char const *set);
 int     is_a_redirection(char *line);
 int		ft_isalnum(int c);
 void	free_simple_cmd(t_simple_cmd **simple_cmd);
 void	free_args(t_args **args);
+int     is_a_redirection(char *line);
+void    ft_lexer_token_helper(char *c, char *line, int setter, int token);
+int     is_not_a_string(char c);
+int     redirection_is_set(char *c, char *line);
+int     is_a_redirection_token(char *line);
+int		dispatcher_id(char *cmd);
+int		insert_cmd(t_simple_cmd **s, char *cmd);
+char	*arg_correction(char *s, t_element *env, int err_id);
+char	*add_char_at_beginning(char c, char *s);
+char	*extract_filename(char *s, t_element *env, int err_id);
+int		get_fd_file(char *cmd, int *i, t_simple_cmd **s, t_element *env);
+t_simple_cmd	*create_simple_cmd_node(char *cmd, t_element *env, int *stat, int err_id);
+int		add_simple_cmd_node(t_simple_cmd **simple_cmd, char *cmd, t_minishell *cli);
+void	create_simple_cmd(t_minishell *cli, int *i, int *start, t_simple_cmd **simple_cmd);
 
 //exec
 char **ft_split(char const *s, char c);
@@ -138,5 +154,6 @@ char	*ft_strdup(const char *src);
 t_element *catch_elem(char *elm1,t_element **shell_);
 void	free_element(t_element *list);
 void	ft_free_var(void *var);
+void	ft_free(void *s);
 
 #endif

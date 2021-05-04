@@ -1,11 +1,11 @@
 #include "../../includes/minishell.h"
 
-int     is_a_redirection_token(char *line)
+int	is_a_redirection_token(char *line)
 {
 	return (*line == RED1_TOKEN || *line == RED2_TOKEN || *line == RED3_TOKEN);
 }
 
-int				dispatcher_id(char *cmd)
+int	dispatcher_id(char *cmd)
 {
 	if (ft_strcmp(cmd, "pwd") == 0)
 		return (2);
@@ -26,11 +26,11 @@ int				dispatcher_id(char *cmd)
 
 int	insert_arg(t_simple_cmd **s, char *cmd)
 {
-	t_args *p;
+	t_args	*p;
 
 	if ((*s)->args == NULL)
 	{
-		(*s)->args = (t_args*)malloc(sizeof(t_args));
+		(*s)->args = (t_args *)malloc(sizeof(t_args));
 		if (!(*s)->args)
 			return (6);
 		(*s)->args->arg = cmd;
@@ -39,9 +39,9 @@ int	insert_arg(t_simple_cmd **s, char *cmd)
 	else
 	{
 		p = (*s)->args;
-		while(p->next)
+		while (p->next)
 			p = p->next;
-		p->next = (t_args*)malloc(sizeof(t_args));
+		p->next = (t_args *)malloc(sizeof(t_args));
 		if (!p->next)
 			return (6);
 		p->next->arg = cmd;
@@ -61,9 +61,9 @@ void	insert_first_cmd(t_simple_cmd **s, char *cmd)
 	(*s)->id = dispatcher_id(cmd);
 }
 
-int				insert_cmd(t_simple_cmd **s, char *cmd)
+int	insert_cmd(t_simple_cmd **s, char *cmd)
 {
-	t_args *p;
+	t_args	*p;
 
 	if ((*s)->id == -1)
 		insert_first_cmd(s, cmd);

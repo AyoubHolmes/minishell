@@ -2,9 +2,9 @@
 
 void	dollar_traversal(char *s, int *i, int *j)
 {
-	while(s[*i] && s[*i] != DOLLAR_TOKEN && s[*i] != BS_TOKEN
-					&& s[*i] != SQ_TOKEN
-					&& s[*i] != DQ_TOKEN && s[*i] != ' ')
+	while (s[*i] && s[*i] != DOLLAR_TOKEN && s[*i] != BS_TOKEN
+		&& s[*i] != SQ_TOKEN
+		&& s[*i] != DQ_TOKEN && s[*i] != ' ')
 	{
 		(*j)++;
 		(*i)++;
@@ -13,9 +13,9 @@ void	dollar_traversal(char *s, int *i, int *j)
 
 char	*error_var(char *s, int *i, int *j, int err_id)
 {
-	char *dollar;
+	char	*dollar;
 
-	if(s[*i] == '?')
+	if (s[*i] == '?')
 		dollar = ft_itoa(err_id);
 	else
 		dollar = ft_strdup("");
@@ -24,12 +24,12 @@ char	*error_var(char *s, int *i, int *j, int err_id)
 	return (dollar);
 }
 
-void		dollar_case_correction(char *s, int *i, t_element *env, int err_id)
+void	dollar_case_correction(char *s, int *i, t_element *env, int err_id)
 {
-	int j;
-	char *tmp[2];
-	t_element *env_var;
-	char *dollar;
+	int			j;
+	char		*tmp[2];
+	t_element	*env_var;
+	char		*dollar;
 
 	dollar = "";
 	if (s[*i] == DOLLAR_TOKEN)
@@ -38,7 +38,7 @@ void		dollar_case_correction(char *s, int *i, t_element *env, int err_id)
 		j = 0;
 		if (ft_isalnum(s[*i]))
 		{
-			dollar_traversal(s,i, &j);
+			dollar_traversal(s, i, &j);
 			tmp[0] = ft_substr(&s[(*i) - j], 0, j);
 			env_var = catch_elem(tmp[0], &env);
 			if (env_var && env_var->obj2)
@@ -53,13 +53,13 @@ void		dollar_case_correction(char *s, int *i, t_element *env, int err_id)
 	}
 }
 
-char			*arg_correction(char *s, t_element *env, int err_id)
+char	*arg_correction(char *s, t_element *env, int err_id)
 {
-	int i;
-	int j;
-	t_element *env_var;
-	char *tmp[2];
-	char *dollar;
+	int			i;
+	int			j;
+	t_element	*env_var;
+	char		*tmp[2];
+	char		*dollar;
 
 	i = 0;
 	while (s[i])

@@ -14,7 +14,7 @@ void	print_readline(t_readline *str)
 	}
 }
 
-void 	reset_readline(t_readline *str)
+void	reset_readline(t_readline *str)
 {
 	t_readline	*p;
 	t_readline	*q;
@@ -29,9 +29,9 @@ void 	reset_readline(t_readline *str)
 	}
 }
 
-int		ft_atoi_readline(char **s)
+int	ft_atoi_readline(char **s)
 {
-	int		a;
+	int	a;
 
 	a = 0;
 	while (ft_isdigit(**s))
@@ -42,16 +42,12 @@ int		ft_atoi_readline(char **s)
 	return (a);
 }
 
-int is_up_or_down(int c)
-{
-  return ((c&0xFF) == 27 && ((c >> 8)&0xFF) == 91 && ((c >> 24)&0xFF) == 0);
-}
-
 void	termios_config(struct termios *old_attr)
 {
 	struct termios	new_attr;
 	char			*term_type;
 	int				ret;
+
 	term_type = getenv("TERM");
 	if (term_type == NULL)
 		ft_putstr("\r\033[0KTERM must be set (see 'env').\n", 1);
@@ -68,10 +64,54 @@ void	termios_config(struct termios *old_attr)
 		ft_putstr("\r\033[0KError tcsetattr.\n", 1);
 }
 
-char 	*ft_readline(t_history **h, int *status)
+void	backspace_trigger(t_readline **dup)
+{
+	char	s[20];
+	char	*test;
+	int		x;
+	int		y;
+
+	ft_putstr("\033[6n", 1);
+	read(0, s, 8);
+	test = &s[2];
+	x = ft_atoi_readline(&test);
+	test++;
+	y = ft_atoi_readline(&(test));
+	if (y >= 14 && *dup)
+	{
+		if (y > 14)
+		{
+			delete_last_readline(dup);
+			ft_putstr(tgetstr("le", NULL), 1);
+			ft_putstr(tgetstr("cd", NULL), 1);
+		}
+		else if (y == 14 && *dup)
+		{
+			free(*dup);
+			*dup = NULL;
+		}
+	}
+}
+
+char	*enter_trigger(t_history **last, t_readline *dup, t_history **h, struct termios *s_termios)
+{
+	char *finale;
+
+	ft_putstr("\n", 1);
+	(*last)->str = dup;
+	*h = (*last);
+	tcsetattr(STDIN_FILENO, TCSANOW, s_termios);
+	if ((*h)->str)
+	{
+		finale = generate_line((*last)->str);
+		return (finale);
+	}
+	return (NULL);
+}
+
+char	*ft_readline(t_history **h, int *status)
 {
 	char s[20];
-	char *finale;
 	int c;
 	struct termios s_termios;
 	t_history	*last;
@@ -87,25 +127,7 @@ char 	*ft_readline(t_history **h, int *status)
 		c = 0;
 		read (STDIN_FILENO, &c, 4);
 		if (c == 127 && dup)
-		{
-			ft_putstr("\033[6n", 1);
-			read(0, s, 8);
-			char *test = &s[2];
-			int x = ft_atoi_readline(&test);
-			test++;
-			int y = ft_atoi_readline(&(test));
-			if (y > 14)
-			{
-				delete_last_readline(&dup);
-				ft_putstr(tgetstr("le", NULL), 1);
-				ft_putstr(tgetstr("cd", NULL), 1);
-			}
-			else if (y == 14 && dup)
-			{
-				free(dup);
-				dup = NULL;
-			}
-		}
+			backspace_trigger(&dup);
 		else if (c == 0x3)
 		{
 			ft_putstr("\n", 1);
@@ -131,19 +153,7 @@ char 	*ft_readline(t_history **h, int *status)
 			}
 		}
 		else if (c == 10)
-		{
-			
-			ft_putstr("\n", 1);
-			last->str = dup;
-			*h = last;
-			tcsetattr(STDIN_FILENO, TCSANOW, &s_termios);
-			if ((*h)->str)
-			{
-				finale = generate_line(last->str);
-				return (finale);
-			}
-			return (NULL);
-		}
+			return (enter_trigger(&last, dup, h, &s_termios));
 		else if (c == UP_KEY)
 		{
 			ft_putstr("\033[6n", 1);

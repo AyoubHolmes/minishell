@@ -11,8 +11,6 @@
 #include <termcap.h>
 #include <signal.h>
 
-// #include <curses.h>
-
 typedef struct			s_readline
 {
 
