@@ -90,32 +90,3 @@ char	*generate_line(t_readline *str)
 	s[i] = '\0';
 	return (s);
 }
-
-void	print_readline(t_readline *str)
-{
-	t_readline	*p;
-
-	p = str;
-	if (!p)
-		write(1, "", 1);
-	while (p)
-	{
-		write(1, &p->c, 1);
-		p = p->next;
-	}
-}
-
-void 	reset_readline(t_readline *str)
-{
-	t_readline	*p;
-	t_readline	*q;
-
-	p = str;
-	while (p)
-	{
-		q = p;
-		p = p->next;
-		free(q);
-		q = NULL;
-	}
-}

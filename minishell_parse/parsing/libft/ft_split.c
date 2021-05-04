@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aboulbaz <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: shikma <shikma@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/20 15:25:33 by aboulbaz          #+#    #+#             */
-/*   Updated: 2019/10/20 15:25:34 by aboulbaz         ###   ########.fr       */
+/*   Updated: 2021/05/04 13:55:47 by shikma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int		ft_nbr_words(char *str, char c)
+static int	ft_nbr_words(char *str, char c)
 {
-	int nbr;
-	int i;
+	int	nbr;
+	int	i;
 
 	nbr = 0;
 	i = 0;
@@ -36,7 +36,7 @@ static int		ft_nbr_words(char *str, char c)
 	return (nbr);
 }
 
-static int		ft_word_size(char *str, int k, char c)
+static int	ft_word_size(char *str, int k, char c)
 {
 	int	word_size;
 
@@ -49,9 +49,9 @@ static int		ft_word_size(char *str, int k, char c)
 	return (word_size);
 }
 
-static void		free_tab(char **t)
+static void	free_tab(char **t)
 {
-	int idx;
+	int	idx;
 
 	idx = 0;
 	while (t[idx])
@@ -62,10 +62,10 @@ static void		free_tab(char **t)
 	free(t);
 }
 
-static char		**spl_f(char **new_str, char *str, char c, int i)
+static char	**spl_f(char **new_str, char *str, char c, int i)
 {
-	int j;
-	int k;
+	int	j;
+	int	k;
 
 	k = 0;
 	while (str[k])
@@ -75,8 +75,8 @@ static char		**spl_f(char **new_str, char *str, char c, int i)
 		if (str[k])
 		{
 			j = 0;
-			if (!(new_str[i] = malloc(sizeof(char) *\
-					(ft_word_size(str, k, c) + 1))))
+			new_str[i] = malloc(sizeof(char) * (ft_word_size(str, k, c) + 1));
+			if (!new_str[i])
 			{
 				free_tab(new_str);
 				free(new_str);
@@ -91,15 +91,17 @@ static char		**spl_f(char **new_str, char *str, char c, int i)
 	return (new_str);
 }
 
-char			**ft_split(char const *s, char c)
+char	**ft_split(char const *s, char c)
 {
 	char	**new_str;
 	char	*str;
 
-	if (!((str = (char*)s)) ||\
-			!(new_str = malloc((ft_nbr_words(str, c) + 1) * sizeof(char*))))
+	str = (char *)s;
+	new_str = malloc((ft_nbr_words(str, c) + 1) * sizeof(char *));
+	if (!str || !new_str)
 		return (NULL);
-	if (!(new_str = spl_f(new_str, str, c, 0)))
+	new_str = spl_f(new_str, str, c, 0);
+	if (!new_str)
 		return (NULL);
 	return (new_str);
 }

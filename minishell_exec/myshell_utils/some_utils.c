@@ -58,7 +58,7 @@ void	checker_error_printer(t_minishell *shell, char *arg)
 	ft_putstr(": `", shell->err_fd);
 	ft_putstr(arg, shell->err_fd);
 	ft_putstr("': not a valid identifier\n", shell->err_fd);
-	shell->status = 1;
+	shell->er_id = 1;
 }
 
 int	check_identifier(char *str, t_minishell *shell, int id, char *arg)

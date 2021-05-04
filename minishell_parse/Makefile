@@ -2,16 +2,24 @@ NAME = minishell_parse.a
 AR = ar rcs
 LMLX_FLAG= -L ./minilibx_opengl_20191021 libmlx.a -L ./minilibx_mms_20200219 libmlx.dylib -framework OpenGL -framework AppKit
 
-SRC = 	./parsing/main.c \
+SRC = 	./parsing/ft_free.c\
+		./parsing/main.c\
 		./parsing/prompt.c \
-		./parsing/get_next_line.c\
+		./parsing/lexer_helper.c\
 		./parsing/lexer.c\
-		./parsing/list_funcs.c\
+		./parsing/parser.c\
 		./parsing/list_debugger.c\
 		./parsing/pipeline_exec.c\
 		./parsing/readline.c\
 		./parsing/readline_utils.c\
 		./parsing/history_utils.c\
+		./parsing/err.c\
+		./parsing/arg_correction.c\
+		./parsing/get_fd_file.c\
+		./parsing/extract_filename.c\
+		./parsing/insert_cmd.c\
+		./parsing/readline_listfunc.c\
+        ./parsing/readline_helper.c\
 
 OBJECT = $(SRC:.c=.o)
 LIBFT = ./parsing/libft
@@ -37,3 +45,5 @@ fclean: clean
 	@rm -f $(NAME)
 
 re: fclean $(NAME)
+
+#./parsing/get_next_line.c\

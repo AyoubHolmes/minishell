@@ -5,21 +5,24 @@
 # define SEMICOLONE_SETTER 2
 # define SINGLE_QUOTE_SETTER 4
 # define DOUBLE_QUOTE_SETTER 8
-# define REDIRECTION1_SETTER 16
-# define REDIRECTION2_SETTER 32
-# define REDIRECTION3_SETTER 64
+# define RED1_SETTER 16
+# define RED2_SETTER 32
+# define RED3_SETTER 64
 # define DOLLAR_SETTER 128
 
 # define PIPE_TOKEN -10
 # define SEMICOLONE_TOKEN -20
-# define SINGLE_QUOTE_TOKEN -30
-# define DOUBLE_QUOTE_TOKEN -40
-# define REDIRECTION1_TOKEN -50
-# define REDIRECTION2_TOKEN -60
-# define REDIRECTION3_TOKEN -70
+# define SQ_TOKEN -30
+# define DQ_TOKEN -40
+# define RED1_TOKEN -50
+# define RED2_TOKEN -60
+# define RED3_TOKEN -70
 # define DOLLAR_TOKEN -80
-# define BACKSLASH_TOKEN -90
+# define BS_TOKEN -90
+# define STAR_TOKEN -100
 
+#define UP_KEY 4283163
+#define DOWN_KEY 4348699
 
 # include <stdio.h>
 # include <sys/types.h>
@@ -58,6 +61,7 @@ typedef struct s_simple_cmd
 	int		out_fd;
 	int		in_fd;
 	int		err_fd;
+	int		err_id;
 	struct s_simple_cmd *next;
 } t_simple_cmd;
 
@@ -89,7 +93,11 @@ typedef struct s_minishell
 	int			err_fd;
 	int			nb_pipe;
 	int			wait_status;
+	int			er_id;
+	int				*pid_status;
 }				t_minishell;
+
+t_minishell	g_cli;
 
 typedef struct		s_regex
 {
@@ -104,21 +112,32 @@ typedef struct		s_regex
 }					t_regex;
 
 void	ft_putstr_parse(char *str);
-void	prompt(int status);
+void	prompt(int status, int err);
 int		get_next_line(char **line);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 void    ft_lexer(t_minishell *cli);
 void    lexer_debugger(t_minishell *cli);
 char	*ft_minisubstr(char const *src, unsigned int start, size_t n);
 void	create_simple_cmd(t_minishell *cli, int *i, int *start, t_simple_cmd **simple_cmd);
-int		add_simple_cmd_node(t_simple_cmd **simple_cmd, char *cmd, t_element *env);
+int		add_simple_cmd_node(t_simple_cmd **simple_cmd, char *cmd, t_minishell *cli);
 void	simple_cmd_printer(t_simple_cmd *s);
 void	ft_putnbr_fd(int n, int fd);
 char	*ft_substr(char const *src, unsigned int start, size_t n);
-//int		ft_strlen(const char *s);
 char	*ft_strtrim(char const *s1, char const *set);
 int     is_a_redirection(char *line);
-int		ft_isalnum(int c);
+void	free_simple_cmd(t_simple_cmd **simple_cmd);
+void	free_args(t_args **args);
+void    ft_lexer_token_helper(char *c, char *line, int setter, int token);
+int     is_not_a_string(char c);
+int     redirection_is_set(char *c, char *line);
+int     is_a_redirection_token(char *line);
+int		dispatcher_id(char *cmd);
+int		insert_cmd(t_simple_cmd **s, char *cmd);
+char	*arg_correction(char *s, t_element *env, int err_id);
+char	*add_char_at_beginning(char c, char *s);
+char	*extract_filename(char *s, t_element *env, int err_id);
+int		get_fd_file(char *cmd, int *i, t_simple_cmd **s, t_element *env);
+t_simple_cmd	*create_simple_cmd_node(char *cmd, t_element *env, int *stat, int err_id);
 
 //exec
 char **ft_split(char const *s, char c);
@@ -158,4 +177,5 @@ int	check_star(char *str);
 char	*check_path(char *arg, char **match);
 void	check_cli_cmd(char **cmd);
 t_element	*fill_list_files(DIR *direc, char *match);
+void	replace_star(char **str);
 #endif

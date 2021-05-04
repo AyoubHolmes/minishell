@@ -55,12 +55,7 @@ void	path_handler(t_minishell *shell, int *a, int *i)
 		*a = stat(binary_path, &buff);
 	}
 	else
-	{
-		if (ft_strncmp(shell->cmd, "./", 2) == 0)
-			binary_path = shell->cmd;
-		else
-			*a = -1;
-	}
+		binary_path = shell->cmd;
 	if (*a == 0)
 	{
 		argv = fill_args(argv, shell->args, binary_path);

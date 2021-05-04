@@ -43,6 +43,19 @@ void	reg_handler(t_regex *reg, t_args **args)
 	}
 }
 
+void	replace_star(char **str)
+{
+	int	i;
+
+	i = 0;
+	while((*str)[i])
+	{
+		if((*str)[i] == STAR_TOKEN)
+			(*str)[i] = '*';
+		i++;
+	}
+}
+
 void	check_cli_cmd(char **cmd)
 {
 	t_regex		reg;
@@ -65,6 +78,7 @@ void	check_cli_cmd(char **cmd)
 			}
 			p = p->next;
 		}
+		replace_star(cmd);
 		if (reg.directory)
 			closedir(reg.directory);
 	}

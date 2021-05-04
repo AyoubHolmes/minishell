@@ -29,11 +29,11 @@ HEADERS = ../includes
 OBJECT = $(SRC:.c=.o)
 
 $(NAME): $(OBJECT)
-	@$(AR) $(NAME) $(OBJECT)
+	$(AR) $(NAME) $(OBJECT)
 	#@gcc $(FLAGS) minishell.a -o miniSHELL
 
 %.o: %.c
-	@gcc $(FLAGS) -I $(HEADERS) -D BUFFER_SIZE=1  -o $@ -c $<
+	gcc $(FLAGS) -I $(HEADERS) -D BUFFER_SIZE=1  -o $@ -c $<
 
 all: $(NAME) 
 	

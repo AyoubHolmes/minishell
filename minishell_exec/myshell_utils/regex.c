@@ -37,11 +37,11 @@ int	regex_handler(char *regex, char *file)
 
 	start = 0;
 	end = 0;
-	if (regex[0] == '*')
+	if (regex[0] == STAR_TOKEN)
 		start = 1;
-	if (regex[ft_strlen(regex) - 1] == '*')
+	if (regex[ft_strlen(regex) - 1] == STAR_TOKEN)
 		end = 1;
-	tmp = ft_split(regex, '*');
+	tmp = ft_split(regex, STAR_TOKEN);
 	return (ft_checker(tmp, file, start, end));
 }
 
@@ -52,8 +52,11 @@ int	check_star(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '*')
+		if (str[i] == STAR_TOKEN)
+		{
+			// puts("here");
 			return (0);
+			}
 		i++;
 	}
 	return (1);
@@ -92,6 +95,7 @@ void	check_cli_args(t_args **args)
 			reg_handler(&reg, args);
 			if (reg.directory)
 				closedir(reg.directory);
+			replace_star(&reg.tmp->arg);
 			if (reg.id == 1)
 				delete_arg(args, reg.tmp->arg);
 		}

@@ -31,6 +31,7 @@ void	fill_dispatcher(t_minishell *shell)
 
 	check_cli_cmd(&shell->cmd);
 	check_cli_args(&shell->args);
+	shell->er_id = 0;
 	command[0] = ft_system;
 	command[2] = pwd;
 	command[1] = echo_;

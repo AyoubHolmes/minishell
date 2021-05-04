@@ -10,7 +10,7 @@ $(NAME):
 	@mv ./minishell_parse/libft.a .
 	@mv ./minishell_parse/minishell_parse.a .
 	@mv ./minishell_exec/minishell_exec.a .
-	@gcc -ltermcap  $(FLAGS) minishell_exec.a minishell_parse.a libft.a -o $(NAME) 2> /dev/null
+	@gcc -ltermcap minishell_exec.a minishell_parse.a libft.a -o $(NAME)
 	@rm *.a
 	
 

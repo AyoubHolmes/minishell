@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   strnstr.c                                          :+:      :+:    :+:   */
+/*   ft_strnstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aboulbaz <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: shikma <shikma@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/17 14:38:38 by aboulbaz          #+#    #+#             */
-/*   Updated: 2019/10/17 14:53:54 by aboulbaz         ###   ########.fr       */
+/*   Updated: 2021/05/04 13:57:58 by shikma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*ft_strnstr(const char *s1, const char *s2, size_t len)
 	size_t	j;
 
 	if (!*s2)
-		return ((char*)s1);
+		return ((char *)s1);
 	if (!s1 && len == 0)
 		return (NULL);
 	i = 0;
@@ -34,7 +34,7 @@ char	*ft_strnstr(const char *s1, const char *s2, size_t len)
 				j++;
 			}
 			if (s2[j] == '\0')
-				return ((char*)(s1 + i));
+				return ((char *)(s1 + i));
 		}
 		i++;
 	}

@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aboulbaz <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: shikma <shikma@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/31 17:10:10 by aboulbaz          #+#    #+#             */
-/*   Updated: 2019/10/31 17:10:17 by aboulbaz         ###   ########.fr       */
+/*   Updated: 2021/05/04 14:02:55 by shikma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int		size_int(int n)
+static int	size_int(int n)
 {
-	int i;
-	int temp;
+	int	i;
+	int	temp;
 
 	temp = n;
 	i = 0;
@@ -27,7 +27,7 @@ static int		size_int(int n)
 	return (i);
 }
 
-char			*ft_itoa(int nb)
+char	*ft_itoa(int nb)
 {
 	int		i;
 	char	*nbr;

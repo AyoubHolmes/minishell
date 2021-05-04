@@ -2,13 +2,12 @@
 
 void	error_printer(t_minishell *shell)
 {
-	shell->status = 10;
 	ft_putstr("ayoub-shell: cd: ", shell->err_fd);
 	ft_putstr(shell->args->arg, shell->err_fd);
 	ft_putstr(": ", shell->err_fd);
 	ft_putstr(strerror(errno), shell->err_fd);
 	ft_putstr("\n", shell->err_fd);
-	shell->status = 1;
+	shell->er_id = 1;
 }
 
 void	edit_elem(char *elm1, char *elm2, t_element **shell_)
@@ -39,7 +38,7 @@ char	*ft_cases(t_minishell *shell, char *oldpwd)
 	else if (ft_strcmp(shell->args->arg, "-") == 0 && oldpwd == NULL)
 	{
 		ft_putstr("bash: cd: OLDPWD not set\n", shell->err_fd);
-		shell->status = 1;
+		shell->er_id = 1;
 		return (NULL);
 	}
 	else if (ft_strcmp(shell->args->arg, "-") == 0 && oldpwd != NULL)
