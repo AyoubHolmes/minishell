@@ -14,7 +14,7 @@
 typedef struct			s_readline
 {
 
-	int				c;
+	int					c;
 	struct s_readline	*begin;
 	struct s_readline	*next;
 	struct s_readline	*prev;
@@ -27,9 +27,14 @@ typedef struct			s_history
 	struct s_history	*prev;
 }						t_history;
 
-struct termios saved_attributes;
-
-// --------------- history functions -----------
+typedef struct		s_readline_vars
+{
+	char			s[20];
+	int				c;
+	struct termios	s_termios;
+	t_history		*last;
+	t_readline		*dup;
+}					t_readline_vars;
 
 void			add_history(t_history **str);
 void    		reset_input_mode (void);
@@ -37,19 +42,26 @@ void    		set_input_mode (void);
 int     		init_term(void);
 t_history		*get_last_history(t_history **str);
 t_history		*duplicate_history(t_history **history);
+void	    	add_char(int c, t_readline **str);
+int		    	size_of_readline(t_readline *str);
+void	    	delete_last_readline(t_readline **str);
+char	    	*generate_line(t_readline *str);
+void	    	print_readline(t_readline *str);
+t_readline		*duplicate_readline(t_readline **str);
+void			reset_readline(t_readline *str);
+void    		reset_input_mode (void);
+void			print_readline(t_readline *str);
+void			reset_readline(t_readline *str);
+int				ft_atoi_readline(char **s);
+void			termios_config(struct termios *old_attr);
+void			backspace_trigger(t_readline **dup);
+char			*enter_trigger(t_history **last, t_readline *dup, t_history **h, struct termios *s_termios);
+char			*clear_trigger(int *status, struct termios *s_termios);
+void			up_trigger(t_history **h, t_readline **dup);
+void			down_trigger(t_history **h, t_readline **dup);
+void			arrow_triggers(int key, t_history **h, t_readline **dup);
+void			ft_readline_helper1(int c, t_history **h, t_readline **dup);
+void			quit_control(t_history **h, t_readline_vars *vars, int *status);
+char 			*ft_readline(t_history **h, int *status);
 
-// ---------------------------------------------
-
-// --------------- readline functions ----------
-
-void	    add_char(int c, t_readline **str);
-int		    size_of_readline(t_readline *str);
-void	    delete_last_readline(t_readline **str);
-char	    *generate_line(t_readline *str);
-void	    print_readline(t_readline *str);
-t_readline	*duplicate_readline(t_readline **str);
-void		reset_readline(t_readline *str);
-void    	reset_input_mode (void);
-char 		*ft_readline(t_history **h, int *status);
-
-#endif // !READLINE_H
+#endif

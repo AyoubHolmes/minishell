@@ -93,7 +93,7 @@ int	main(int argc, char **argv, char **env)
 			cli.line = ft_strtrim(tmp, " ");
 			ft_lexer(&cli);
 			lexer_debugger(&cli);
-			if (cli.status == 0)
+			if (cli.status == 0 && ft_strcmp(cli.line, "") != 0)
 				ft_parser(&cli);
 			ft_free(tmp);
 			ft_free(cli.line);
