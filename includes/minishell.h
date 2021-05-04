@@ -157,5 +157,5 @@ int	regex_handler(char *regex, char *file);
 int	check_star(char *str);
 char	*check_path(char *arg, char **match);
 void	check_cli_cmd(char **cmd);
-t_element	*fill_list_files(DIR *direc);
+t_element	*fill_list_files(DIR *direc, char *match);
 #endif

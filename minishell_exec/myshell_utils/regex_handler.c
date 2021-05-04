@@ -24,23 +24,20 @@ int	ft_find(char *str, char *look_for)
 
 void	reg_handler(t_regex *reg, t_args **args)
 {
-	t_element *p;
+	t_element	*p;
 
-	p = fill_list_files(reg->directory);
+	p = fill_list_files(reg->directory, reg->match);
 	sort_l(p);
 	while (p)
 	{
 		reg->file = ft_strdup(p->obj1);
-		if (reg->file[0] != '.')
+		if (regex_handler(reg->match, reg->file) == 0)
 		{
-			if (regex_handler(reg->match, reg->file) == 0)
-			{
-				if (ft_strcmp(reg->path, "."))
-					add_args(*args, ft_strjoin(reg->path, reg->file));
-				else
-					add_args(*args, reg->file);
-				reg->id = 1;
-			}
+			if (ft_strcmp(reg->path, "."))
+				add_args(*args, ft_strjoin(reg->path, reg->file));
+			else
+				add_args(*args, reg->file);
+			reg->id = 1;
 		}
 		p = p->next;
 	}
@@ -48,27 +45,25 @@ void	reg_handler(t_regex *reg, t_args **args)
 
 void	check_cli_cmd(char **cmd)
 {
-	t_regex	reg;
+	t_regex		reg;
+	t_element	*p;
 
 	reg.cmp_tmp = *cmd;
 	if (check_star(reg.cmp_tmp) == 0)
 	{
 		reg.path = check_path(reg.cmp_tmp, &reg.match);
 		reg.directory = opendir(reg.path);
-		reg.entry = readdir(reg.directory);
-		while ((reg.entry))
+		p = fill_list_files(reg.directory, reg.match);
+		sort_l(p);
+		while (p)
 		{
-			reg.file = ft_strdup(reg.entry->d_name);
-			puts(reg.file);
-			if (reg.file[0] != '.')
+			reg.file = ft_strdup(p->obj1);
+			if (regex_handler(reg.match, reg.file) == 0)
 			{
-				if (regex_handler(reg.match, reg.file) == 0)
-				{
-					*cmd = reg.file;
-					return ;
-				}
+				*cmd = reg.file;
+				return ;
 			}
-			reg.entry = readdir(reg.directory);
+			p = p->next;
 		}
 		if (reg.directory)
 			closedir(reg.directory);

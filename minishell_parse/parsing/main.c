@@ -67,8 +67,8 @@ void	free_simple_cmd(t_simple_cmd **simple_cmd)
 	{
 		q = p;
 		p = p->next;
-		free_args(&q->args);
-		free(q->cmd);
+		// free_args(&q->args);
+		// free(q->cmd);
 		q->cmd = NULL;
 		free(q);
 		q = NULL;
