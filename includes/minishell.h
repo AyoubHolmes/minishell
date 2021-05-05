@@ -84,6 +84,7 @@ typedef struct s_minishell
     t_element	*pwd;
     t_element	*home;
 	t_element	*oldpwd;
+	t_element	*shlvl;
     char		**path;
 	int			old_stdout;
 	int			old_stdin;
@@ -94,7 +95,7 @@ typedef struct s_minishell
 	int			nb_pipe;
 	int			wait_status;
 	int			er_id;
-	int				*pid_status;
+	int			*pid_status;
 }				t_minishell;
 
 t_minishell	g_cli;
@@ -178,4 +179,5 @@ char	*check_path(char *arg, char **match);
 void	check_cli_cmd(char **cmd);
 t_element	*fill_list_files(DIR *direc, char *match);
 void	replace_star(char **str);
+void	signals_manager(void);
 #endif

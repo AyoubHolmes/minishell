@@ -78,7 +78,8 @@ int	check_identifier(char *str, t_minishell *shell, int id, char *arg)
 	while (str[i] || ft_strcmp(str, "\0") == 0)
 	{
 		if (ft_strcmp(str, "\0") == 0 || str[0] == '='
-			|| ft_isdigit(str[0]) == 1 || valid_or_not(str[i], str[i + 1], id) == 1)
+			|| ft_isdigit(str[0]) == 1
+			|| valid_or_not(str[i], str[i + 1], id) == 1)
 		{
 			checker_error_printer(shell, arg);
 			return (0);

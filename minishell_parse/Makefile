@@ -18,15 +18,17 @@ SRC = 	./parsing/ft_free.c\
 		./parsing/get_fd_file.c\
 		./parsing/extract_filename.c\
 		./parsing/insert_cmd.c\
-		./parsing/readline_funcs.c\
 		./parsing/readline_helpers.c\
+		./parsing/readline_funcs.c\
+		./parsing/ft_signal.c\
+		./parsing/ft_insert_args.c\
 
 OBJECT = $(SRC:.c=.o)
 LIBFT = ./parsing/libft
 HEADERS =	../includes
 
 $(NAME): $(OBJECT) $(HEADERS)
-	@make -sC $(LIBFT)
+	make -sC $(LIBFT)
 	@cp ./parsing/libft/libft.a .
 	@$(AR) $(NAME) $(OBJECT)
 

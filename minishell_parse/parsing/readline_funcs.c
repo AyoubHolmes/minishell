@@ -1,7 +1,7 @@
 #include "readline.h"
 #include "../../includes/minishell.h"
 
-char			*enter_trigger(t_readline_vars *vars,t_history **h)
+char	*enter_trigger(t_readline_vars *vars, t_history **h)
 {
 	ft_putstr("\n", 1);
 	vars->last->str = vars->dup;
@@ -25,7 +25,7 @@ void	up_trigger(t_history **h, t_readline **dup)
 			*h = (*h)->prev;
 			(*dup) = duplicate_readline(&(*h)->str);
 		}
-		print_readline((*dup)); 
+		print_readline((*dup));
 	}
 }
 
@@ -39,17 +39,17 @@ void	down_trigger(t_history **h, t_readline **dup)
 			*h = (*h)->next;
 			(*dup) = duplicate_readline(&(*h)->str);
 		}
-		print_readline((*dup)); 
+		print_readline((*dup));
 	}
 }
 
-void			arrow_triggers(int key, t_history **h, t_readline **dup)
+void	arrow_triggers(int key, t_history **h, t_readline **dup)
 {
 	char	s[30];
 
 	ft_putstr("\033[6n", 1);
 	read(0, s, 30);
-	ft_putstr(tgoto(tgetstr("cm", NULL), 11, atoi(&s[2])  - 1), 1);
+	ft_putstr(tgoto(tgetstr("cm", NULL), 11, atoi(&s[2]) - 1), 1);
 	ft_putstr(tgetstr("cd", NULL), 1);
 	if (key == UP_KEY)
 		up_trigger(h, dup);
@@ -57,10 +57,10 @@ void			arrow_triggers(int key, t_history **h, t_readline **dup)
 		down_trigger(h, dup);
 }
 
-void			ft_readline_helper(int c, t_history **h, t_readline **dup)
+void	ft_readline_helper(int c, t_history **h, t_readline **dup)
 {
 	if (c == UP_KEY || c == DOWN_KEY)
-			arrow_triggers(c, h, dup);
+		arrow_triggers(c, h, dup);
 	else if (c >= 32 && c < 127)
 	{
 		write(1, &c, 4);

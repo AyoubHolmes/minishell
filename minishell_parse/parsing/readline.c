@@ -3,7 +3,7 @@
 
 char 	*ft_readline(t_history **h)
 {
-	t_readline_vars vars;
+	t_readline_vars	vars;
 
 	add_history(h);
 	vars.last = *h;

@@ -1,7 +1,7 @@
 #include "readline.h"
 #include "../../includes/minishell.h"
 
-int		ft_atoi_readline(char **s)
+int	ft_atoi_readline(char **s)
 {
 	int		a;
 
@@ -19,6 +19,7 @@ void	termios_config(struct termios *old_attr)
 	struct termios	new_attr;
 	char			*term_type;
 	int				ret;
+
 	term_type = getenv("TERM");
 	if (term_type == NULL)
 		ft_putstr("\r\033[0KTERM must be set (see 'env').\n", 1);
@@ -37,14 +38,16 @@ void	termios_config(struct termios *old_attr)
 
 void	ft_backspace(t_readline **dup)
 {
-	char s[30];
+	char	s[30];
+	char	*test;
+	int		y;
 
 	ft_putstr("\033[6n", 1);
 	read(0, s, 30);
-	char *test = &s[2];
-	int x = ft_atoi_readline(&test);
+	test = &s[2];
+	y = ft_atoi_readline(&test);
 	test++;
-	int y = ft_atoi_readline(&(test));
+	y = ft_atoi_readline(&(test));
 	if (y > 12)
 	{
 		delete_last_readline(dup);

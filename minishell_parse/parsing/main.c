@@ -40,45 +40,6 @@ void	ft_exec_(t_minishell *cli)
 	cli->paths = catch_elem("PATH", &cli->shell);
 }
 
-/* void	signal_handler_c(int sig)
-{
-	(void)sig;
-	if (g_cli.pid_status == 0)
-		exit(0);
-	ft_putstr_fd("\n",2);
-	g_cli.er_id = 130;
-}
-
-void	signal_handler_quit(int sig)
-{
-	(void)sig;
-	ft_putstr_fd("QUIT :3\n",2);
-	g_cli.er_id = 131;
-} */
-
-void	signal_handler(int sig)
-{
-	if(sig == SIGQUIT)
-	{
-		signal(SIGQUIT,SIG_IGN);
-		ft_putstr_fd("QUIT :3\n",1);
-	}
-	if(sig == SIGINT)
-	{
-		signal(SIGINT,SIG_IGN);
-		ft_putstr_fd("\n",1);
-	}
-	if (g_cli.pid_status == 0)
-			exit(0);
-	g_cli.er_id = 1;
-}
-
-void	signals_manager(void)
-{
-	signal(SIGQUIT,signal_handler);
-	signal(SIGINT,signal_handler);
-}
-
 void	ft_parser(t_minishell *cli)
 {
 	int		i;
@@ -121,7 +82,6 @@ int	main(int argc, char **argv, char **env)
 	t_history	*history;
 	char		*tmp;
 
-	
 	init_(&history, &g_cli, env);
 	prompt(0, g_cli.er_id);
 	while (1)

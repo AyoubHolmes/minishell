@@ -58,8 +58,8 @@ void	path_handler(t_minishell *shell, int *a, int *i)
 		binary_path = shell->cmd;
 	if (*a == 0)
 	{
-		dup2(shell->out_fd,1);
-		dup2(shell->in_fd,0);
+		dup2(shell->out_fd, 1);
+		dup2(shell->in_fd, 0);
 		argv = fill_args(argv, shell->args, binary_path);
 		execve(argv[0], argv, shell->enviroment);
 	}
