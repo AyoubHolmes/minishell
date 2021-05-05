@@ -40,30 +40,6 @@ void	ft_exec_(t_minishell *cli)
 	cli->paths = catch_elem("PATH", &cli->shell);
 }
 
-void	signal_handler_c(int sig)
-{
-	if(sig == SIGINT)
-		signal(SIGINT,SIG_IGN);	
-	g_cli.er_id = 130;
-	if (g_cli.pid_status == 0)
-		exit(0);
-	ft_putstr_fd("\n",2);
-}
-
-void	signal_handler_quit(int sig)
-{
-	(void)sig;
-	ft_putstr_fd("QUIT :3\n",2);
-	g_cli.er_id = 131;
-	if (g_cli.pid_status == 0)
-		exit(0);
-}
-
-void	signals_manager(void)
-{
-	signal(SIGQUIT,signal_handler_quit);
-	signal(SIGINT,signal_handler_c);
-}
 
 void	ft_parser(t_minishell *cli)
 {
@@ -75,13 +51,13 @@ void	ft_parser(t_minishell *cli)
 	i = 0;
 	start = 0;
 	cli->simple_cmd = NULL;
+	g_cli.is_empty_dollar = 0;
 	signals_manager();
 	while (cli->line[i])
 	{
 		create_simple_cmd(cli, &i, &start, &cli->simple_cmd);
 		if (!cli->status)
 			ft_pipe(cli);
-			// simple_cmd_printer(cli->simple_cmd);
 		else
 			cli->er_id = cli->status;
 		free_simple_cmd(&cli->simple_cmd);

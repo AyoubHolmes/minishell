@@ -53,10 +53,7 @@ int	check_star(char *str)
 	while (str[i])
 	{
 		if (str[i] == STAR_TOKEN)
-		{
-			// puts("here");
 			return (0);
-			}
 		i++;
 	}
 	return (1);

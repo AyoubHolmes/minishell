@@ -9,19 +9,22 @@ void	edit_or_add(char *elm1, char *elm2, t_element **shell_)
 		return ;
 	while (list->next)
 	{
-		if (ft_strcmp(list->next->obj1, elm1) == 0)
+		if (ft_strcmp(list->next->obj1, ft_split(elm1, '+')[0]) == 0)
 		{
 			ft_free_var (elm1);
 			list->next->id = 0;
 			if (elm2 == NULL)
 				return ;
 			ft_free_var (list->next->obj2);
-			list->next->obj2 = elm2;
+			if (elm1[ft_strlen(elm1) - 1] == '+')
+				list->next->obj2 = ft_strjoin(list->next->obj2, elm2);
+			else
+				list->next->obj2 = elm2;
 			return ;
 		}
 		list = list->next;
 	}
-	add_end(shell_, elm1, elm2, 0);
+	add_end(shell_, ft_split(elm1, '+')[0], elm2, 0);
 }
 
 char	**var_split(char *str)

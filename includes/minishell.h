@@ -20,6 +20,7 @@
 # define DOLLAR_TOKEN -80
 # define BS_TOKEN -90
 # define STAR_TOKEN -100
+# define EMPTY_DOLLAR_TOKEN -220
 
 #define UP_KEY 4283163
 #define DOWN_KEY 4348699
@@ -36,7 +37,6 @@
 #include <errno.h>
 #include <limits.h>
 #include "libft.h"
-#include "readline.h"
 
 typedef struct	s_element
 {
@@ -85,6 +85,7 @@ typedef struct s_minishell
     t_element	*pwd;
     t_element	*home;
 	t_element	*oldpwd;
+	t_element	*shlvl;
     char		**path;
 	int			old_stdout;
 	int			old_stdin;
@@ -95,8 +96,8 @@ typedef struct s_minishell
 	int			nb_pipe;
 	int			wait_status;
 	int			er_id;
-	int				*pid_status;
-	struct termios *s_termios;
+	int			*pid_status;
+	int			is_empty_dollar;
 }				t_minishell;
 
 t_minishell	g_cli;
@@ -180,4 +181,5 @@ char	*check_path(char *arg, char **match);
 void	check_cli_cmd(char **cmd);
 t_element	*fill_list_files(DIR *direc, char *match);
 void	replace_star(char **str);
+void	signals_manager(void);
 #endif

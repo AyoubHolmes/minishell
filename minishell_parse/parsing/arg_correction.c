@@ -24,6 +24,23 @@ char	*error_var(char *s, int *i, int *j, int err_id)
 	return (dollar);
 }
 
+char	*dollar_case_helper(char *s, int *i, int *j)
+{
+	t_element	*env_var;
+	char		*tmp;
+	char		*dollar;
+
+	dollar = "";
+	dollar_traversal(s, i, j);
+	tmp = ft_substr(&s[(*i) - (*j)], 0, *j);
+	env_var = catch_elem(tmp, &g_cli.shell);
+	if (env_var && env_var->obj2)
+		dollar = ft_strdup(env_var->obj2);
+	else
+		g_cli.is_empty_dollar = 1;
+	return (dollar);
+}
+
 char	*dollar_case_correction(char *s, int *i, t_element *env, int err_id)
 {
 	int			j;
@@ -37,13 +54,7 @@ char	*dollar_case_correction(char *s, int *i, t_element *env, int err_id)
 		(*i)++;
 		j = 0;
 		if (ft_isalnum(s[*i]))
-		{
-			dollar_traversal(s, i, &j);
-			tmp[0] = ft_substr(&s[(*i) - j], 0, j);
-			env_var = catch_elem(tmp[0], &env);
-			if (env_var && env_var->obj2)
-				dollar = ft_strdup(env_var->obj2);
-		}
+			dollar = dollar_case_helper(s, i, &j);
 		else
 			dollar = error_var(s, i, &j, err_id);
 		tmp[0] = ft_strjoin(ft_substr(s, 0, (*i) - j - 1), dollar);

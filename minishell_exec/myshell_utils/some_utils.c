@@ -42,9 +42,9 @@ char	*ft_strchr(const char *s, int c)
 		return (0);
 }
 
-int	valid_or_not(char c, int id)
+int	valid_or_not(char c, char b, int id)
 {
-	if (id == 1 && c == '=')
+	if (id == 1 && (c == '=' || (c == '+' && b != '+')))
 		return (0);
 	if (ft_isalnum(c) == 1 || c == '_')
 		return (0);
@@ -53,7 +53,7 @@ int	valid_or_not(char c, int id)
 
 void	checker_error_printer(t_minishell *shell, char *arg)
 {
-	ft_putstr("ayoub-shell:", shell->err_fd);
+	ft_putstr("minishell:", shell->err_fd);
 	ft_putstr(shell->cmd, shell->err_fd);
 	ft_putstr(": `", shell->err_fd);
 	ft_putstr(arg, shell->err_fd);
@@ -78,7 +78,8 @@ int	check_identifier(char *str, t_minishell *shell, int id, char *arg)
 	while (str[i] || ft_strcmp(str, "\0") == 0)
 	{
 		if (ft_strcmp(str, "\0") == 0 || str[0] == '='
-			|| ft_isdigit(str[0]) == 1 || valid_or_not(str[i], id) == 1)
+			|| ft_isdigit(str[0]) == 1
+			|| valid_or_not(str[i], str[i + 1], id) == 1)
 		{
 			checker_error_printer(shell, arg);
 			return (0);

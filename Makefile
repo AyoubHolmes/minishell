@@ -17,6 +17,8 @@ $(NAME):
 
 all: $(NAME) 
 	
+bonus: $(NAME)
+
 clean:
 	@make clean -sC $(PARSE)
 	@make clean -sC $(EXEC)

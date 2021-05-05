@@ -2,7 +2,7 @@
 
 void	error_printer(t_minishell *shell)
 {
-	ft_putstr("ayoub-shell: cd: ", shell->err_fd);
+	ft_putstr("minishell: cd: ", shell->err_fd);
 	ft_putstr(shell->args->arg, shell->err_fd);
 	ft_putstr(": ", shell->err_fd);
 	ft_putstr(strerror(errno), shell->err_fd);

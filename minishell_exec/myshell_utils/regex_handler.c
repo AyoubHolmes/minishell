@@ -48,9 +48,9 @@ void	replace_star(char **str)
 	int	i;
 
 	i = 0;
-	while((*str)[i])
+	while ((*str)[i])
 	{
-		if((*str)[i] == STAR_TOKEN)
+		if ((*str)[i] == STAR_TOKEN)
 			(*str)[i] = '*';
 		i++;
 	}
