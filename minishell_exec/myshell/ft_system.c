@@ -75,7 +75,7 @@ char	*ft_system(t_minishell *shell)
 	shell->path = ft_split(shell->paths->obj2, ':');
 	if (shell->path == NULL)
 	{
-		ft_putstr("ayoub-shell: ", shell->err_fd);
+		ft_putstr("minishell: ", shell->err_fd);
 		ft_putstr(shell->cmd, shell->err_fd);
 		ft_putstr(" No such file or directory\n", shell->err_fd);
 		exit(127);
@@ -84,7 +84,7 @@ char	*ft_system(t_minishell *shell)
 		path_handler(shell, &a, &i);
 	if (a < 0)
 	{
-		ft_putstr("ayoub-shell: ", shell->err_fd);
+		ft_putstr("minishell: ", shell->err_fd);
 		ft_putstr(shell->cmd, shell->err_fd);
 		ft_putstr(": command not found\n", shell->err_fd);
 		exit(127);

@@ -49,14 +49,13 @@ void			reset_readline(t_readline *str);
 int				ft_atoi_readline(char **s);
 void			termios_config(struct termios *old_attr);
 void			ft_backspace(t_readline **dup);
-char			*enter_trigger(t_history **last, t_readline *dup,
-					t_history **h, struct termios *s_termios);
-char			*clear_trigger(int *status, struct termios *s_termios);
+char			*enter_trigger(t_readline_vars *vars, t_history **h);
+char			*clear_trigger(struct termios *s_termios);
 void			up_trigger(t_history **h, t_readline **dup);
 void			down_trigger(t_history **h, t_readline **dup);
 void			arrow_triggers(int key, t_history **h, t_readline **dup);
 void			ft_readline_helper1(int c, t_history **h, t_readline **dup);
-void			quit_control(t_history **h, t_readline_vars *vars, int *status);
+char			*quit_control(t_history **h, t_readline_vars *vars);
 char			*ft_readline(t_history **h);
 
 #endif

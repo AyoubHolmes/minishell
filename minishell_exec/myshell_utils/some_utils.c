@@ -53,7 +53,7 @@ int	valid_or_not(char c, char b, int id)
 
 void	checker_error_printer(t_minishell *shell, char *arg)
 {
-	ft_putstr("ayoub-shell:", shell->err_fd);
+	ft_putstr("minishell:", shell->err_fd);
 	ft_putstr(shell->cmd, shell->err_fd);
 	ft_putstr(": `", shell->err_fd);
 	ft_putstr(arg, shell->err_fd);
