@@ -33,10 +33,11 @@ char	*dollar_case_helper(char *s, int *i, int *j)
 	dollar = "";
 	dollar_traversal(s, i, j);
 	tmp = ft_substr(&s[(*i) - (*j)], 0, *j);
-	puts("here");
 	env_var = catch_elem(tmp, &g_cli.shell);
 	if (env_var && env_var->obj2)
 		dollar = ft_strdup(env_var->obj2);
+	else
+		g_cli.is_empty_dollar = 1;
 	return (dollar);
 }
 

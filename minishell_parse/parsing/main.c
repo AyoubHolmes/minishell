@@ -40,6 +40,7 @@ void	ft_exec_(t_minishell *cli)
 	cli->paths = catch_elem("PATH", &cli->shell);
 }
 
+
 void	ft_parser(t_minishell *cli)
 {
 	int		i;
@@ -50,6 +51,7 @@ void	ft_parser(t_minishell *cli)
 	i = 0;
 	start = 0;
 	cli->simple_cmd = NULL;
+	g_cli.is_empty_dollar = 0;
 	signals_manager();
 	while (cli->line[i])
 	{

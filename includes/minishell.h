@@ -20,6 +20,7 @@
 # define DOLLAR_TOKEN -80
 # define BS_TOKEN -90
 # define STAR_TOKEN -100
+# define EMPTY_DOLLAR_TOKEN -220
 
 #define UP_KEY 4283163
 #define DOWN_KEY 4348699
@@ -96,6 +97,7 @@ typedef struct s_minishell
 	int			wait_status;
 	int			er_id;
 	int			*pid_status;
+	int			is_empty_dollar;
 }				t_minishell;
 
 t_minishell	g_cli;
