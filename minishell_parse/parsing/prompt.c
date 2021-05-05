@@ -14,11 +14,11 @@ void	ft_putstr_parse(char *s)
 
 void	prompt(int status, int err)
 {
-	ft_putstr_parse("ayoub-shell");
 	if (status != 0 || err != 0)
 		ft_putstr_parse("\033[1;31m");
 	else
 		ft_putstr_parse("\033[0;32m");
+	ft_putstr_parse("minishell");
 	ft_putstr_parse("$>");
 	ft_putstr_parse("\033[0m");
 }

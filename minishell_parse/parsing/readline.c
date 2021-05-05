@@ -1,32 +1,17 @@
 #include "readline.h"
 #include "../../includes/minishell.h"
 
-void	ft_putchar(char s)
-{
-	write(1, &s, 1);
-}
-
-int		is_digit(char c)
-{
-	return (c >= '0' && c <= '9');
-}
-
 int		ft_atoi_readline(char **s)
 {
 	int		a;
 
 	a = 0;
-	while (is_digit(**s))
+	while (ft_isdigit(**s))
 	{
 		a = (a * 10) + (**s - '0');
 		(*s)++;
 	}
 	return (a);
-}
-
-int is_up_or_down(int c)
-{
-  return ((c&0xFF) == 27 && ((c >> 8)&0xFF) == 91 && ((c >> 24)&0xFF) == 0);
 }
 
 void	termios_config(struct termios *old_attr)
@@ -50,119 +35,123 @@ void	termios_config(struct termios *old_attr)
 		ft_putstr("\r\033[0KError tcsetattr.\n", 1);
 }
 
-char 	*ft_readline(t_history **h)
+void	ft_backspace(t_readline **dup)
 {
 	char s[30];
-	char *finale;
-	int c;
-	struct termios s_termios;
-	t_history	*last;
-	t_readline	*dup;
+
+	ft_putstr("\033[6n", 1);
+	read(0, s, 30);
+	char *test = &s[2];
+	int x = ft_atoi_readline(&test);
+	test++;
+	int y = ft_atoi_readline(&(test));
+	if (y > 12)
+	{
+		delete_last_readline(dup);
+		ft_putstr(tgetstr("le", NULL), 1);
+		ft_putstr(tgetstr("cd", NULL), 1);
+	}
+	else if (y == 12 && *dup)
+	{
+		free(*dup);
+		*dup = NULL;
+	}
+}
+
+char	*clear_trigger(int *status, struct termios *s_termios)
+{
+	ft_putstr("\n", 1);
+	*status = 0;
+	tcsetattr(STDIN_FILENO, TCSANOW, s_termios);
+	return (ft_strdup("clear"));
+}
+
+void	quit_control(t_history **h, t_readline_vars *vars, int *status)
+{
+	*h = vars->last;
+	ft_putstr("exit\n", 1);
+	tcsetattr(STDIN_FILENO, TCSANOW, &vars->s_termios);
+	exit(*status);
+}
+
+
+char 	*ft_readline(t_history **h)
+{
+	t_readline_vars vars;
 
 	add_history(h);
-	last = *h;
+	vars.last = *h;
 	(*h)->str = NULL;
-	termios_config(&s_termios);
-	dup = NULL;
+	termios_config(&vars.s_termios);
+	vars.dup = NULL;
 	while (1)
 	{
-		c = 0;
-		read (STDIN_FILENO, &c, 4);
-		if (c == 127 && dup)
-		{
-			ft_putstr("\033[6n", 1);
-			read(0, s, 8);
-			char *test = &s[2];
-			int x = ft_atoi_readline(&test);
-			test++;
-			int y = ft_atoi_readline(&(test));
-			if (y > 14)
-			{
-				delete_last_readline(&dup);
-				ft_putstr(tgetstr("le", NULL), 1);
-				ft_putstr(tgetstr("cd", NULL), 1);
-			}
-			else if (y == 14 && dup)
-			{
-				free(dup);
-				dup = NULL;
-			}
-		}
-		else if (c == 0x3)
+		vars.c = 0;
+		read (STDIN_FILENO, &vars.c, 4);
+		if (vars.c == 127 && vars.dup)
+			ft_backspace(&vars.dup);
+		else if (vars.c == 0xC)
+			return (clear_trigger(g_cli.status, &vars.s_termios));
+		else if (vars.c == 0x3)
 		{
 			ft_putstr("\n", 1);
 			g_cli.er_id = 1;
-			*h = last;
-			tcsetattr(STDIN_FILENO, TCSANOW, &s_termios);
+			*h = vars.last;
+			tcsetattr(STDIN_FILENO, TCSANOW, &vars.s_termios);
 			return (NULL);
 		}
-		else if (c == 0x4)
-		{	
-			if (!dup)
-			{
-				*h = last;
-				ft_putstr("\n", 1);
-				tcsetattr(STDIN_FILENO, TCSANOW, &s_termios);
-				exit(1);
-			}
-		}
-		else if (c == 0xC)
+		else if (vars.c == 0x4 && !vars.dup)
+			quit_control(h, &vars, g_cli.status);
+		else if (vars.c == 10)
 		{
 			ft_putstr("\n", 1);
-			g_cli.status = 0;
-			tcsetattr(STDIN_FILENO, TCSANOW, &s_termios);
-			return (ft_strdup("clear"));
-		}
-		else if (c == 10)
-		{
-			ft_putstr("\n", 1);
-			last->str = dup;
-			*h = last;
-			tcsetattr(STDIN_FILENO, TCSANOW, &s_termios);
+			vars.last->str = vars.dup;
+			*h = vars.last;
+			tcsetattr(STDIN_FILENO, TCSANOW, &vars.s_termios);
 			if ((*h)->str)
 			{
-				finale = generate_line(last->str);
-				return (finale);
+				vars.finale = generate_line(vars.last->str);
+				return (vars.finale);
 			}
 			return (NULL);
 		}
-		else if (c == UP_KEY || c == DOWN_KEY)
+		else if (vars.c == UP_KEY || vars.c == DOWN_KEY)
 		{
 			ft_putstr("\033[6n", 1);
-			read(0, s, 30);
-			ft_putstr(tgoto(tgetstr("cm", NULL), 13, atoi(&s[2])  - 1), 1);
+			read(0, vars.s, 30);
+			ft_putstr(tgoto(tgetstr("cm", NULL), 11, atoi(&vars.s[2])  - 1), 1);
 			ft_putstr(tgetstr("cd", NULL), 1);
-			if (c == UP_KEY)
+			if (vars.c == UP_KEY)
 			{
 				if (*h)
 				{
 					if ((*h)->prev)
 					{
-						(*h)->str = dup;
+						(*h)->str = vars.dup;
 						*h = (*h)->prev;
-						dup = duplicate_readline(&(*h)->str);
+						vars.dup = duplicate_readline(&(*h)->str);
 					}
-					print_readline(dup); 
+					print_readline(vars.dup); 
 				}
 			}
-			else if (c == DOWN_KEY)
+			else if (vars.c == DOWN_KEY)
 			{
 				if (h)
 				{
 					if ((*h)->next)
 					{
-						(*h)->str = dup;
+						(*h)->str = vars.dup;
 						*h = (*h)->next;
-						dup = duplicate_readline(&(*h)->str);
+						vars.dup = duplicate_readline(&(*h)->str);
 					}
-					print_readline(dup); 
+					print_readline(vars.dup); 
 				}	
 			}
 		}
-		else if (c >= 32 && c < 127)
+		else if (vars.c >= 32 && vars.c < 127)
 		{
-			write(1, &c, 4);
-			add_char(c, &dup);
+			write(1, &vars.c, 4);
+			add_char(vars.c, &vars.dup);
 		}
 	}
 	return (NULL);
