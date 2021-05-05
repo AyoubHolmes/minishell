@@ -14,7 +14,6 @@
 typedef struct s_readline
 {
 	int					c;
-	struct s_readline	*begin;
 	struct s_readline	*next;
 	struct s_readline	*prev;
 }						t_readline;
@@ -48,7 +47,7 @@ t_readline		*duplicate_readline(t_readline **str);
 void			reset_readline(t_readline *str);
 int				ft_atoi_readline(char **s);
 void			termios_config(struct termios *old_attr);
-void			backspace_trigger(t_readline **dup);
+char			*backspace_trigger(t_readline **dup);
 char			*enter_trigger(t_history **last, t_readline *dup,
 					t_history **h, struct termios *s_termios);
 char			*clear_trigger(int *status, struct termios *s_termios);
@@ -57,6 +56,6 @@ void			down_trigger(t_history **h, t_readline **dup);
 void			arrow_triggers(int key, t_history **h, t_readline **dup);
 void			ft_readline_helper1(int c, t_history **h, t_readline **dup);
 void			quit_control(t_history **h, t_readline_vars *vars, int *status);
-char			*ft_readline(t_history **h, int *status);
+char			*ft_readline(t_history **h);
 
 #endif

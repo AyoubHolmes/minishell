@@ -18,8 +18,6 @@ SRC = 	./parsing/ft_free.c\
 		./parsing/get_fd_file.c\
 		./parsing/extract_filename.c\
 		./parsing/insert_cmd.c\
-		./parsing/readline_listfunc.c\
-        ./parsing/readline_helper.c\
 
 OBJECT = $(SRC:.c=.o)
 LIBFT = ./parsing/libft

@@ -1,80 +1,169 @@
 #include "readline.h"
+#include "../../includes/minishell.h"
 
-void	down_trigger(t_history **h, t_readline **dup)
+void	ft_putchar(char s)
 {
-	if (h)
-	{
-		if ((*h)->next)
-		{
-			(*h)->str = *dup;
-			*h = (*h)->next;
-			*dup = duplicate_readline(&(*h)->str);
-		}
-		print_readline(*dup); 
-	}
+	write(1, &s, 1);
 }
 
-void	arrow_triggers(int key, t_history **h, t_readline **dup)
+int		is_digit(char c)
+{
+	return (c >= '0' && c <= '9');
+}
+
+int		ft_atoi_readline(char **s)
+{
+	int		a;
+
+	a = 0;
+	while (is_digit(**s))
+	{
+		a = (a * 10) + (**s - '0');
+		(*s)++;
+	}
+	return (a);
+}
+
+int is_up_or_down(int c)
+{
+  return ((c&0xFF) == 27 && ((c >> 8)&0xFF) == 91 && ((c >> 24)&0xFF) == 0);
+}
+
+void	termios_config(struct termios *old_attr)
+{
+	struct termios	new_attr;
+	char			*term_type;
+	int				ret;
+	term_type = getenv("TERM");
+	if (term_type == NULL)
+		ft_putstr("\r\033[0KTERM must be set (see 'env').\n", 1);
+	ret = tgetent(NULL, term_type);
+	if (ret < 0)
+		ft_putstr("\r\033[0KCould not access to the termcap database..\n", 1);
+	if (ret == 0)
+		ft_putstr("\r\033[0KIs not defined in termcap database.\n", 1);
+	if (tcgetattr(STDIN_FILENO, old_attr) < 0)
+		ft_putstr("Error tcgetattr\n", 1);
+	new_attr = *old_attr;
+	new_attr.c_lflag &= ~(ECHO | ICANON | ISIG);
+	if (tcsetattr(STDIN_FILENO, TCSANOW, &new_attr) < 0)
+		ft_putstr("\r\033[0KError tcsetattr.\n", 1);
+}
+
+char 	*ft_readline(t_history **h)
 {
 	char s[30];
-
-	ft_putstr("\033[6n", 1);
-	read(0, s, 30);
-	ft_putstr(tgoto(tgetstr("cm", NULL), 13, atoi(&s[2])  - 1), 1);
-	ft_putstr(tgetstr("cd", NULL), 1);
-	if (key == UP_KEY)
-		up_trigger(h, dup);
-	else
-		down_trigger(h, dup);
-}
-
-void	ft_readline_helper1(int c, t_history **h, t_readline **dup)
-{
-	if (c == UP_KEY || c == DOWN_KEY)
-		arrow_triggers(c, h, dup);
-	else if (c >= 32 && c <= 127)
-	{
-		write(1, &c, 4);
-		add_char(c, dup);
-	}
-}
-
-void	quit_control(t_history **h, t_readline_vars *vars, int *status)
-{
-	*h = vars->last;
-	ft_putstr("exit\n", 1);
-	tcsetattr(STDIN_FILENO, TCSANOW, &vars->s_termios);
-	exit(*status);
-}
-
-char	*ft_readline(t_history **h, int *status)
-{
-	t_readline_vars vars;
+	char *finale;
+	int c;
+	struct termios s_termios;
+	t_history	*last;
+	t_readline	*dup;
 
 	add_history(h);
-	vars.last = *h;
+	last = *h;
 	(*h)->str = NULL;
-	termios_config(&vars.s_termios);
-	vars.dup = NULL;
+	termios_config(&s_termios);
+	dup = NULL;
 	while (1)
 	{
-		vars.c = 0;
-		read (STDIN_FILENO, &vars.c, 4);
-		if (vars.c == 127 && vars.dup)
-			backspace_trigger(&vars.dup);
-		else if (vars.c == 0x3)
+		c = 0;
+		read (STDIN_FILENO, &c, 4);
+		if (c == 127 && dup)
+		{
+			ft_putstr("\033[6n", 1);
+			read(0, s, 8);
+			char *test = &s[2];
+			int x = ft_atoi_readline(&test);
+			test++;
+			int y = ft_atoi_readline(&(test));
+			if (y > 14)
+			{
+				delete_last_readline(&dup);
+				ft_putstr(tgetstr("le", NULL), 1);
+				ft_putstr(tgetstr("cd", NULL), 1);
+			}
+			else if (y == 14 && dup)
+			{
+				free(dup);
+				dup = NULL;
+			}
+		}
+		else if (c == 0x3)
 		{
 			ft_putstr("\n", 1);
-			*status = 1;
+			g_cli.er_id = 1;
+			*h = last;
+			tcsetattr(STDIN_FILENO, TCSANOW, &s_termios);
 			return (NULL);
 		}
-		else if (vars.c == 0xC)
-			return (clear_trigger(status, &vars.s_termios));
-		else if (vars.c == 0x4 && !vars.dup)
-			quit_control(h, &vars, status);
-		else if (vars.c == 10)
-			return (enter_trigger(&vars.last, vars.dup, h, &vars.s_termios));
-		ft_readline_helper1(vars.c, h, &vars.dup);
+		else if (c == 0x4)
+		{	
+			if (!dup)
+			{
+				*h = last;
+				ft_putstr("\n", 1);
+				tcsetattr(STDIN_FILENO, TCSANOW, &s_termios);
+				exit(1);
+			}
+		}
+		else if (c == 0xC)
+		{
+			ft_putstr("\n", 1);
+			g_cli.status = 0;
+			tcsetattr(STDIN_FILENO, TCSANOW, &s_termios);
+			return (ft_strdup("clear"));
+		}
+		else if (c == 10)
+		{
+			ft_putstr("\n", 1);
+			last->str = dup;
+			*h = last;
+			tcsetattr(STDIN_FILENO, TCSANOW, &s_termios);
+			if ((*h)->str)
+			{
+				finale = generate_line(last->str);
+				return (finale);
+			}
+			return (NULL);
+		}
+		else if (c == UP_KEY || c == DOWN_KEY)
+		{
+			ft_putstr("\033[6n", 1);
+			read(0, s, 30);
+			ft_putstr(tgoto(tgetstr("cm", NULL), 13, atoi(&s[2])  - 1), 1);
+			ft_putstr(tgetstr("cd", NULL), 1);
+			if (c == UP_KEY)
+			{
+				if (*h)
+				{
+					if ((*h)->prev)
+					{
+						(*h)->str = dup;
+						*h = (*h)->prev;
+						dup = duplicate_readline(&(*h)->str);
+					}
+					print_readline(dup); 
+				}
+			}
+			else if (c == DOWN_KEY)
+			{
+				if (h)
+				{
+					if ((*h)->next)
+					{
+						(*h)->str = dup;
+						*h = (*h)->next;
+						dup = duplicate_readline(&(*h)->str);
+					}
+					print_readline(dup); 
+				}	
+			}
+		}
+		else if (c >= 32 && c < 127)
+		{
+			write(1, &c, 4);
+			add_char(c, &dup);
+		}
 	}
 	return (NULL);
 }
