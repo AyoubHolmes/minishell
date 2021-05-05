@@ -54,7 +54,7 @@ int	error_fd(char *filename, t_simple_cmd **s)
 		ft_putstr("\n", 2);
 		return (1);
 	}
-	ft_free(filename);
+	ft_free_var(filename);
 	return (0);
 }
 

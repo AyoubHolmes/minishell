@@ -3,7 +3,7 @@
 
 void	add_char(int c, t_readline **str)
 {
-	t_readline	*p;
+	t_readline *p;
 
 	if (*str == NULL)
 	{
@@ -25,8 +25,8 @@ void	add_char(int c, t_readline **str)
 
 t_readline	*duplicate_readline(t_readline **str)
 {
-	t_readline	*dup;
-	t_readline	*s;
+	t_readline *dup;
+	t_readline *s;
 
 	s = *str;
 	dup = NULL;
@@ -35,10 +35,10 @@ t_readline	*duplicate_readline(t_readline **str)
 		add_char(s->c, &dup);
 		s = s->next;
 	}
-	return (dup);
+	return dup;
 }
 
-int	size_of_readline(t_readline *str)
+int		size_of_readline(t_readline *str)
 {
 	t_readline	*p;
 	int			i;
@@ -53,7 +53,8 @@ int	size_of_readline(t_readline *str)
 	return (i);
 }
 
-void	delete_last_readline(t_readline **str)
+
+void		delete_last_readline(t_readline **str)
 {
 	t_readline	*p;
 
@@ -74,13 +75,13 @@ void	delete_last_readline(t_readline **str)
 
 char	*generate_line(t_readline *str)
 {
-	char	*s;
-	int		size;
-	int		i;
+	char *s;
+	int size;
+	int i;
 
 	i = 0;
 	size = size_of_readline(str);
-	s = (char *)malloc(sizeof(char) * size + 1);
+	s = (char*)malloc(sizeof(char) * size + 1);
 	while (i < size)
 	{
 		s[i] = str->c;
@@ -89,4 +90,33 @@ char	*generate_line(t_readline *str)
 	}
 	s[i] = '\0';
 	return (s);
+}
+
+void	print_readline(t_readline *str)
+{
+	t_readline  *p;
+
+	p = str;
+	if (!p)
+		write(1, "", 1);
+	while (p)
+	{
+		write(1, &p->c, 1);
+		p = p->next;
+	}
+}
+
+void 	reset_readline(t_readline *str)
+{
+	t_readline *p;
+	t_readline *q;
+
+	p = str;
+	while (p)
+	{
+		q = p;
+		p = p->next;
+		free(q);
+		q = NULL;
+	}
 }

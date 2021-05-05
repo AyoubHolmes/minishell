@@ -34,7 +34,7 @@ pid_t	process_(int *fds, int *counter, t_minishell *cli, t_simple_cmd *tmp)
 		ft_fill_exec(cli, tmp);
 		fill_dispatcher(cli);
 		if (cli->nb_pipe != 0 || tmp->id == 0 )
-			exit(cli->status);
+			exit(cli->er_id);
 	}
 	return (pid);
 }
@@ -79,7 +79,7 @@ void	pipe_handler(t_minishell *cli, int *pid_status,
 		if (cli->nb_pipe == 0 && cli->simple_cmd->id != 0)
 			break ;
 		waitpid(pid_status[i], &cli->wait_status, 0);
-		cli->status = WEXITSTATUS(cli->wait_status);
+		cli->er_id = WEXITSTATUS(cli->wait_status);
 		i++;
 	}
 }
@@ -88,7 +88,6 @@ void	ft_pipe(t_minishell *cli)
 {
 	t_simple_cmd	*tmp;
 	int				*fds;
-	int				*pid_status;
 	int				i;
 
 	tmp = cli->simple_cmd;
@@ -98,16 +97,16 @@ void	ft_pipe(t_minishell *cli)
 	cli->out_fd = dup(STDOUT_FILENO);
 	cli->nb_pipe = number_of_pipes(tmp) - 1;
 	fds = malloc(cli->nb_pipe * 2 * sizeof(int));
-	pid_status = malloc(cli->nb_pipe * sizeof(int));
+	cli->pid_status = malloc(cli->nb_pipe * sizeof(int));
 	i = 0;
 	while (i < cli->nb_pipe)
 	{
 		pipe(fds + i * 2);
 		i++;
 	}
-	pipe_handler(cli, pid_status, tmp, fds);
+	pipe_handler(cli, cli->pid_status, tmp, fds);
 	ft_free_var(fds);
-	ft_free_var(pid_status);
+	ft_free_var(cli->pid_status);
 	dup2(STDOUT_FILENO, cli->out_fd);
 	dup2(STDIN_FILENO, cli->in_fd);
 	dup2(STDERR_FILENO, cli->err_fd);

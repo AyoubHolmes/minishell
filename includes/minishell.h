@@ -36,6 +36,7 @@
 #include <errno.h>
 #include <limits.h>
 #include "libft.h"
+#include "readline.h"
 
 typedef struct	s_element
 {
@@ -94,10 +95,26 @@ typedef struct s_minishell
 	int			nb_pipe;
 	int			wait_status;
 	int			er_id;
+	int				*pid_status;
+	struct termios *s_termios;
 }				t_minishell;
 
+t_minishell	g_cli;
+
+typedef struct		s_regex
+{
+	struct dirent	*entry;
+	char			*file;
+	t_args			*tmp;
+	int				id;
+	DIR				*directory;
+	char			*path;
+	char			*match;
+	char *cmp_tmp;
+}					t_regex;
+
 void	ft_putstr_parse(char *str);
-void	prompt(int status);
+void	prompt(int status, int err);
 int		get_next_line(char **line);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 void    ft_lexer(t_minishell *cli);
@@ -110,10 +127,8 @@ void	ft_putnbr_fd(int n, int fd);
 char	*ft_substr(char const *src, unsigned int start, size_t n);
 char	*ft_strtrim(char const *s1, char const *set);
 int     is_a_redirection(char *line);
-int		ft_isalnum(int c);
 void	free_simple_cmd(t_simple_cmd **simple_cmd);
 void	free_args(t_args **args);
-int     is_a_redirection(char *line);
 void    ft_lexer_token_helper(char *c, char *line, int setter, int token);
 int     is_not_a_string(char c);
 int     redirection_is_set(char *c, char *line);
@@ -125,8 +140,6 @@ char	*add_char_at_beginning(char c, char *s);
 char	*extract_filename(char *s, t_element *env, int err_id);
 int		get_fd_file(char *cmd, int *i, t_simple_cmd **s, t_element *env);
 t_simple_cmd	*create_simple_cmd_node(char *cmd, t_element *env, int *stat, int err_id);
-int		add_simple_cmd_node(t_simple_cmd **simple_cmd, char *cmd, t_minishell *cli);
-void	create_simple_cmd(t_minishell *cli, int *i, int *start, t_simple_cmd **simple_cmd);
 
 //exec
 char **ft_split(char const *s, char c);
@@ -134,7 +147,7 @@ void fill_list(char **var,t_minishell *shell);
 void fill_dispatcher(t_minishell *shell);
 char *ft_system(t_minishell *shell);
 void ft_putstr(char *str,int fd);
-char *echo(t_minishell *shell);
+char *echo_(t_minishell *shell);
 char *pwd(t_minishell *shell);
 char *cd(t_minishell *shell);
 char *export_(t_minishell *shell);
@@ -154,6 +167,17 @@ char	*ft_strdup(const char *src);
 t_element *catch_elem(char *elm1,t_element **shell_);
 void	free_element(t_element *list);
 void	ft_free_var(void *var);
-void	ft_free(void *s);
-
+int	check_identifier(char *str, t_minishell *shell, int id, char *arg);
+void check_cli_args(t_args **args);
+void	add_args(t_args *args_, char *cmd);
+void	delete_arg(t_args **args, char *arg);
+char *ft_trim_end(char const *s1,char const *end);
+int	ft_find(char *str, char *look_for);
+void	reg_handler(t_regex *reg, t_args **args);
+int	regex_handler(char *regex, char *file);
+int	check_star(char *str);
+char	*check_path(char *arg, char **match);
+void	check_cli_cmd(char **cmd);
+t_element	*fill_list_files(DIR *direc, char *match);
+void	replace_star(char **str);
 #endif

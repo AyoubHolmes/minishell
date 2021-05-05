@@ -1,11 +1,11 @@
 #include "../../includes/minishell.h"
 
-int     is_a_redirection_token(char *line)
+int	is_a_redirection_token(char *line)
 {
 	return (*line == RED1_TOKEN || *line == RED2_TOKEN || *line == RED3_TOKEN);
 }
 
-int				dispatcher_id(char *cmd)
+int	dispatcher_id(char *cmd)
 {
 	if (ft_strcmp(cmd, "pwd") == 0)
 		return (2);
@@ -26,11 +26,11 @@ int				dispatcher_id(char *cmd)
 
 int	insert_arg(t_simple_cmd **s, char *cmd)
 {
-	t_args *p;
+	t_args	*p;
 
 	if ((*s)->args == NULL)
 	{
-		(*s)->args = (t_args*)malloc(sizeof(t_args));
+		(*s)->args = (t_args *)malloc(sizeof(t_args));
 		if (!(*s)->args)
 			return (6);
 		(*s)->args->arg = cmd;
@@ -39,9 +39,9 @@ int	insert_arg(t_simple_cmd **s, char *cmd)
 	else
 	{
 		p = (*s)->args;
-		while(p->next)
+		while (p->next)
 			p = p->next;
-		p->next = (t_args*)malloc(sizeof(t_args));
+		p->next = (t_args *)malloc(sizeof(t_args));
 		if (!p->next)
 			return (6);
 		p->next->arg = cmd;
@@ -61,9 +61,9 @@ void	insert_first_cmd(t_simple_cmd **s, char *cmd)
 	(*s)->id = dispatcher_id(cmd);
 }
 
-int				insert_cmd(t_simple_cmd **s, char *cmd)
+int	insert_cmd(t_simple_cmd **s, char *cmd)
 {
-	t_args *p;
+	t_args	*p;
 
 	if ((*s)->id == -1)
 		insert_first_cmd(s, cmd);
@@ -72,9 +72,9 @@ int				insert_cmd(t_simple_cmd **s, char *cmd)
 	return (0);
 }
 
-t_simple_cmd			*simple_cmd_node_init(int *i, int *start)
+t_simple_cmd	*simple_cmd_node_init(int *i, int *start)
 {
-	t_simple_cmd *s;
+	t_simple_cmd	*s;
 
 	*i = 0;
 	*start = 0;
@@ -92,7 +92,7 @@ t_simple_cmd			*simple_cmd_node_init(int *i, int *start)
 void	node_traversal(char *cmd, int *i, int *start, int *size)
 {
 	while (cmd[*i] && cmd[*i] == ' ')
-			(*i)++;
+		(*i)++;
 	*start = *i;
 	while (cmd[*i] && cmd[*i] != ' ' && !is_a_redirection_token(&cmd[*i]))
 	{
@@ -111,20 +111,21 @@ void	node_traversal(char *cmd, int *i, int *start, int *size)
 	}
 }
 
-t_simple_cmd	*create_simple_cmd_node(char *cmd, t_element *env, int *stat, int err_id)
+t_simple_cmd	*create_simple_cmd_node(char *cmd, t_element *env,
+			int *stat, int err_id)
 {
-	t_simple_cmd *s;
-	int i;
-	int size;
-	int start;
-	char *c;
+	t_simple_cmd	*s;
+	int				i;
+	int				size;
+	int				start;
+	char			*c;
 
 	s = simple_cmd_node_init(&i, &start);
 	while (cmd[i])
 	{
 		size = 0;
 		node_traversal(cmd, &i, &start, &size);
-		if(is_a_redirection_token(&cmd[i]))
+		if (is_a_redirection_token(&cmd[i]))
 			*stat = get_fd_file(cmd, &i, &s, env);
 		else if (size != 0)
 		{
@@ -138,29 +139,32 @@ t_simple_cmd	*create_simple_cmd_node(char *cmd, t_element *env, int *stat, int e
 	return (s);
 }
 
-int		add_simple_cmd_node(t_simple_cmd **simple_cmd, char *cmd, t_minishell *cli)
+int	add_simple_cmd_node(t_simple_cmd **simple_cmd,
+		char *cmd, t_minishell *cli)
 {
-	t_simple_cmd *p;
-	int stat;
+	t_simple_cmd	*p;
+	int				stat;
 
 	stat = 0;
 	if (*simple_cmd == NULL)
-		*simple_cmd = create_simple_cmd_node(cmd, cli->shell, &stat, cli->er_id);
+		*simple_cmd = create_simple_cmd_node(cmd, cli->shell, &stat,
+				cli->er_id);
 	else
 	{
 		p = *simple_cmd;
-		while(p->next)
+		while (p->next)
 			p = p->next;
 		p->next = create_simple_cmd_node(cmd, cli->shell, &stat, cli->er_id);
 	}
 	return (stat);
 }
 
-void	create_simple_cmd(t_minishell *cli, int *i, int *start, t_simple_cmd **simple_cmd)
+void	create_simple_cmd(t_minishell *cli, int *i,
+	int *start, t_simple_cmd **simple_cmd)
 {
-	char *cmd;
-	int size;
-	int stat;
+	char	*cmd;
+	int		size;
+	int		stat;
 
 	while (cli->line[*i] && cli->line[*i] != SEMICOLONE_TOKEN)
 	{
@@ -169,7 +173,7 @@ void	create_simple_cmd(t_minishell *cli, int *i, int *start, t_simple_cmd **simp
 		while (cli->line[*i] && cli->line[*i] != PIPE_TOKEN)
 		{
 			if (cli->line[*i] == SEMICOLONE_TOKEN)
-				break;
+				break ;
 			size++;
 			(*i)++;
 		}

@@ -2,7 +2,7 @@
 
 void	args_printer(t_args *args, int fd)
 {
-	t_args *p;
+	t_args	*p;
 
 	p = args;
 	while (p != NULL)
@@ -15,9 +15,9 @@ void	args_printer(t_args *args, int fd)
 	}
 }
 
-void simple_cmd_printer(t_simple_cmd *s)
+void	simple_cmd_printer(t_simple_cmd *s)
 {
-	t_simple_cmd *p;
+	t_simple_cmd	*p;
 
 	p = s;
 	while (p != NULL)

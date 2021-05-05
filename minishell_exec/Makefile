@@ -18,6 +18,9 @@ SRC  =	myshell/dispatcher.c\
 		myshell_utils/fill_list_to_sort.c\
 		\
 		myshell_utils/some_utils.c\
+		myshell_utils/regex.c\
+		myshell_utils/regex_handler.c\
+		myshell_utils/sort_file.c\
 		#get_next_line/get_next_line_bonus.c\
 
 
@@ -26,11 +29,11 @@ HEADERS = ../includes
 OBJECT = $(SRC:.c=.o)
 
 $(NAME): $(OBJECT)
-	@$(AR) $(NAME) $(OBJECT)
+	$(AR) $(NAME) $(OBJECT)
 	#@gcc $(FLAGS) minishell.a -o miniSHELL
 
 %.o: %.c
-	@gcc $(FLAGS) -I $(HEADERS) -D BUFFER_SIZE=1  -o $@ -c $<
+	gcc $(FLAGS) -I $(HEADERS) -D BUFFER_SIZE=1  -o $@ -c $<
 
 all: $(NAME) 
 	

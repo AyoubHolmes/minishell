@@ -2,13 +2,12 @@
 
 void	error_printer(t_minishell *shell)
 {
-	shell->status = 10;
 	ft_putstr("ayoub-shell: cd: ", shell->err_fd);
 	ft_putstr(shell->args->arg, shell->err_fd);
 	ft_putstr(": ", shell->err_fd);
 	ft_putstr(strerror(errno), shell->err_fd);
 	ft_putstr("\n", shell->err_fd);
-	shell->status = 1;
+	shell->er_id = 1;
 }
 
 void	edit_elem(char *elm1, char *elm2, t_element **shell_)
@@ -31,7 +30,7 @@ void	edit_elem(char *elm1, char *elm2, t_element **shell_)
 
 char	*ft_cases(t_minishell *shell, char *oldpwd)
 {
-	int dir;
+	int	dir;
 
 	if (!shell->args || ft_strcmp(shell->args->arg, "~") == 0
 		|| ft_strcmp(shell->args->arg, "~/") == 0)
@@ -39,7 +38,7 @@ char	*ft_cases(t_minishell *shell, char *oldpwd)
 	else if (ft_strcmp(shell->args->arg, "-") == 0 && oldpwd == NULL)
 	{
 		ft_putstr("bash: cd: OLDPWD not set\n", shell->err_fd);
-		shell->status = 1;
+		shell->er_id = 1;
 		return (NULL);
 	}
 	else if (ft_strcmp(shell->args->arg, "-") == 0 && oldpwd != NULL)
@@ -69,7 +68,6 @@ void	cd_helper(t_minishell *shell, int dir, char	*cwd)
 	{
 		shell->oldpwd->obj2 = shell->pwd->obj2;
 		getcwd(cwd, PATH_MAX);
-		// ft_free_var(shell->pwd->obj2);
 		shell->pwd->obj2 = cwd;
 	}
 }
@@ -85,11 +83,11 @@ char	*cd(t_minishell *shell)
 	s = ft_cases(shell, shell->oldpwd->obj2);
 	if (s != NULL)
 	{
-		if(shell->args)
+		if (shell->args)
 			shell->args->arg = s;
 		dir = chdir(s);
 		cd_helper(shell, dir, cwd);
 	}
-	ft_free_var(cwd);
+	// ft_free_var(cwd);
 	return ("");
 }

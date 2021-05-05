@@ -40,6 +40,31 @@ void	ft_exec_(t_minishell *cli)
 	cli->paths = catch_elem("PATH", &cli->shell);
 }
 
+void	signal_handler_c(int sig)
+{
+	if(sig == SIGINT)
+		signal(SIGINT,SIG_IGN);	
+	g_cli.er_id = 130;
+	if (g_cli.pid_status == 0)
+		exit(0);
+	ft_putstr_fd("\n",2);
+}
+
+void	signal_handler_quit(int sig)
+{
+	(void)sig;
+	ft_putstr_fd("QUIT :3\n",2);
+	g_cli.er_id = 131;
+	if (g_cli.pid_status == 0)
+		exit(0);
+}
+
+void	signals_manager(void)
+{
+	signal(SIGQUIT,signal_handler_quit);
+	signal(SIGINT,signal_handler_c);
+}
+
 void	ft_parser(t_minishell *cli)
 {
 	int		i;
@@ -50,11 +75,13 @@ void	ft_parser(t_minishell *cli)
 	i = 0;
 	start = 0;
 	cli->simple_cmd = NULL;
+	signals_manager();
 	while (cli->line[i])
 	{
 		create_simple_cmd(cli, &i, &start, &cli->simple_cmd);
 		if (!cli->status)
-			simple_cmd_printer(cli->simple_cmd);
+			ft_pipe(cli);
+			// simple_cmd_printer(cli->simple_cmd);
 		else
 			cli->er_id = cli->status;
 		free_simple_cmd(&cli->simple_cmd);
@@ -78,28 +105,27 @@ void	init_(t_history **h, t_minishell *cli, char **env)
 
 int	main(int argc, char **argv, char **env)
 {
-	t_minishell	cli;
 	t_history	*history;
 	char		*tmp;
 
-	init_(&history, &cli, env);
-	prompt(0);
+	init_(&history, &g_cli, env);
+	prompt(0, g_cli.er_id);
 	while (1)
 	{
-		cli.line = NULL;
-		tmp = ft_readline(&history, &cli.status);
+		g_cli.line = NULL;
+		tmp = ft_readline(&history);
 		if (tmp)
 		{
-			cli.line = ft_strtrim(tmp, " ");
-			ft_lexer(&cli);
-			lexer_debugger(&cli);
-			if (cli.status == 0 && ft_strcmp(cli.line, "") != 0)
-				ft_parser(&cli);
-			ft_free(tmp);
-			ft_free(cli.line);
-			cli.line = NULL;
+			g_cli.line = ft_strtrim(tmp, " ");
+			ft_lexer(&g_cli);
+			lexer_debugger(&g_cli);
+			if (g_cli.status == 0 && ft_strcmp(g_cli.line, "") != 0)
+				ft_parser(&g_cli);
+			ft_free_var(tmp);
+			ft_free_var(g_cli.line);
+			g_cli.line = NULL;
 		}
-		prompt(cli.status);
+		prompt(g_cli.status, g_cli.er_id);
 	}
 	return (0);
 }

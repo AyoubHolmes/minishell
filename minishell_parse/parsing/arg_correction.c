@@ -24,7 +24,7 @@ char	*error_var(char *s, int *i, int *j, int err_id)
 	return (dollar);
 }
 
-void	dollar_case_correction(char *s, int *i, t_element *env, int err_id)
+char	*dollar_case_correction(char *s, int *i, t_element *env, int err_id)
 {
 	int			j;
 	char		*tmp[2];
@@ -49,8 +49,9 @@ void	dollar_case_correction(char *s, int *i, t_element *env, int err_id)
 		tmp[0] = ft_strjoin(ft_substr(s, 0, (*i) - j - 1), dollar);
 		tmp[1] = s;
 		s = ft_strjoin(tmp[0], ft_substr(&s[*i], 0, ft_strlen(s) - (*i)));
-		*i = (*i - j) + ft_strlen(dollar) - 2;
+		(*i) = ((*i) - j) + ft_strlen(dollar) - 2;
 	}
+	return (s);
 }
 
 char	*arg_correction(char *s, t_element *env, int err_id)
@@ -74,7 +75,7 @@ char	*arg_correction(char *s, t_element *env, int err_id)
 			}
 			i--;
 		}
-		dollar_case_correction(s, &i, env, err_id);
+		s = dollar_case_correction(s, &i, env, err_id);
 		i++;
 	}
 	return (s);

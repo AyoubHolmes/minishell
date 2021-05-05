@@ -42,7 +42,7 @@ void	check_echo_args(t_args *elm, int *n, int out_fd)
 	}
 }
 
-char	*echo(t_minishell *shell)
+char	*echo_(t_minishell *shell)
 {
 	int	n;
 	int	i;

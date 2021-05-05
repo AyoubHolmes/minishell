@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aboulbaz <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: shikma <shikma@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/18 15:58:31 by aboulbaz          #+#    #+#             */
-/*   Updated: 2019/11/06 16:56:55 by aboulbaz         ###   ########.fr       */
+/*   Updated: 2021/05/04 13:44:46 by shikma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	signe(char c, int *i, int *t)
 {
-	int k;
+	int	k;
 
 	k = *i;
 	if (c == '-' || c == '+')
@@ -26,7 +26,7 @@ static void	signe(char c, int *i, int *t)
 	}
 }
 
-int			ft_atoi(const char *str)
+int	ft_atoi(const char *str)
 {
 	int				i;
 	int				t;

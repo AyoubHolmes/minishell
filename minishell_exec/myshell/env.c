@@ -10,7 +10,7 @@ char	*env_(t_minishell *shell_)
 		ft_putstr("env: ", shell_->err_fd);
 		ft_putstr(shell_->args->arg, shell_->err_fd);
 		ft_putstr(": No such file or directory\n", shell_->err_fd);
-		shell_->status = 127;
+		shell_->er_id = 127;
 		return ("");
 	}
 	while (p != NULL)
