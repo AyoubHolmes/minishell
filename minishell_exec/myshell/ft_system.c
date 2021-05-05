@@ -1,20 +1,5 @@
 #include "minishell.h"
 
-int	len_list(t_args *arg)
-{
-	t_args	*p;
-	int		i;
-
-	p = arg;
-	i = 0;
-	while (p)
-	{
-		p = p->next;
-		i++;
-	}
-	return (i);
-}
-
 char	**fill_args(char **argv, t_args *elm, char *binary)
 {
 	int		i;
@@ -41,54 +26,80 @@ char	**fill_args(char **argv, t_args *elm, char *binary)
 	return (argv);
 }
 
-void	path_handler(t_minishell *shell, int *a, int *i)
+void	path_handler(t_minishell *shell, int id, int *i)
 {
 	struct stat		buff;
 	char			*binary_path;
 	char			**argv;
 
-	*a = stat(shell->cmd, &buff);
-	if (*a != 0 && shell->paths->id == 0 && !ft_strchr(shell->cmd,'/'))
+	if (shell->paths->id == 0 && id != 2 && !ft_strchr(shell->cmd, '/'))
 	{
 		binary_path = ft_strjoin(ft_strjoin(shell->path[*i],
 					ft_strdup("/")), ft_strdup(shell->cmd));
-		*a = stat(binary_path, &buff);
 	}
 	else
 		binary_path = shell->cmd;
-	if (*a == 0 && buff.st_mode & S_IXUSR)
-	{
-		puts("here");
-		dup2(shell->out_fd, 1);
-		dup2(shell->in_fd, 0);
-		argv = fill_args(argv, shell->args, binary_path);
-		execve(argv[0], argv, shell->enviroment);
-	}
+	dup2(shell->out_fd, 1);
+	dup2(shell->in_fd, 0);
+	argv = fill_args(argv, shell->args, binary_path);
+	execve(argv[0], argv, shell->enviroment);
 	(*i)++;
+}
+
+void	system_help(t_minishell *shell, struct stat buff, int a)
+{
+	if (errno != 0)
+	{
+		ft_putstr("minishell: ", shell->err_fd);
+		ft_putstr(shell->cmd, shell->err_fd);
+		ft_putstr(" ", shell->err_fd);
+		if (ft_strchr(shell->cmd, '/'))
+		{
+			ft_putstr(strerror(errno), shell->err_fd);
+			ft_putstr("\n", shell->err_fd);
+			if (a == 0 && !(buff.st_mode & S_IXUSR))
+				exit(126);
+		}
+		else
+		{
+			ft_putstr("command not found", 1);
+			ft_putstr("\n", shell->err_fd);
+		}
+		exit(127);
+	}
+}
+
+void	id_direc_error(t_minishell *shell)
+{
+	ft_putstr("minishell: ", shell->err_fd);
+	ft_putstr(shell->cmd, shell->err_fd);
+	ft_putstr(" is a directory \n", shell->err_fd);
+	exit(126);
 }
 
 char	*ft_system(t_minishell *shell)
 {
-	int	i;
-	int	a;
+	int				i;
+	int				a;
+	struct stat		buff;
+	int				id;
 
+	id = 0;
 	i = 0;
 	shell->path = ft_split(shell->paths->obj2, ':');
-	if (shell->path == NULL)
-	{
-		ft_putstr("minishell: ", shell->err_fd);
-		ft_putstr(shell->cmd, shell->err_fd);
-		ft_putstr(" No such file or directory\n", shell->err_fd);
-		exit(127);
+	a = stat(shell->cmd, &buff);
+	if (ft_strchr(shell->cmd, '/') && a == 0)
+	{	
+		if (a == 0 && (S_IFDIR & buff.st_mode))
+			id_direc_error(shell);
+		if (a == 0 && (S_IFREG & buff.st_mode))
+			id = 2;
 	}
-	while (shell->path[i])
-		path_handler(shell, &a, &i);
-	if (a < 0)
+	if (shell->path != NULL)
 	{
-		ft_putstr("minishell: ", shell->err_fd);
-		ft_putstr(shell->cmd, shell->err_fd);
-		ft_putstr(": command not found\n", shell->err_fd);
-		exit(127);
+		while (shell->path[i])
+			path_handler(shell, id, &i);
 	}
+	system_help(shell, buff, a);
 	return ("");
 }

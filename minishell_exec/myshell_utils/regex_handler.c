@@ -73,7 +73,10 @@ void	check_cli_cmd(char **cmd)
 			reg.file = ft_strdup(p->obj1);
 			if (regex_handler(reg.match, reg.file) == 0)
 			{
-				*cmd = reg.file;
+				if (ft_strcmp(reg.path, "."))
+					*cmd = ft_strjoin(reg.path, reg.file);
+				else
+					*cmd = reg.file;
 				return ;
 			}
 			p = p->next;

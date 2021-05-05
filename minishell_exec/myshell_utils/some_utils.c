@@ -21,8 +21,8 @@ char	*ft_strjoin(char *s1, char *s2)
 		s3[len++] = *(str1++);
 	while (*str2)
 		s3[len++] = *(str2++);
-	// free(s1);
-	// free(s2);
+	ft_free_var(s1);
+	ft_free_var(s2);
 	s3[len] = '\0';
 	return (s3);
 }

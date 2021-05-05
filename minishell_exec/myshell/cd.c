@@ -60,13 +60,17 @@ void	cd_helper(t_minishell *shell, int dir, char	*cwd)
 	{
 		if (shell->oldpwd->obj2
 			&& ft_strcmp((char *)shell->oldpwd->obj2, "") == 0)
-			shell->oldpwd->obj2 = shell->pwd->obj2;
+		{
+			ft_free_var(shell->oldpwd->obj2);
+			shell->oldpwd->obj2 = ft_strdup(shell->pwd->obj2);
+		}
 		else
 			error_printer(shell);
 	}
 	else
 	{
-		shell->oldpwd->obj2 = shell->pwd->obj2;
+		ft_free_var(shell->oldpwd->obj2);
+		shell->oldpwd->obj2 = ft_strdup(shell->pwd->obj2);
 		getcwd(cwd, PATH_MAX);
 		shell->pwd->obj2 = cwd;
 	}
@@ -84,10 +88,13 @@ char	*cd(t_minishell *shell)
 	if (s != NULL)
 	{
 		if (shell->args)
-			shell->args->arg = s;
+		{
+			ft_free_var(shell->args->arg);
+			shell->args->arg = ft_strdup(s);
+		}
 		dir = chdir(s);
 		cd_helper(shell, dir, cwd);
 	}
-	// ft_free_var(cwd);
+	ft_free_var(cwd);
 	return ("");
 }

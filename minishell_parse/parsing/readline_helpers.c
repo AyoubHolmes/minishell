@@ -76,7 +76,7 @@ char	*quit_control(t_history **h, t_readline_vars *vars)
 	{
 		*h = vars->last;
 		ft_putstr("exit\n", 1);
-		exit(1);
+		exit(0);
 	}
 	ft_putstr("\n", 1);
 	g_cli.er_id = 1;

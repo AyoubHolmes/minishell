@@ -1,5 +1,20 @@
 #include "minishell.h"
 
+int	len_list(t_args *arg)
+{
+	t_args	*p;
+	int		i;
+
+	p = arg;
+	i = 0;
+	while (p)
+	{
+		p = p->next;
+		i++;
+	}
+	return (i);
+}
+
 void	filling(t_element **ptr, t_element *list)
 {
 	t_element	*shell;

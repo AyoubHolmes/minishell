@@ -182,4 +182,5 @@ void	check_cli_cmd(char **cmd);
 t_element	*fill_list_files(DIR *direc, char *match);
 void	replace_star(char **str);
 void	signals_manager(void);
+int	len_list(t_args *arg);
 #endif
