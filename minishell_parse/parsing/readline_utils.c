@@ -73,12 +73,15 @@ void 	reset_readline(t_readline *str)
 	t_readline	*p;
 	t_readline	*q;
 
-	p = str;
-	while (p)
+	if (str)
 	{
-		q = p;
-		p = p->next;
-		free(q);
-		q = NULL;
+		p = str;
+		while (p)
+		{
+			q = p;
+			p = p->next;
+			free(q);
+			q = NULL;
+		}
 	}
 }

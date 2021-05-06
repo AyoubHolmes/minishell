@@ -53,18 +53,15 @@ void	system_help(t_minishell *shell, struct stat buff, int a)
 		ft_putstr("minishell: ", shell->err_fd);
 		ft_putstr(shell->cmd, shell->err_fd);
 		ft_putstr(" ", shell->err_fd);
-		if (ft_strchr(shell->cmd, '/'))
+		if (ft_strchr(shell->cmd, '/') != NULL)
 		{
 			ft_putstr(strerror(errno), shell->err_fd);
 			ft_putstr("\n", shell->err_fd);
 			if (a == 0 && !(buff.st_mode & S_IXUSR))
 				exit(126);
 		}
-		else
-		{
-			ft_putstr("command not found", 1);
-			ft_putstr("\n", shell->err_fd);
-		}
+		ft_putstr("command not found", shell->err_fd);
+		ft_putstr("\n", shell->err_fd);
 		exit(127);
 	}
 }

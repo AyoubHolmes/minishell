@@ -66,12 +66,14 @@ void	cd_helper(t_minishell *shell, int dir, char	*cwd)
 		}
 		else
 			error_printer(shell);
+		ft_free_var(cwd);
 	}
 	else
 	{
 		ft_free_var(shell->oldpwd->obj2);
 		shell->oldpwd->obj2 = ft_strdup(shell->pwd->obj2);
 		getcwd(cwd, PATH_MAX);
+		ft_free_var(shell->pwd->obj2);
 		shell->pwd->obj2 = cwd;
 	}
 }
@@ -83,10 +85,10 @@ char	*cd(t_minishell *shell)
 	char	*cwd;
 	char	*oldpwd;
 
-	cwd = (char *)malloc(PATH_MAX);
 	s = ft_cases(shell, shell->oldpwd->obj2);
 	if (s != NULL)
 	{
+		cwd = (char *)malloc(PATH_MAX);
 		if (shell->args)
 		{
 			ft_free_var(shell->args->arg);
@@ -95,6 +97,5 @@ char	*cd(t_minishell *shell)
 		dir = chdir(s);
 		cd_helper(shell, dir, cwd);
 	}
-	ft_free_var(cwd);
 	return ("");
 }

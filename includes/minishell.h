@@ -111,7 +111,7 @@ typedef struct		s_regex
 	DIR				*directory;
 	char			*path;
 	char			*match;
-	char *cmp_tmp;
+	char			*cmp_tmp;
 }					t_regex;
 
 void	ft_putstr_parse(char *str);
@@ -183,4 +183,5 @@ t_element	*fill_list_files(DIR *direc, char *match);
 void	replace_star(char **str);
 void	signals_manager(void);
 int	len_list(t_args *arg);
+void	free_double_p(char **str);
 #endif

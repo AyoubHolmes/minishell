@@ -67,6 +67,7 @@ int	check_identifier(char *str, t_minishell *shell, int id, char *arg)
 	char	**tmp;
 
 	i = 0;
+	tmp = NULL;
 	if (id == 1)
 	{
 		tmp = ft_split(str, '=');
@@ -77,14 +78,17 @@ int	check_identifier(char *str, t_minishell *shell, int id, char *arg)
 	}
 	while (str[i] || ft_strcmp(str, "\0") == 0)
 	{
-		if (ft_strcmp(str, "\0") == 0 || str[0] == '='
+		if (ft_strcmp(str, "\0") == 0 || str[0] == '=' || str[0] == '+'
 			|| ft_isdigit(str[0]) == 1
 			|| valid_or_not(str[i], str[i + 1], id) == 1)
 		{
 			checker_error_printer(shell, arg);
+			free_double_p(tmp);
 			return (0);
 		}
 		i++;
 	}
+	if (tmp)
+		free_double_p(tmp);
 	return (1);
 }

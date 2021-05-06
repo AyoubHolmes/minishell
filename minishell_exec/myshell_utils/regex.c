@@ -42,7 +42,10 @@ int	regex_handler(char *regex, char *file)
 	if (regex[ft_strlen(regex) - 1] == STAR_TOKEN)
 		end = 1;
 	tmp = ft_split(regex, STAR_TOKEN);
-	return (ft_checker(tmp, file, start, end));
+	// return (ft_checker(tmp, file, start, end));
+	start = ft_checker(tmp, file, start, end);
+	// free_double_p(tmp);
+	return (start);
 }
 
 int	check_star(char *str)
@@ -63,7 +66,8 @@ char	*check_path(char *arg, char **match)
 {
 	char	*result;
 
-	(*match) = ft_strrchr(arg, '/');
+	result = NULL;
+	(*match) = ft_strdup(ft_strrchr(arg, '/'));
 	if (*match)
 	{
 		(*match)++;
@@ -71,6 +75,7 @@ char	*check_path(char *arg, char **match)
 	}
 	else
 	{
+		// ft_free_var(*match);
 		(*match) = ft_strdup(arg);
 		result = ft_strdup(".");
 	}
@@ -83,6 +88,7 @@ void	check_cli_args(t_args **args)
 
 	reg.id = 0;
 	reg.tmp = *args;
+	reg.match = NULL;
 	while (reg.tmp)
 	{
 		if (check_star(reg.tmp->arg) == 0)

@@ -3,28 +3,33 @@
 void	edit_or_add(char *elm1, char *elm2, t_element **shell_)
 {
 	t_element	*list;
+	char		**tmp;
 
-	list = *shell_;
 	if (list == NULL)
 		return ;
+	list = *shell_;
+	tmp = ft_split(elm1, '+');
 	while (list->next)
 	{
-		if (ft_strcmp(list->next->obj1, ft_split(elm1, '+')[0]) == 0)
+		if (ft_strcmp(list->next->obj1, tmp[0]) == 0)
 		{
-			ft_free_var (elm1);
 			list->next->id = 0;
+			free_double_p(tmp);
 			if (elm2 == NULL)
 				return ;
-			ft_free_var (list->next->obj2);
 			if (elm1[ft_strlen(elm1) - 1] == '+')
-				list->next->obj2 = ft_strjoin(list->next->obj2, elm2);
+				list->next->obj2 = ft_strjoin(list->next->obj2, ft_strdup(elm2));
 			else
-				list->next->obj2 = elm2;
+			{
+				ft_free_var (list->next->obj2);
+				list->next->obj2 = ft_strdup(elm2);
+			}
 			return ;
 		}
 		list = list->next;
 	}
-	add_end(shell_, ft_split(elm1, '+')[0], elm2, 0);
+	add_end(shell_, ft_strdup(tmp[0]), ft_strdup(elm2), 0);
+	free_double_p(tmp);
 }
 
 char	**var_split(char *str)
@@ -56,7 +61,7 @@ void	export_to_liste(t_minishell *shell)
 		{
 			str = var_split(tmp->arg);
 			edit_or_add(str[0], str[1], &shell->shell);
-			free(str);
+			free_double_p(str);
 			str = NULL;
 		}
 		tmp = tmp->next;

@@ -27,8 +27,18 @@ void	traversal_fd(int *i, char *cmd, int *size)
 	*size = 0;
 	while (cmd[*i] && cmd[*i] != ' ' && !is_a_redirection_token(&cmd[*i]))
 	{
-		(*i)++;
+		if (cmd[*i] == SQ_TOKEN || cmd[*i] == DQ_TOKEN)
+		{
+			(*size)++;
+			(*i)++;
+			while (cmd[*i] && (cmd[*i] != SQ_TOKEN && cmd[*i] != DQ_TOKEN))
+			{
+				(*size)++;
+				(*i)++;
+			}
+		}
 		(*size)++;
+		(*i)++;
 	}
 }
 

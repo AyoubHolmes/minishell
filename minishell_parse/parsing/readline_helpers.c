@@ -81,5 +81,6 @@ char	*quit_control(t_history **h, t_readline_vars *vars)
 	ft_putstr("\n", 1);
 	g_cli.er_id = 1;
 	*h = vars->last;
+	reset_readline(vars->dup);
 	return (NULL);
 }

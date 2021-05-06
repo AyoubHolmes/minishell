@@ -23,5 +23,6 @@ t_element	*fill_list_files(DIR *direc, char *match)
 			files = add_end(&files, entry->d_name, NULL, 0);
 		entry = readdir(direc);
 	}
+	ft_free_var(entry);
 	return (files);
 }

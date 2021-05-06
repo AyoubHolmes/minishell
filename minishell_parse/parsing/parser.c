@@ -55,7 +55,7 @@ t_simple_cmd	*create_simple_cmd_node(char *cmd, t_element *env,
 		node_traversal(cmd, &i, &start, &size);
 		if (is_a_redirection_token(&cmd[i]))
 			*stat = get_fd_file(cmd, &i, &s, env);
-		else if (size != 0)
+		if (size != 0)
 		{
 			c = arg_correction(ft_substr(cmd, start, size), env, err_id);
 			*stat = insert_cmd(&s, c);

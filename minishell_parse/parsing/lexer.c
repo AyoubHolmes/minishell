@@ -1,5 +1,18 @@
 #include "../../includes/minishell.h"
 
+/* void	helper(char **line)
+{
+	int	i;
+
+	i = 0;
+	while((*line)[i + 1])
+	{
+		(*line)[i] = (*line)[i + 1];
+		i++;
+	}
+	(*line)[i] = '\0';
+}
+ */
 void	ft_tokenizer_2(char *c, char *line, int *escape)
 {
 	if (*line == '|' && is_not_a_string(*c) && *escape == 0)
@@ -40,6 +53,22 @@ void	ft_tokenizer(char *c, char *line, int *escape)
 		*line = STAR_TOKEN;
 	else if (*escape == 1)
 		*escape = 0;
+	/* else if (*line == '$' && *escape == 0 && is_not_a_string(*c)
+		&& (*(line + 1)== '\''|| *(line + 1)== '"'))
+	{
+		helper(&line);
+	} */
+}
+
+int	is_token_material(char line)
+{
+	return (line == '\\' || line == '|' || line == ';');
+}
+
+int	a_token_is_set(char *c, char *line)
+{
+	return ((*c & SEMICOLONE_SETTER) != 0 || (*c & PIPE_SETTER) != 0
+		|| redirection_is_set(c, line));
 }
 
 int	ft_error_checker(char *c, char *line, t_minishell *cli)
@@ -64,6 +93,8 @@ int	ft_error_checker(char *c, char *line, t_minishell *cli)
 				&& *(line - 1) == RED3_TOKEN
 				&& *(line + 1) == '\0')))
 		return (4);
+	if (a_token_is_set(c, line) && is_token_material(*line))
+		return (5);
 	if (ft_isalnum(*line) && is_not_a_string(*c))
 		*c = 0;
 	return (0);
@@ -101,5 +132,5 @@ void	ft_lexer(t_minishell *cli)
 		i++;
 	}
 	if (!is_not_a_string(cli->c))
-		cli->status = 2;
+		cli->status = 6;
 }

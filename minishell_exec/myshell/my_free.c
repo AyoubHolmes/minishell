@@ -27,3 +27,16 @@ void	free_element(t_element *list)
 		q = NULL;
 	}
 }
+
+void	free_double_p(char **str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		ft_free_var(str[i]);
+		i++;
+	}
+	ft_free_var(str);
+}

@@ -30,13 +30,13 @@ void	reg_handler(t_regex *reg, t_args **args)
 	sort_l(p);
 	while (p)
 	{
-		reg->file = ft_strdup(p->obj1);
-		if (regex_handler(reg->match, reg->file) == 0)
+		if (regex_handler(reg->match, p->obj1) == 0)
 		{
 			if (ft_strcmp(reg->path, "."))
-				add_args(*args, ft_strjoin(reg->path, reg->file));
+				add_args(*args, ft_strjoin(ft_strdup(reg->path),
+						ft_strdup(p->obj1)));
 			else
-				add_args(*args, reg->file);
+				add_args(*args, ft_strdup(p->obj1));
 			reg->id = 1;
 		}
 		p = p->next;
@@ -60,6 +60,7 @@ void	check_cli_cmd(char **cmd)
 {
 	t_regex		reg;
 	t_element	*p;
+	t_element	*q;
 
 	reg.cmp_tmp = *cmd;
 	if (check_star(reg.cmp_tmp) == 0)
@@ -68,15 +69,15 @@ void	check_cli_cmd(char **cmd)
 		reg.directory = opendir(reg.path);
 		p = fill_list_files(reg.directory, reg.match);
 		sort_l(p);
+		q = p;
 		while (p)
 		{
-			reg.file = ft_strdup(p->obj1);
-			if (regex_handler(reg.match, reg.file) == 0)
+			if (regex_handler(reg.match, p->obj1) == 0)
 			{
 				if (ft_strcmp(reg.path, "."))
-					*cmd = ft_strjoin(reg.path, reg.file);
+					*cmd = ft_strjoin(reg.path, ft_strdup(p->obj1));
 				else
-					*cmd = reg.file;
+					*cmd = ft_strdup(p->obj1);
 				return ;
 			}
 			p = p->next;

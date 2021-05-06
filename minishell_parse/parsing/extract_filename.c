@@ -21,6 +21,32 @@ char	*extract_helper(char *s, int *i, int *j, t_element *env)
 	return (filename);
 }
 
+char	*file_correction(char *s, t_element *env, int err_id)
+{
+	int			i;
+	int			j;
+	t_element	*env_var;
+	char		*tmp[2];
+	char		*dollar;
+
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == BS_TOKEN || s[i] == SQ_TOKEN || s[i] == DQ_TOKEN)
+		{
+			j = i;
+			while (s[j])
+			{
+				s[j] = s[j + 1];
+				j++;
+			}
+			i--;
+		}
+		i++;
+	}
+	return (s);
+}
+
 char	*extract_filename(char *s, t_element *env, int err_id)
 {
 	char		*filename;
@@ -39,9 +65,7 @@ char	*extract_filename(char *s, t_element *env, int err_id)
 			j++;
 			i++;
 		}
-		filename = extract_helper(s, &i, &j, env);
+		return (extract_helper(s, &i, &j, env));
 	}
-	else if (i == -1 || 1)
-		filename = arg_correction(s, env, err_id);
-	return (filename);
+	return (file_correction(s, env, err_id));
 }

@@ -60,8 +60,6 @@ void	delete_elem(char *elm, t_element *shell_)
 		if (ft_strcmp(list->next->obj1, elm) == 0)
 		{
 			list->next->id = 1;
-			free(list->next->obj2);
-			list->next->obj2 = NULL;
 			break ;
 		}
 		list = list->next;
