@@ -95,36 +95,26 @@ HEADERS = ./minishell_mandatory/includes
 
 HEADERS_BONUS = ./minishell_bonus/includes
 
+all: $(NAME)
+
 $(NAME): $(OBJECT) $(HEADERS)
 	@make -C $(LIBFT)
-	@cp ./minishell_mandatory/parsing/libft/libft.a .
-	@gcc -ltermcap $(OBJECT) libft.a -o $(NAME)
+	@gcc -ltermcap $(OBJECT) ./minishell_mandatory/parsing/libft/libft.a -o $(NAME)
 
-all: $(NAME)
+$(NAME_BONUS): $(OBJECT_BONUS) $(HEADERS_BONUS)
+	@make -C $(LIBFT)
+	@gcc -ltermcap $(OBJECT_BONUS)  ./minishell_mandatory/parsing/libft/libft.a -o $(NAME_BONUS)
+
+%.o: %.c
+	@gcc -ltermcap -I  $(HEADERS) $(HEADERS_BONUS) -o $@ -c $< 2> /dev/null
+
+bonus: $(NAME_BONUS)
 
 clean:
 	@make fclean -sC $(LIBFT)
-	@rm -f $(OBJECT)
+	@rm -f $(OBJECT) $(OBJECT_BONUS)
 
 fclean: clean
-	@rm libft.a
-	@rm -f $(NAME)
+	@rm -f $(NAME) $(NAME_BONUS)
 
-re: fclean $(NAME)
-
-bonus: $(OBJECT_BONUS) $(HEADERS_BONUS)
-	@make -C $(LIBFT_BONUS)
-	@cp ./minishell_bonus/parsing/libft/libft.a .
-	@gcc -ltermcap $(OBJECT_BONUS)  libft.a -o $(NAME_BONUS)
-
-%.o: %.c
-	@gcc -ltermcap -I $(HEADERS) $(HEADERS_BONUS) -o $@ -c $< 2> /dev/null
-
-clean_bonus:
-	@make fclean -sC $(LIBFT_BONUS)
-	@rm -f $(OBJECT_BONUS)
-
-fclean_bonus: clean_bonus
-	@rm libft.a
-	@rm -f $(NAME_BONUS)
-
+re: fclean $(NAME) $(NAME_BONUS)
