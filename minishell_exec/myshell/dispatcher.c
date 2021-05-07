@@ -29,9 +29,12 @@ void	fill_dispatcher(t_minishell *shell)
 {
 	char	*(*command[8])(t_minishell *);
 
-	if (g_cli.is_empty_dollar == 0)
+		shell->enviroment = ft_fill_shell_env(shell);
+	if (g_cli.is_empty_dollar == 0 && shell->cmd != NULL)
 	{
 		check_cli_cmd(&shell->cmd);
+		check_cli_args(shell->args_tmp);
+        shell->args = (*shell->args_tmp);
 		check_cli_args(&shell->args);
 		shell->er_id = 0;
 		command[0] = ft_system;

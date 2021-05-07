@@ -38,6 +38,9 @@ void	ft_exec_(t_minishell *cli)
 	cli->pwd = catch_elem("PWD", &cli->shell);
 	cli->home = catch_elem("HOME", &cli->shell);
 	cli->paths = catch_elem("PATH", &cli->shell);
+	cli->shlvl = catch_elem("SHLVL", &cli->shell);
+	cli->shlvl->obj2 = ft_itoa(ft_atoi(cli->shlvl->obj2) + 1);
+	puts(cli->shlvl->obj2);
 }
 
 void	ft_parser(t_minishell *cli)

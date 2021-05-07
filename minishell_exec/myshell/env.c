@@ -1,5 +1,35 @@
 #include "minishell.h"
 
+char **ft_fill_shell_env(t_minishell *cli)
+{
+	int			len;
+	t_element	*p;
+	int			i;
+
+	p = cli->shell;
+	len = 0;
+	len =len_list_element(cli->shell);
+	cli->enviroment = (char **)malloc(sizeof(char *) * (len + 1));
+	i = 0;
+	while (p)
+	{
+
+		if(p->id == 0)
+		{
+			if (!p->obj2){
+				cli->enviroment[i] = ft_strjoin(ft_strdup(p->obj1),ft_strjoin(ft_strdup("="),ft_strdup("")));
+			}
+			else{
+				cli->enviroment[i] = ft_strjoin(ft_strdup(p->obj1),ft_strjoin(ft_strdup("="),ft_strdup(p->obj2)));
+			}
+			i++;
+		}
+		p = p->next;
+	}
+	cli->enviroment[i] = NULL;
+	return (cli->enviroment);
+}
+
 char	*env_(t_minishell *shell_)
 {
 	t_element	*p;
@@ -15,7 +45,7 @@ char	*env_(t_minishell *shell_)
 	}
 	while (p != NULL)
 	{
-		if (p->obj2)
+		if (p->obj2 && p->id == 0)
 		{
 			ft_putstr(p->obj1, shell_->out_fd);
 			ft_putstr("=", shell_->out_fd);

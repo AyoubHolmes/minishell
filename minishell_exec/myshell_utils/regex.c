@@ -82,6 +82,20 @@ char	*check_path(char *arg, char **match)
 	return (result);
 }
 
+/* void	final_args(t_args **args)
+{
+	t_args *p;
+	t_args *q;
+
+	p = args;
+	q = args;
+	while (p)
+	{
+		
+	}
+	
+} */
+
 void	check_cli_args(t_args **args)
 {
 	t_regex	reg;
@@ -100,7 +114,7 @@ void	check_cli_args(t_args **args)
 				closedir(reg.directory);
 			replace_star(&reg.tmp->arg);
 			if (reg.id == 1)
-				delete_arg(args, reg.tmp->arg);
+				delete_arg((args), reg.tmp->arg);
 		}
 		reg.tmp = reg.tmp->next;
 	}

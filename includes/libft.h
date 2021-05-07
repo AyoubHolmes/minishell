@@ -6,7 +6,7 @@
 /*   By: shikma <shikma@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/02 22:13:54 by aboulbaz          #+#    #+#             */
-/*   Updated: 2021/04/28 14:35:49 by shikma           ###   ########.fr       */
+/*   Updated: 2021/05/06 15:39:41 by shikma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-typedef struct		s_list
+typedef struct s_list
 {
 	void			*content;
 	struct s_list	*next;
@@ -52,7 +52,6 @@ void				ft_putstr_fd(char *s, int fd);
 char				**ft_split(char const *s, char c);
 char				*ft_strchr(const char *str, int c);
 char				*ft_strdup(const char *s1);
-//char				*ft_strjoin(char const *s1, char const *s2);
 size_t				ft_strlcat(char *dst, const char *src, size_t size);
 size_t				ft_strlcpy(char *dst, const char *src, size_t size);
 size_t				ft_strlen(const char *s);
@@ -64,8 +63,8 @@ char				*ft_strtrim(char const *s1, char const *set);
 char				*ft_substr(char const *src, unsigned int start, size_t n);
 int					ft_tolower(int c);
 int					ft_toupper(int c);
-t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),\
-								void (*del)(void *));
+t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
+						void (*del)(void *));
 int					ft_strcmp(const char *s1, const char *s2);
 
 #endif

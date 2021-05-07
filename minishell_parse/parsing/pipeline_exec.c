@@ -4,7 +4,7 @@ void	ft_fill_exec(t_minishell *cli, t_simple_cmd *tmp)
 {
 	cli->choice = tmp->id;
 	cli->cmd = tmp->cmd;
-	cli->args = tmp->args;
+	cli->args_tmp = &tmp->args;
 	cli->in_fd = tmp->in_fd;
 	cli->out_fd = tmp->out_fd;
 	cli->err_fd = tmp->err_fd;
@@ -67,20 +67,19 @@ void	pipe_handler(t_minishell *cli, int *pid_status,
 		counter += 2;
 		tmp = tmp->next;
 	}
-	i = 0;
-	while (i < 2 * cli->nb_pipe)
-	{
+	i = -1;
+	while ((++i) < 2 * cli->nb_pipe)
 		close(fds[i]);
-		i++;
-	}
-	i = 0;
-	while (i < cli->nb_pipe + 1)
+	i = -1;
+	while ((++i) < cli->nb_pipe + 1)
 	{
 		if (cli->nb_pipe == 0 && cli->simple_cmd->id != 0)
 			break ;
 		waitpid(pid_status[i], &cli->wait_status, 0);
-		cli->er_id = WEXITSTATUS(cli->wait_status);
-		i++;
+		if (WIFEXITED(cli->wait_status))
+			cli->er_id = WEXITSTATUS(cli->wait_status);
+		if (WIFSIGNALED(cli->wait_status))
+			cli->er_id = 128 + WTERMSIG(cli->wait_status);
 	}
 }
 

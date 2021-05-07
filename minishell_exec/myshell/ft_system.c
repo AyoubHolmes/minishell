@@ -42,6 +42,12 @@ void	path_handler(t_minishell *shell, int id, int *i)
 	dup2(shell->out_fd, 1);
 	dup2(shell->in_fd, 0);
 	argv = fill_args(argv, shell->args, binary_path);
+	// puts("*********************");
+	// int j = 0;
+	// while(shell->enviroment[j]){
+	// 	puts(shell->enviroment[j]);
+	// 	j++;
+	// }
 	execve(argv[0], argv, shell->enviroment);
 	(*i)++;
 }
@@ -60,8 +66,11 @@ void	system_help(t_minishell *shell, struct stat buff, int a)
 			if (a == 0 && !(buff.st_mode & S_IXUSR))
 				exit(126);
 		}
-		ft_putstr("command not found", shell->err_fd);
-		ft_putstr("\n", shell->err_fd);
+		else
+		{
+			ft_putstr("command not found", shell->err_fd);
+			ft_putstr("\n", shell->err_fd);
+		}
 		exit(127);
 	}
 }
@@ -83,6 +92,7 @@ char	*ft_system(t_minishell *shell)
 
 	id = 0;
 	i = 0;
+
 	shell->path = ft_split(shell->paths->obj2, ':');
 	a = stat(shell->cmd, &buff);
 	if (ft_strchr(shell->cmd, '/') && a == 0)

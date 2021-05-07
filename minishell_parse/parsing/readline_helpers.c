@@ -66,7 +66,7 @@ char	*clear_trigger(struct termios *s_termios)
 	ft_putstr("\n", 1);
 	g_cli.status = 0;
 	tcsetattr(STDIN_FILENO, TCSANOW, s_termios);
-	return (ft_strdup("clear"));
+	return (ft_strdup("/usr/bin/clear"));
 }
 
 char	*quit_control(t_history **h, t_readline_vars *vars)

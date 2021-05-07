@@ -70,26 +70,31 @@ void	delete_arg(t_args **args, char *arg)
 {
 	t_args	*p;
 	t_args	*q;
+	t_args	*s;
+	if ((*args)->next)
+		p = (*args)->next;
+	q = *args;
 
-	p = *args;
-	if (p && ft_strcmp(p->arg, arg) == 0)
+	if (*args && ft_strcmp((*args)->arg, arg) == 0)
 	{
+		t_args *tmp = *args;
 		(*args) = (*args)->next;
-		free(p);
-		p = NULL;
+		if (tmp)
+			free(tmp);
 	}
 	else
 	{
-		while (p->next)
+		while (p)
 		{
-			if (ft_strcmp(p->next->arg, arg) == 0)
+			if (ft_strcmp(p->arg, arg) == 0)
 			{
-				q = p->next;
-				p->next = p->next->next;
+				s = p;
+				q->next = p->next;
+				free(s);
+				s = NULL;
 				break ;
-				free(q);
-				q = NULL;
 			}
+			q = p;
 			p = p->next;
 		}
 	}
