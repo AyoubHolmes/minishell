@@ -189,4 +189,12 @@ char			**ft_fill_shell_env(t_minishell *cli);
 int				len_list_element(t_element *element);
 char			*dollar_case_correction(char *s, int *i, t_element *env,
 					int err_id);
+void			list_help(char *elm1, char *elm2, t_element **list);
+void			delete_arg_node(t_args **args, char *arg);
+void			insert_first_cmd(t_simple_cmd **s, char *cmd);
+int				insert_cmd(t_simple_cmd **s, char *cmd);
+void			shell_reg_list(t_regex *reg, t_element **p);
+char			**identifier_help(char **str);
+int				is_token_material(char line);
+int				a_token_is_set(char *c, char *line);
 #endif

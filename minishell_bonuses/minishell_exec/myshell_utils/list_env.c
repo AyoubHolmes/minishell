@@ -69,13 +69,10 @@ void	delete_elem(char *elm, t_element *shell_)
 void	delete_arg(t_args **args, char *arg)
 {
 	t_args	*p;
-	t_args	*q;
-	t_args	*s;
 	t_args	*tmp;
 
 	if ((*args)->next)
 		p = (*args)->next;
-	q = *args;
 	if (*args && ft_strcmp((*args)->arg, arg) == 0)
 	{
 		tmp = *args;
@@ -84,19 +81,5 @@ void	delete_arg(t_args **args, char *arg)
 			free(tmp);
 	}
 	else
-	{
-		while (p)
-		{
-			if (ft_strcmp(p->arg, arg) == 0)
-			{
-				s = p;
-				q->next = p->next;
-				free(s);
-				s = NULL;
-				break ;
-			}
-			q = p;
-			p = p->next;
-		}
-	}
+		delete_arg_node(args, arg);
 }

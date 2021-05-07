@@ -60,16 +60,11 @@ void	check_cli_cmd(char **cmd)
 {
 	t_regex		reg;
 	t_element	*p;
-	t_element	*q;
 
 	reg.cmp_tmp = *cmd;
 	if (check_star(reg.cmp_tmp) == 0)
 	{
-		reg.path = check_path(reg.cmp_tmp, &reg.match);
-		reg.directory = opendir(reg.path);
-		p = fill_list_files(reg.directory, reg.match);
-		sort_l(p);
-		q = p;
+		shell_reg_list(&reg, &p);
 		while (p)
 		{
 			if (regex_handler(reg.match, p->obj1) == 0)

@@ -1,5 +1,13 @@
 #include "minishell.h"
 
+void	shell_reg_list(t_regex *reg, t_element **p)
+{
+	reg->path = check_path(reg->cmp_tmp, &reg->match);
+	reg->directory = opendir(reg->path);
+	(*p) = fill_list_files(reg->directory, reg->match);
+	sort_l((*p));
+}
+
 t_element	*fill_list_files(DIR *direc, char *match)
 {
 	struct dirent	*entry;
@@ -25,4 +33,27 @@ t_element	*fill_list_files(DIR *direc, char *match)
 	}
 	ft_free_var(entry);
 	return (files);
+}
+
+void	delete_arg_node(t_args **args, char *arg)
+{
+	t_args	*s;
+	t_args	*p;
+	t_args	*q;
+
+	p = *args;
+	q = *args;
+	while (p)
+	{
+		if (ft_strcmp(p->arg, arg) == 0)
+		{
+			s = p;
+			q->next = p->next;
+			free(s);
+			s = NULL;
+			break ;
+		}
+		q = p;
+		p = p->next;
+	}
 }

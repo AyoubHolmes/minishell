@@ -17,14 +17,7 @@ void	edit_or_add(char *elm1, char *elm2, t_element **shell_)
 			free_double_p(tmp);
 			if (elm2 == NULL)
 				return ;
-			if (elm1[ft_strlen(elm1) - 1] == '+')
-				list->next->obj2 = ft_strjoin(list->next->obj2,
-						ft_strdup(elm2));
-			else
-			{
-				ft_free_var (list->next->obj2);
-				list->next->obj2 = ft_strdup(elm2);
-			}
+			list_help(elm1, elm2, &list);
 			return ;
 		}
 		list = list->next;

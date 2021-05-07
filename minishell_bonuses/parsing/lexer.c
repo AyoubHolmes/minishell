@@ -42,17 +42,6 @@ void	ft_tokenizer(char *c, char *line, int *escape)
 		*escape = 0;
 }
 
-int	is_token_material(char line)
-{
-	return (line == '\\' || line == '|' || line == ';');
-}
-
-int	a_token_is_set(char *c, char *line)
-{
-	return ((*c & SEMICOLONE_SETTER) != 0 || (*c & PIPE_SETTER) != 0
-		|| redirection_is_set(c, line));
-}
-
 int	ft_error_checker(char *c, char *line, t_minishell *cli)
 {
 	cli->helper = line;

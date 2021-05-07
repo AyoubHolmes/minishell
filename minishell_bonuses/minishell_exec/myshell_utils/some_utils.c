@@ -69,13 +69,7 @@ int	check_identifier(char *str, t_minishell *shell, int id, char *arg)
 	i = 0;
 	tmp = NULL;
 	if (id == 1)
-	{
-		tmp = ft_split(str, '=');
-		if (tmp[0])
-			str = tmp[0];
-		else
-			str = "\0";
-	}
+		tmp = identifier_help(&str);
 	while (str[i] || ft_strcmp(str, "\0") == 0)
 	{
 		if (ft_strcmp(str, "\0") == 0 || str[0] == '=' || str[0] == '+'

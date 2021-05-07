@@ -1,68 +1,130 @@
-NAME = minishell.a
+NAME = minishell
+NAME_BONUS = minishell_bonus
 AR = ar rcs
+SRC =	./minishell_mandatory/parsing/main.c\
+	./minishell_mandatory/parsing/ft_free.c\
+	./minishell_mandatory/parsing/prompt.c \
+	./minishell_mandatory/parsing/lexer_helper.c\
+	./minishell_mandatory/parsing/lexer.c\
+	./minishell_mandatory/parsing/parser.c\
+	./minishell_mandatory/parsing/list_debugger.c\
+	./minishell_mandatory/parsing/pipeline_exec.c\
+	./minishell_mandatory/parsing/readline_helpers.c\
+	./minishell_mandatory/parsing/readline_funcs.c\
+	./minishell_mandatory/parsing/readline.c\
+	./minishell_mandatory/parsing/readline_utils.c\
+	./minishell_mandatory/parsing/history_utils.c\
+	./minishell_mandatory/parsing/err.c\
+	./minishell_mandatory/parsing/arg_correction.c\
+	./minishell_mandatory/parsing/get_fd_file.c\
+	./minishell_mandatory/parsing/extract_filename.c\
+	./minishell_mandatory/parsing/insert_cmd.c\
+	./minishell_mandatory/parsing/ft_signal.c\
+	./minishell_mandatory/parsing/ft_insert_args.c\
+	./minishell_mandatory/minishell_exec/myshell/dispatcher.c\
+	./minishell_mandatory/minishell_exec/myshell/env.c\
+	./minishell_mandatory/minishell_exec/myshell/ft_system.c\
+	./minishell_mandatory/minishell_exec/myshell/echo.c\
+	./minishell_mandatory/minishell_exec/myshell/pwd.c\
+	./minishell_mandatory/minishell_exec/myshell/cd.c\
+	./minishell_mandatory/minishell_exec/myshell/export.c\
+	./minishell_mandatory/minishell_exec/myshell/unset.c\
+	./minishell_mandatory/minishell_exec/myshell/exit.c\
+	./minishell_mandatory/minishell_exec/myshell/my_free.c\
+	\
+	./minishell_mandatory/minishell_exec/myshell_utils/list_env.c\
+	./minishell_mandatory/minishell_exec/myshell_utils/ft_split.c\
+	./minishell_mandatory/minishell_exec/myshell_utils/ft_putstr.c\
+	./minishell_mandatory/minishell_exec/myshell_utils/fill_list_to_sort.c\
+	\
+	./minishell_mandatory/minishell_exec/myshell_utils/some_utils.c\
+	./minishell_mandatory/minishell_exec/myshell_utils/regex.c\
+	./minishell_mandatory/minishell_exec/myshell_utils/regex_handler.c\
+	./minishell_mandatory/minishell_exec/myshell_utils/sort_file.c\
 
-SRC = 	./parsing/main.c\
-		./parsing/ft_free.c\
-		./parsing/prompt.c \
-		./parsing/lexer_helper.c\
-		./parsing/lexer.c\
-		./parsing/parser.c\
-		./parsing/list_debugger.c\
-		./parsing/pipeline_exec.c\
-		./parsing/readline_helpers.c\
-		./parsing/readline_funcs.c\
-		./parsing/readline.c\
-		./parsing/readline_utils.c\
-		./parsing/history_utils.c\
-		./parsing/err.c\
-		./parsing/arg_correction.c\
-		./parsing/get_fd_file.c\
-		./parsing/extract_filename.c\
-		./parsing/insert_cmd.c\
-		./parsing/ft_signal.c\
-		./parsing/ft_insert_args.c\
-		./minishell_exec/myshell/dispatcher.c\
-		./minishell_exec/myshell/env.c\
-		./minishell_exec/myshell/ft_system.c\
-		./minishell_exec/myshell/echo.c\
-		./minishell_exec/myshell/pwd.c\
-		./minishell_exec/myshell/cd.c\
-		./minishell_exec/myshell/export.c\
-		./minishell_exec/myshell/unset.c\
-		./minishell_exec/myshell/exit.c\
-		./minishell_exec/myshell/my_free.c\
-		\
-		./minishell_exec/myshell_utils/list_env.c\
-		./minishell_exec/myshell_utils/ft_split.c\
-		./minishell_exec/myshell_utils/ft_putstr.c\
-		./minishell_exec/myshell_utils/fill_list_to_sort.c\
-		\
-		./minishell_exec/myshell_utils/some_utils.c\
-		./minishell_exec/myshell_utils/regex.c\
-		./minishell_exec/myshell_utils/regex_handler.c\
-		./minishell_exec/myshell_utils/sort_file.c\
+SRC_BONUS =	./minishell_bonus/parsing/main.c\
+	./minishell_bonus/parsing/ft_free.c\
+	./minishell_bonus/parsing/prompt.c \
+	./minishell_bonus/parsing/lexer_helper.c\
+	./minishell_bonus/parsing/lexer.c\
+	./minishell_bonus/parsing/parser.c\
+	./minishell_bonus/parsing/list_debugger.c\
+	./minishell_bonus/parsing/pipeline_exec.c\
+	./minishell_bonus/parsing/readline_helpers.c\
+	./minishell_bonus/parsing/readline_funcs.c\
+	./minishell_bonus/parsing/readline.c\
+	./minishell_bonus/parsing/readline_utils.c\
+	./minishell_bonus/parsing/history_utils.c\
+	./minishell_bonus/parsing/err.c\
+	./minishell_bonus/parsing/arg_correction.c\
+	./minishell_bonus/parsing/get_fd_file.c\
+	./minishell_bonus/parsing/extract_filename.c\
+	./minishell_bonus/parsing/insert_cmd.c\
+	./minishell_bonus/parsing/ft_signal.c\
+	./minishell_bonus/parsing/ft_insert_args.c\
+	./minishell_bonus/minishell_exec/myshell/dispatcher.c\
+	./minishell_bonus/minishell_exec/myshell/env.c\
+	./minishell_bonus/minishell_exec/myshell/ft_system.c\
+	./minishell_bonus/minishell_exec/myshell/echo.c\
+	./minishell_bonus/minishell_exec/myshell/pwd.c\
+	./minishell_bonus/minishell_exec/myshell/cd.c\
+	./minishell_bonus/minishell_exec/myshell/export.c\
+	./minishell_bonus/minishell_exec/myshell/unset.c\
+	./minishell_bonus/minishell_exec/myshell/exit.c\
+	./minishell_bonus/minishell_exec/myshell/my_free.c\
+	\
+	./minishell_bonus/minishell_exec/myshell_utils/list_env.c\
+	./minishell_bonus/minishell_exec/myshell_utils/ft_split.c\
+	./minishell_bonus/minishell_exec/myshell_utils/ft_putstr.c\
+	./minishell_bonus/minishell_exec/myshell_utils/fill_list_to_sort.c\
+	\
+	./minishell_bonus/minishell_exec/myshell_utils/some_utils.c\
+	./minishell_bonus/minishell_exec/myshell_utils/regex.c\
+	./minishell_bonus/minishell_exec/myshell_utils/regex_handler.c\
+	./minishell_bonus/minishell_exec/myshell_utils/sort_file.c\
 
 OBJECT = $(SRC:.c=.o)
-LIBFT = ./parsing/libft
-HEADERS =	./includes
+
+OBJECT_BONUS = $(SRC_BONUS:.c=.o)
+
+LIBFT = ./minishell_mandatory/parsing/libft
+
+LIBFT_BONUS = ./minishell_bonus/parsing/libft
+
+HEADERS = ./minishell_mandatory/includes
+
+HEADERS_BONUS = ./minishell_bonus/includes
 
 $(NAME): $(OBJECT) $(HEADERS)
-	@make -sC $(LIBFT)
-	@cp ./parsing/libft/libft.a .
-	@$(AR) $(NAME) $(OBJECT)
-	@gcc -ltermcap  $(NAME) libft.a -o minishell
-	@rm -f $(OBJECT)
+	@make -C $(LIBFT)
+	@cp ./minishell_mandatory/parsing/libft/libft.a .
+	@gcc -ltermcap $(OBJECT) libft.a -o $(NAME)
 
-%.o: %.c
-	@gcc -ltermcap -I $(HEADERS) -o $@ -c $< 2> /dev/null
+all: $(NAME)
 
-all: $(NAME) 
-	
 clean:
-	@make clean -sC $(LIBFT)
+	@make fclean -sC $(LIBFT)
 	@rm -f $(OBJECT)
 
 fclean: clean
+	@rm libft.a
 	@rm -f $(NAME)
 
 re: fclean $(NAME)
+
+bonus: $(OBJECT_BONUS) $(HEADERS_BONUS)
+	@make -C $(LIBFT_BONUS)
+	@cp ./minishell_bonus/parsing/libft/libft.a .
+	@gcc -ltermcap $(OBJECT_BONUS)  libft.a -o $(NAME_BONUS)
+
+%.o: %.c
+	@gcc -ltermcap -I $(HEADERS) $(HEADERS_BONUS) -o $@ -c $< 2> /dev/null
+
+clean_bonus:
+	@make fclean -sC $(LIBFT_BONUS)
+	@rm -f $(OBJECT_BONUS)
+
+fclean_bonus: clean_bonus
+	@rm libft.a
+	@rm -f $(NAME_BONUS)
+
