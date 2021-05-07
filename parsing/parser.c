@@ -1,4 +1,4 @@
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 t_simple_cmd	*simple_cmd_node_init(int *i, int *start)
 {
@@ -55,7 +55,7 @@ t_simple_cmd	*create_simple_cmd_node(char *cmd, t_element *env,
 		node_traversal(cmd, &i, &start, &size);
 		if (is_a_redirection_token(&cmd[i]))
 			*stat = get_fd_file(cmd, &i, &s, env);
-		if (size != 0)
+		if (size != 0 && *stat == 0)
 		{
 			c = arg_correction(ft_substr(cmd, start, size), env, err_id);
 			*stat = insert_cmd(&s, c);
@@ -113,5 +113,6 @@ void	create_simple_cmd(t_minishell *cli, int *i,
 		if (cli->line[*i] != SEMICOLONE_TOKEN && cli->line[*i] && !stat)
 			(*i)++;
 	}
+	cli->er_id = stat;
 	cli->status = stat;
 }

@@ -1,4 +1,18 @@
-#include "../../includes/minishell.h"
+#include "minishell.h"
+
+int		bs_exists(char *s)
+{
+	int	i;
+
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == BS_TOKEN)
+			return (1);
+		i++;
+	}
+	return (0);
+}
 
 char	*extract_helper(char *s, int *i, int *j, t_element *env)
 {
@@ -17,7 +31,9 @@ char	*extract_helper(char *s, int *i, int *j, t_element *env)
 			filename = ft_strdup(env_var->obj2);
 		else
 			filename = add_char_at_beginning(DOLLAR_TOKEN, tmp);
-	}	
+	}
+	ft_free_var(s);
+	ft_free_var(tmp);
 	return (filename);
 }
 
@@ -40,8 +56,10 @@ char	*file_correction(char *s, t_element *env, int err_id)
 				s[j] = s[j + 1];
 				j++;
 			}
+			s[j] = '\0';
 			i--;
 		}
+		s = dollar_case_correction(s, &i, env, err_id);
 		i++;
 	}
 	return (s);
@@ -55,7 +73,7 @@ char	*extract_filename(char *s, t_element *env, int err_id)
 	int			i;
 	int			j;
 
-	if (s[0] == DOLLAR_TOKEN)
+	if (s[0] == DOLLAR_TOKEN && !bs_exists(s))
 	{
 		i = 1;
 		j = 0;

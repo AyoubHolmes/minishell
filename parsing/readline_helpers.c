@@ -1,5 +1,5 @@
 #include "readline.h"
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 int	ft_atoi_readline(char **s)
 {

@@ -1,5 +1,5 @@
 #include "readline.h"
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 char	*enter_trigger(t_readline_vars *vars, t_history **h)
 {
@@ -21,6 +21,7 @@ void	up_trigger(t_history **h, t_readline **dup)
 	{
 		if ((*h)->prev)
 		{
+			reset_readline((*h)->str);
 			(*h)->str = (*dup);
 			*h = (*h)->prev;
 			(*dup) = duplicate_readline(&(*h)->str);
@@ -35,6 +36,7 @@ void	down_trigger(t_history **h, t_readline **dup)
 	{
 		if ((*h)->next)
 		{
+			reset_readline((*h)->str);
 			(*h)->str = (*dup);
 			*h = (*h)->next;
 			(*dup) = duplicate_readline(&(*h)->str);

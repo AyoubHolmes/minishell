@@ -29,12 +29,12 @@ void	fill_dispatcher(t_minishell *shell)
 {
 	char	*(*command[8])(t_minishell *);
 
-		shell->enviroment = ft_fill_shell_env(shell);
+	shell->enviroment = ft_fill_shell_env(shell);
 	if (g_cli.is_empty_dollar == 0 && shell->cmd != NULL)
 	{
 		check_cli_cmd(&shell->cmd);
 		check_cli_args(shell->args_tmp);
-        shell->args = (*shell->args_tmp);
+		shell->args = (*shell->args_tmp);
 		check_cli_args(&shell->args);
 		shell->er_id = 0;
 		command[0] = ft_system;
@@ -46,5 +46,6 @@ void	fill_dispatcher(t_minishell *shell)
 		command[6] = env_;
 		command[7] = exit_;
 		command[shell->choice](shell);
+		free_double_p(shell->enviroment);
 	}
 }

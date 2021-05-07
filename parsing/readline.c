@@ -1,5 +1,5 @@
 #include "readline.h"
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 char 	*ft_readline(t_history **h)
 {

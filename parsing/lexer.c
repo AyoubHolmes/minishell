@@ -1,18 +1,5 @@
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
-/* void	helper(char **line)
-{
-	int	i;
-
-	i = 0;
-	while((*line)[i + 1])
-	{
-		(*line)[i] = (*line)[i + 1];
-		i++;
-	}
-	(*line)[i] = '\0';
-}
- */
 void	ft_tokenizer_2(char *c, char *line, int *escape)
 {
 	if (*line == '|' && is_not_a_string(*c) && *escape == 0)

@@ -1,4 +1,4 @@
-#include "../../includes/minishell.h"
+#include "minishell.h"
 #include "readline.h"
 
 t_element	*catch_elem(char *elm1, t_element **shell_)
@@ -21,6 +21,7 @@ void	ft_exec_(t_minishell *cli)
 {
 	char	**var;
 	int		i;
+	char *s;
 
 	i = 0;
 	cli->shell = NULL;
@@ -39,8 +40,9 @@ void	ft_exec_(t_minishell *cli)
 	cli->home = catch_elem("HOME", &cli->shell);
 	cli->paths = catch_elem("PATH", &cli->shell);
 	cli->shlvl = catch_elem("SHLVL", &cli->shell);
+	s = cli->shlvl->obj2;
 	cli->shlvl->obj2 = ft_itoa(ft_atoi(cli->shlvl->obj2) + 1);
-	puts(cli->shlvl->obj2);
+	ft_free_var(s);
 }
 
 void	ft_parser(t_minishell *cli)
@@ -58,7 +60,7 @@ void	ft_parser(t_minishell *cli)
 	while (cli->line[i])
 	{
 		create_simple_cmd(cli, &i, &start, &cli->simple_cmd);
-		if (!cli->status)
+		if (!cli->status && !cli->er_id && !errno)
 			ft_pipe(cli);
 		else
 			cli->er_id = cli->status;

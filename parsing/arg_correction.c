@@ -1,4 +1,4 @@
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 void	dollar_traversal(char *s, int *i, int *j)
 {

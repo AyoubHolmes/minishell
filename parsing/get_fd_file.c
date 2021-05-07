@@ -1,4 +1,4 @@
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 char	*add_char_at_beginning(char c, char *s)
 {
@@ -62,6 +62,7 @@ int	error_fd(char *filename, t_simple_cmd **s)
 		else
 			ft_putstr_fd("ambiguous redirect", 2);
 		ft_putstr("\n", 2);
+		ft_free_var(filename);
 		return (1);
 	}
 	ft_free_var(filename);

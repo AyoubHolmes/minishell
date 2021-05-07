@@ -5,29 +5,28 @@ char **ft_fill_shell_env(t_minishell *cli)
 	int			len;
 	t_element	*p;
 	int			i;
+	char		**tmp;
 
 	p = cli->shell;
 	len = 0;
 	len =len_list_element(cli->shell);
-	cli->enviroment = (char **)malloc(sizeof(char *) * (len + 1));
+	tmp = (char **)malloc(sizeof(char *) * (len + 1));
 	i = 0;
 	while (p)
 	{
 
 		if(p->id == 0)
 		{
-			if (!p->obj2){
-				cli->enviroment[i] = ft_strjoin(ft_strdup(p->obj1),ft_strjoin(ft_strdup("="),ft_strdup("")));
-			}
-			else{
-				cli->enviroment[i] = ft_strjoin(ft_strdup(p->obj1),ft_strjoin(ft_strdup("="),ft_strdup(p->obj2)));
-			}
+			if (!p->obj2)
+				tmp[i] = ft_strjoin(ft_strdup(p->obj1),ft_strjoin(ft_strdup("="),ft_strdup("")));
+			else
+				tmp[i] = ft_strjoin(ft_strdup(p->obj1),ft_strjoin(ft_strdup("="),ft_strdup(p->obj2)));
 			i++;
 		}
 		p = p->next;
 	}
-	cli->enviroment[i] = NULL;
-	return (cli->enviroment);
+	tmp[i] = NULL;
+	return (tmp);
 }
 
 char	*env_(t_minishell *shell_)

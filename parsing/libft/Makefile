@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aboulbaz <aboulbaz@student.42.fr>          +#+  +:+       +#+         #
+#    By: shikma <shikma@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/26 18:39:42 by aboulbaz          #+#    #+#              #
-#    Updated: 2021/05/03 15:23:40 by aboulbaz         ###   ########.fr        #
+#    Updated: 2021/05/07 13:39:49 by shikma           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ BONUS_O = ft_lstadd_front_bonus.o ft_lstclear_bonus.o ft_lstdelone_bonus.o ft_ls
 
 CC = gcc -Wall -Wextra -Werror 
 
-HEADERS = ../../../includes
+HEADERS = ../../includes/
 
 all: $(NAME)
 

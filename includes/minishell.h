@@ -187,5 +187,6 @@ void			free_double_p(char **str);
 int				insert_arg(t_simple_cmd **s, char *cmd);
 char			**ft_fill_shell_env(t_minishell *cli);
 int				len_list_element(t_element *element);
+char			*dollar_case_correction(char *s, int *i, t_element *env, int err_id);
 
 #endif

@@ -1,4 +1,4 @@
-#include "../../includes/minishell.h"
+#include "minishell.h"
 #include "readline.h"
 #include <fcntl.h>
 

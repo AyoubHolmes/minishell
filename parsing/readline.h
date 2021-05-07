@@ -1,7 +1,7 @@
 #ifndef READLINE_H
 # define READLINE_H
 
-# include "../../includes/minishell.h"
+# include "minishell.h"
 # include <unistd.h>
 # include <string.h>
 # include <stdio.h>
@@ -54,7 +54,7 @@ char			*clear_trigger(struct termios *s_termios);
 void			up_trigger(t_history **h, t_readline **dup);
 void			down_trigger(t_history **h, t_readline **dup);
 void			arrow_triggers(int key, t_history **h, t_readline **dup);
-void			ft_readline_helper1(int c, t_history **h, t_readline **dup);
+void			ft_readline_helper(int c, t_history **h, t_readline **dup);
 char			*quit_control(t_history **h, t_readline_vars *vars);
 char			*ft_readline(t_history **h);
 
