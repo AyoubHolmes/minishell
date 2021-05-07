@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int		bs_exists(char *s)
+int	bs_exists(char *s)
 {
 	int	i;
 

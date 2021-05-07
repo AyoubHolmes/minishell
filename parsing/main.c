@@ -21,7 +21,7 @@ void	ft_exec_(t_minishell *cli)
 {
 	char	**var;
 	int		i;
-	char *s;
+	char	*s;
 
 	i = 0;
 	cli->shell = NULL;

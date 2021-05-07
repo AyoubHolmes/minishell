@@ -71,13 +71,14 @@ void	delete_arg(t_args **args, char *arg)
 	t_args	*p;
 	t_args	*q;
 	t_args	*s;
+	t_args	*tmp;
+
 	if ((*args)->next)
 		p = (*args)->next;
 	q = *args;
-
 	if (*args && ft_strcmp((*args)->arg, arg) == 0)
 	{
-		t_args *tmp = *args;
+		tmp = *args;
 		(*args) = (*args)->next;
 		if (tmp)
 			free(tmp);

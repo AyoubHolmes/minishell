@@ -42,9 +42,7 @@ int	regex_handler(char *regex, char *file)
 	if (regex[ft_strlen(regex) - 1] == STAR_TOKEN)
 		end = 1;
 	tmp = ft_split(regex, STAR_TOKEN);
-	// return (ft_checker(tmp, file, start, end));
 	start = ft_checker(tmp, file, start, end);
-	// free_double_p(tmp);
 	return (start);
 }
 
@@ -75,26 +73,11 @@ char	*check_path(char *arg, char **match)
 	}
 	else
 	{
-		// ft_free_var(*match);
 		(*match) = ft_strdup(arg);
 		result = ft_strdup(".");
 	}
 	return (result);
 }
-
-/* void	final_args(t_args **args)
-{
-	t_args *p;
-	t_args *q;
-
-	p = args;
-	q = args;
-	while (p)
-	{
-		
-	}
-	
-} */
 
 void	check_cli_args(t_args **args)
 {

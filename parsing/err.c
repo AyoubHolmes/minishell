@@ -86,22 +86,6 @@ void	lexer_debugger(t_minishell *cli)
 {
 	char	c;
 
-	/* ft_putstr("Line After Lexer: ", 1);
-	ft_putstr(cli->line, 1);
-	ft_putstr("\n", 1);
-	if (cli->status != 0)
-	{
-		ft_putstr("Line Helper: ", 1);
-		ft_putstr(cli->helper, 1);
-		ft_putstr("\n", 1);
-		ft_putstr("Error ID: ", 1);
-		ft_putnbr_fd(cli->status, 1);
-		ft_putstr("\n", 1);
-		if (is_not_a_string(cli->c))
-		{
-			ft_putstr("hello\n", 1);
-		}
-	}  */
 	if (cli->status != 0)
 	{
 		ft_putstr("minishell: ", 2);

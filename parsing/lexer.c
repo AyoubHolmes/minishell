@@ -40,11 +40,6 @@ void	ft_tokenizer(char *c, char *line, int *escape)
 		*line = STAR_TOKEN;
 	else if (*escape == 1)
 		*escape = 0;
-	/* else if (*line == '$' && *escape == 0 && is_not_a_string(*c)
-		&& (*(line + 1)== '\''|| *(line + 1)== '"'))
-	{
-		helper(&line);
-	} */
 }
 
 int	is_token_material(char line)

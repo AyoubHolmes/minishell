@@ -83,7 +83,7 @@ int	check_identifier(char *str, t_minishell *shell, int id, char *arg)
 			|| valid_or_not(str[i], str[i + 1], id) == 1)
 		{
 			checker_error_printer(shell, arg);
-			if(tmp)
+			if (tmp)
 				free_double_p(tmp);
 			return (0);
 		}
